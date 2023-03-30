@@ -17,7 +17,7 @@ import {
   Button,
   Link,
 } from '@mui/material';
-import '../Login/loginn.css'
+import './loginn.css'
 // import duma from '../../../assets/img/logo/logo.svg';
 import { auth } from 'data/firebase';
 export default function Login() {
