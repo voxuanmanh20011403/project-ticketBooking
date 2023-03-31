@@ -18,10 +18,10 @@ import {
   setOpenConfigurator,
 } from "Admin/context";
 import Admin from "Admin/admin";
-import Register from "layouts/Signup/Register";
+// import Register from "layouts/Signup/Register";
 import NotFoundPage from "layouts/404/NotFoundPage";
-import Login from "layouts/Login/Login";
-import Cover from "Admin/layouts/authentication/sign-up";
+import SignIn from "layouts/Login";
+import Register from "layouts/Register";
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -30,12 +30,11 @@ export default function App() {
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
         <Route path="/admin" element={<Admin />} />
-        <Route path="/" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
-        <Route path="/sign-in" element={<Cover />} />
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFoundPage />} />
-        
+
+
       </Routes>
     </ThemeProvider>
   );

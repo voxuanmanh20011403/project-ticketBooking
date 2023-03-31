@@ -1,11 +1,7 @@
-
 import PropTypes from "prop-types";
-
 import Grid from "@mui/material/Grid";
 import PageLayout from "Admin/examples/LayoutContainers/PageLayout";
-import DefaultNavbar from "Admin/examples/Navbars/DefaultNavbar";
 import MDBox from "Admin/components/MDBox";
-import Footer from "../Footer";
 
 function CoverLayout({ coverHeight, image, children }) {
   return (
