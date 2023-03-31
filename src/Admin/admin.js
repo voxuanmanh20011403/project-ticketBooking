@@ -118,7 +118,7 @@ export default function Admin() {
       </Icon>
     </MDBox>
   );
-  const [selectedValue, setSelectedValue] = useState(null);
+  const [selectedValue, setSelectedValue] = useState(1);
 
   const onValueSelected = (value) => {
     setSelectedValue(value);
