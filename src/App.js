@@ -7,11 +7,13 @@ import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../src/Admin/assets/theme";
 import themeDark from "../src/Admin/assets/theme-dark";
-import Register from "register/Signup/Register";
 
-import NotFoundPage from "register/404/NotFoundPage";
+
+
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "Admin/context";
 import Admin from "Admin/admin";
+import Register from "layouts/Signup/Register";
+import NotFoundPage from "layouts/404/NotFoundPage";
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -23,7 +25,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Register />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/Register" element={<Register />} />
+        <Route path="/Register" element={<Register/>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </ThemeProvider>

@@ -1,25 +1,8 @@
-
-
 import { useState, useEffect, useMemo } from "react";
-
-// react-router components
 import {  Route, useLocation } from "react-router-dom";
-
-// @mui material components
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Icon from "@mui/material/Icon";
-
-// Material Dashboard 2 React components
-
-
-// Material Dashboard 2 React example components
-
-
-
-// Material Dashboard 2 React themes
-
-// Material Dashboard 2 React Dark Mode themes
 import themeDark from "../Admin/assets/theme-dark";
 
 // RTL plugins
