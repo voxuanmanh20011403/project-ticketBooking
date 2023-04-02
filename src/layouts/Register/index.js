@@ -206,7 +206,7 @@ function Register() {
                 Don&apos;t have an account?{" "}
                 <MDTypography
                   component={Link}
-                  to="/login"
+                  to="/"
                   variant="button"
                   color="info"
                   fontWeight="medium"
