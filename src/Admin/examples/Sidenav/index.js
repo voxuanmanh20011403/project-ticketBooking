@@ -13,7 +13,6 @@ import Icon from "@mui/material/Icon";
 
 // Custom styles for the Sidenav
 
-
 // Material Dashboard 2 React context
 import {
   useMaterialUIController,
@@ -54,8 +53,7 @@ function Sidenav(props, { color, brand, brandName, routes, ...rest }) {
     function handleMiniSidenav() {
       setMiniSidenav(dispatch, window.innerWidth < 1200);
       setTransparentSidenav(
-        dispatch
-        ,
+        dispatch,
         window.innerWidth < 1200 ? false : transparentSidenav
       );
       setWhiteSidenav(
@@ -125,9 +123,10 @@ function Sidenav(props, { color, brand, brandName, routes, ...rest }) {
         }
       />
       <List style={{ display: "inline-grid" }}>
-        <Button onClick={() => onClickTaskValue(1)} >DashBoard</Button>
-        <Button onClick={() => onClickTaskValue(2)} >Table</Button>
-        <Button onClick={() => onClickTaskValue(3)}  >Report</Button>
+        <Button onClick={() => onClickTaskValue(1)}>DashBoard</Button>
+        <Button onClick={() => onClickTaskValue(2)}>Account</Button>
+        <Button onClick={() => onClickTaskValue(3)}>Billing</Button>
+        <Button onClick={() => onClickTaskValue(4)}>Garage</Button>
       </List>
     </SidenavRoot>
   );
