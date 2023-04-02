@@ -13,6 +13,7 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 import { auth } from "data/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Notification from "layouts/notication/Notification";
+import './login.css'
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -132,8 +133,8 @@ function SignIn() {
               <Button
                 variant="contained"
                 style={{
-                  width: '40%',
-                  margin: '0 30% 0 30%'
+                  width: '60%',
+                  margin: '0 20% 0 20%'
                 }}
                 color="error"
                 onClick={handleSubmit(onSubmit)}

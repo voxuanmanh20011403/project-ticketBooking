@@ -12,24 +12,26 @@ import * as Yup from 'yup';
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { auth } from "data/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { db } from "data/firebase";
+import { addDoc, collection } from "firebase/firestore";
 function Register() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   // YUP: VALIDATION
   const validationSchema = Yup.object().shape({
-    username: Yup.string()
+    email: Yup.string()
       .required('Bạn chưa nhập email hoặc số điện thoại.')
-      .required('Username is required'),
+      .required('email is required'),
     password: Yup.string().required('Password is required'),
     confirmPassword: Yup.string()
       .required('Confirm Password is required')
       .oneOf([Yup.ref('password'), null], 'Confirm Password does not match'),
     lastname: Yup.string()
       .required('Bạn chưa nhập Name.')
-      .required('Username is required'),
+      .required('lastname is required'),
     firstname: Yup.string()
       .required('Bạn chưa nhập Name.')
-      .required('Username is required'),
+      .required('firstname is required'),
   });
   const {
     register,
@@ -42,10 +44,10 @@ function Register() {
   const history = useNavigate();
   const onSubmit = async (data) => {
     try {
-      //Register
+      //Add thong tin vào authen 
       const users = await createUserWithEmailAndPassword(
         auth,
-        data.username,
+        data.email,
         data.password,
       );
       //add display name cho user
@@ -55,8 +57,22 @@ function Register() {
         });
       };
       updateName();
-      history('/login')
-
+      //add thong tin vào bằng user với role default : role=1 =user;
+      const currentDate = new Date();
+      const formattedDate = currentDate.toISOString().slice(0, 10).replace('T', ' ');
+      try {
+        const docRef = await addDoc(collection(db, 'Account'), {
+          Email: data.email,
+          Password: data.password,
+          Name:  lastName + ' ' + firstName,
+          Role:'1',
+          CreateTime: formattedDate,
+        });
+        console.log('Document written with ID: ', docRef.id);
+      } catch (e) {
+        console.error('Error adding document: ', e);
+      }
+      history('/')
     } catch (error) {
       console.log(error.message);
     }
@@ -126,16 +142,16 @@ function Register() {
               <Grid className="row2__input">
                 <TextField
                   required
-                  id="username"
-                  name="username"
+                  id="email"
+                  name="email"
                   fullWidth
                   placeholder="Email hoặc số điện thoại"
                   variant="outlined"
-                  {...register('username')}
-                  error={errors.username ? true : false}
+                  {...register('email')}
+                  error={errors.email ? true : false}
                 />
                 <Typography variant="inherit" color="textSecondary">
-                  {errors.username?.message}
+                  {errors.email?.message}
                 </Typography>
               </Grid>
               <Grid className="row2__input">

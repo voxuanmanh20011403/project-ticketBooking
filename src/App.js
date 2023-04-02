@@ -30,7 +30,7 @@ export default function App() {
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
         <Route path="/admin" element={<Admin />} />
-        <Route path="/login" element={<SignIn />} />
+        <Route path="/" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFoundPage />} />
 
