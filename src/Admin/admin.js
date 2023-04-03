@@ -23,6 +23,7 @@ import theme from "./assets/theme";
 import Dashboard from "./layouts/dashboard";
 import Tables from "./layouts/tables";
 import Billing from "./layouts/billing";
+import ShowUsers from "./layouts/AddUser/ShowUsers";
 
 
 export default function Admin() {
@@ -124,7 +125,7 @@ export default function Admin() {
     setSelectedValue(value);
   };
   const renderComponent = () => {
-    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <Tables /> : <Billing />);
+    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <ShowUsers /> : <Billing />);
   };
   return (
     <>

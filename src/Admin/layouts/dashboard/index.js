@@ -11,17 +11,39 @@ import reportsBarChartData from "./data/reportsBarChartData";
 import reportsLineChartData from "./data/reportsLineChartData";
 import OrdersOverview from "./components/OrdersOverview";
 import Projects from "./components/Projects";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "data/firebase";
 
 function Dashboard() {
-
   const { sales, tasks } = reportsLineChartData;
-  const [count,setCount]=useState(0);
-  const [percent, setPercent]=useState();
+  const [percent, setPercent] = useState();
+  const [bookings, setBookings] = useState([]);
+
+  let currentDate = new Date();
+  let year = currentDate.getFullYear();
+  let month = currentDate.getMonth() + 1;
+  //GET DATA TO TABLE VENUE
+  const BookingsRef = collection(db, "Statistics");
+  const getBookings = query(BookingsRef, orderBy("ID_month", "desc"));
   useEffect(() => {
-    const value=190/100*100;
-    value>=100 ? setPercent("+ "+(value-100)+" % "): setPercent(" - "+(100-value)+" % " )
-    setCount(1209);
-  },[]);
+    const getBooking = async () => {
+      const data = await getDocs(getBookings);
+      setBookings(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getBooking();
+  }, [BookingsRef]);
+
+  // useEffect(() => {
+  //   const fetchData =()=>{
+  //     {bookings.map((bookings) => (
+  //       console.log((bookings.Bookings))
+  //     ))}
+  //   }
+  //   fetchData();
+    // const value=190/100*100;
+    // value>=100 ? setPercent("+ "+(value-100)+" % "): setPercent(" - "+(100-value)+" % " )
+    // setCount(1209);
+  // });
   return (
     <DashboardLayout>
       {/* Header */}
@@ -35,9 +57,9 @@ function Dashboard() {
                 color="dark"
                 icon="weekend"
                 title="Bookings"
-                count={count}
+            
                 percentage={{
-                  color:120>100?"success":"primary",
+                  color: 120 > 100 ? "success" : "primary",
                   amount: percent,
                   label: "than lask month",
                 }}

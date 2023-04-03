@@ -17,7 +17,6 @@ import './login.css'
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const history = useNavigate();
   //CUSTOM VALIDATION USING YUP!
@@ -42,12 +41,12 @@ function SignIn() {
         data.username,
         data.password,
       ); 
+      //Update +1 views in month while login success
+
+      //end
       const token = user?.user?.accessToken;
       localStorage.setItem('token', token);
-     
       history('/admin');
-     
-
     } catch (e) { 
       setShowError(true);
       setTimeout(() => {
