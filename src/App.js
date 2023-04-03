@@ -22,6 +22,7 @@ import Admin from "Admin/admin";
 import NotFoundPage from "layouts/404/NotFoundPage";
 import SignIn from "layouts/Login";
 import Register from "layouts/Register";
+import Booking from "layouts/Booking/Booking";
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/booking" element={<Booking />}></Route>
         <Route path="*" element={<NotFoundPage />} />
 
 
