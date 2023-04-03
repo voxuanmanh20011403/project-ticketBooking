@@ -18,10 +18,6 @@ function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
   const [percent, setPercent] = useState();
   const [bookings, setBookings] = useState([]);
-
-  let currentDate = new Date();
-  let year = currentDate.getFullYear();
-  let month = currentDate.getMonth() + 1;
   //GET DATA TO TABLE VENUE
   const BookingsRef = collection(db, "Statistics");
   const getBookings = query(BookingsRef, orderBy("ID_month", "desc"));
