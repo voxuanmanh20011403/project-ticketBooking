@@ -1,0 +1,137 @@
+.seat{
+    display: flex;
+    align-items: center;
+}
+
+.seat .note__name{
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+/* Ghế được chọn */
+.seat__note_choose svg rect{
+    stroke: rgb(39, 174, 96);
+    fill: rgb(139, 229, 176);
+}
+.seat__note_choose svg path{
+    stroke: rgb(2, 97, 42);
+    fill: transparent;
+}
+/* Ghế k bán */
+.seat__note_null svg .rect__seat_null {
+    cursor: not-allowed;
+    fill: rgb(121, 111, 111);
+}
+.seat__note_null svg .icon-disabled {
+    fill: rgb(242, 242, 242);
+}
+.seat__note_null svg .icon-selected {
+    fill: rgb(39, 174, 96);
+}
+/* Info Trips*/
+.info__main .v__info{
+    display: flex;
+    justify-content: space-between;
+}
+.v__info .type{
+    text-align: left;
+}
+.v__info .ten__xe{
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+}
+.v__info .star, .star{
+    border-radius: 2px;
+    background: rgb(0, 96, 196);
+    color: white;
+    font-size: 14px;
+    margin: 10px;
+    padding: 4px 5px;
+}
+
+.v__info .cost{
+    font-size: 20px;
+    color: rgb(0, 96, 196);
+    font-weight: bold;
+}
+.lich__trinh{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 20px;
+}
+.lich__trinh .start__end{
+    position: absolute;
+    top: 0;
+    left: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.start__end .noi__den{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    line-height: 20px;
+}
+.start__end .time{
+    font-size: 14px;
+    font-weight: none;
+    padding: 5px 0 10px 0;
+}
+.lich__trinh .ghe__trong{
+    position: absolute;
+    bottom: 50px;
+    right: 0px;
+    text-align: right;
+    color: red;
+
+}
+.lich__trinh .tabs{
+    position: absolute;
+    bottom: -5%;
+    right: 0;
+
+}
+.tabs .tabs__link{
+    margin-right: 10px;
+}
+/* Carousel */
+.container{
+    width: 100%;
+    height: 100%;
+}
+.container .glider-container{
+    width: 550px;
+    height: 300px;
+}
+.container .glider-container .slide img{
+    display: flex;
+    height: 70%;
+    width: 100%;
+    justify-content: center;
+    object-fit: fill;
+}
+.btn__arrow{
+    display: flex;
+    text-justify: center;
+    justify-content: center;
+}
+.custom-arrow{
+    background: none;
+    border: none;
+}
+/* TabsUI */
+.location{
+    display: flex;
+    justify-content: space-between;
+}
+/* List Seat */
+/* .btn__tt{
+    
+} */
