@@ -143,7 +143,7 @@ function SignIn() {
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                Don&apos;t have an account?{" "}
+                Bạn chưa có tài khoản?{" "}
                 <MDTypography
                   component={Link}
                   to="/register"
@@ -152,7 +152,7 @@ function SignIn() {
                   fontWeight="medium"
                   textGradient
                 >
-                  Sign up
+                  Đăng ký
                 </MDTypography>
               </MDTypography>
             </MDBox>
