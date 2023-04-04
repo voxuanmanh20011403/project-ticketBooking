@@ -17,7 +17,10 @@ import { addDoc, collection } from "firebase/firestore";
 function Register() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [numberPhone, setNumberPhone] = useState('');
   // YUP: VALIDATION
+  const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .required('Bạn chưa nhập email hoặc số điện thoại.')
@@ -32,6 +35,10 @@ function Register() {
     firstname: Yup.string()
       .required('Bạn chưa nhập Name.')
       .required('firstname is required'),
+    numberphone: Yup.string()
+      .required('Bạn chưa nhập Số điện thoại.')
+      .matches(phoneRegExp, 'Phone number is not valid')
+      .required('NumberPhone is required'),
   });
   const {
     register,
@@ -67,6 +74,7 @@ function Register() {
           Name:  lastName + ' ' + firstName,
           Role:'1',
           CreateTime: formattedDate,
+          NumberPhone: numberPhone
         });
         console.log('Document written with ID: ', docRef.id);
       } catch (e) {
@@ -107,7 +115,7 @@ function Register() {
                   id="lastname"
                   name="lastname"
                   fullWidth
-                  placeholder="lastname"
+                  placeholder="Họ đệm"
                   variant="outlined"
                   // margin="dense"
                   {...register('lastname')}
@@ -117,7 +125,7 @@ function Register() {
                   }}
                 />
                 <Typography variant="inherit" color="textSecondary">
-                  {errors.name?.message}
+                  {errors.lastname?.message}
                 </Typography>
               </Grid>
               {/* Passwword */}
@@ -127,7 +135,7 @@ function Register() {
                   id="firstname"
                   name="firstname"
                   fullWidth
-                  placeholder="firstname"
+                  placeholder="Tên"
                   variant="outlined"
                   {...register('firstname')}
                   error={errors.firstname ? true : false}
@@ -136,7 +144,7 @@ function Register() {
                   }}
                 />
                 <Typography variant="inherit" color="textSecondary">
-                  {errors.name?.message}
+                  {errors.firstname?.message}
                 </Typography>
               </Grid>
               <Grid className="row2__input">
@@ -145,7 +153,7 @@ function Register() {
                   id="email"
                   name="email"
                   fullWidth
-                  placeholder="Email hoặc số điện thoại"
+                  placeholder="Email tài khoản"
                   variant="outlined"
                   {...register('email')}
                   error={errors.email ? true : false}
@@ -186,6 +194,26 @@ function Register() {
                   {errors.password?.message}
                 </Typography>
               </Grid>
+              <Grid className="row2__input">
+                <TextField
+                  required
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  inputProps={{ pattern: "[0-9]{3}-[0-9]{3}-[0-9]{4}" }}
+                  fullWidth
+                  placeholder="Số điện thoại"
+                  variant="outlined"
+                  {...register('numberphone')}
+                  error={errors.numberphone ? true : false}
+                  onChange={(e) => {
+                    setNumberPhone(e.target.value);
+                  }}
+                />
+                <Typography variant="inherit" color="textSecondary">
+                  {errors.numberphone?.message}
+                </Typography>
+              </Grid>
             </MDBox>
 
             <MDBox mt={4} mb={1}>
@@ -203,7 +231,7 @@ function Register() {
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                Don&apos;t have an account?{" "}
+               Bạn đã có tài khoản?{" "}
                 <MDTypography
                   component={Link}
                   to="/"
@@ -212,7 +240,7 @@ function Register() {
                   fontWeight="medium"
                   textGradient
                 >
-                  Sign up
+                 Đăng nhập
                 </MDTypography>
               </MDTypography>
             </MDBox>
