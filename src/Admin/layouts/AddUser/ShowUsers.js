@@ -1,4 +1,4 @@
-import  React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -26,26 +26,11 @@ import "./ShowUsers.css";
 import { Button } from "@mui/material";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 import { db } from "data/firebase";
-import { orderBy, query } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import Data from "./Data";
 
 
 
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
-//data get db 9 ( now DB temp)
-const data = [
-  { name: 'John', age: 30 },
-  { name: 'Mary', age: 25 },
-  { name: 'Tom', age: 40 }
-];
-const rows = data.map((item) => createData(item.name, item.age,item.age,item.age,item.age));
 
 //Filter
 function descendingComparator(a, b, orderBy) {
@@ -81,41 +66,49 @@ function stableSort(array, comparator) {
 }
 
 //render Header tables
- //GET DATA TO TABLE VENUE
+//GET DATA TO TABLE VENUE
 
 
 const headCells = [
   {
+    id: "id",
+    numeric: true,
+    disablePadding: false,
+    label: "UID",
+  },
+  {
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Dessert (100g serving)",
+    label: "Email",
   },
   {
     id: "calories",
     numeric: true,
     disablePadding: false,
-    label: "Calories",
+    label: "Họ và tên",
   },
   {
     id: "fat",
     numeric: true,
     disablePadding: false,
-    label: "Fat(g)",
+    label: "Số điện thoại",
   },
   {
     id: "carbs",
     numeric: true,
     disablePadding: false,
-    label: "Carbs (g)",
+    label: "Mật khẩu",
   },
   {
     id: "protein",
     numeric: true,
     disablePadding: false,
-    label: "Protein (g)",
+    label: "Quyền",
   },
+ 
 ];
+
 
 const DEFAULT_ORDER = "asc";
 const DEFAULT_ORDER_BY = "calories";
@@ -250,8 +243,32 @@ export default function EnhancedTable() {
   const [visibleRows, setVisibleRows] = React.useState(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = React.useState(0);
-
-  React.useEffect(() => {
+  const [data, setData] = useState([]);
+  function createData(name, calories, fat, carbs, protein,id) {
+    return {
+      name,
+      calories,
+      fat,
+      carbs,
+      protein,
+      id
+    };
+  }
+ 
+  useEffect(() => {
+    async function fetchData() {
+      const accountsCol = collection(db, 'Account');
+      const accountsSnapshot = await getDocs(accountsCol);
+      const accountsList = accountsSnapshot.docs.map((doc) =>{ return {
+        id: doc.id,
+        ...doc.data()
+      }});
+      setData(accountsList);
+    }
+    fetchData();
+  },[data]);
+  const rows = data.map((item) => createData(item.Email, item.Name, item.NumberPhone, item.Password, item.Role,item.id));
+  useEffect(() => {
     let rowsOnMount = stableSort(
       rows,
       getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY)
@@ -263,7 +280,7 @@ export default function EnhancedTable() {
     );
 
     setVisibleRows(rowsOnMount);
-  }, []);
+  },[data] );
 
   const handleRequestSort = React.useCallback(
     (event, newOrderBy) => {
@@ -310,7 +327,6 @@ export default function EnhancedTable() {
         selected.slice(selectedIndex + 1)
       );
     }
-
     setSelected(newSelected);
   };
 
@@ -362,16 +378,26 @@ export default function EnhancedTable() {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const OnclickA = () => {
     // console.log("A");
   };
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this post?')) {
+      try {
+        console.log(id);
+        await deleteDoc(doc(db, 'Account', id));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   return (
     <DashboardLayout>
+      
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          
           <TableContainer>
             <Table
               sx={{ minWidth: 250 }}
@@ -389,50 +415,52 @@ export default function EnhancedTable() {
               <TableBody>
                 {visibleRows
                   ? visibleRows.map((row, index) => {
-                      const isItemSelected = isSelected(row.name);
-                      const labelId = `enhanced-table-checkbox-${index}`;
+                    const isItemSelected = isSelected(row.name);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          aria-checked={isItemSelected}
-                          tabIndex={-1}
-                          key={row.name}
-                          selected={isItemSelected}
-                          sx={{ cursor: "pointer" }}
-                          className="abc"
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.name}
+                        selected={isItemSelected}
+                        sx={{ cursor: "pointer" }}
+                        className="abc"
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            onClick={(event) => handleClick(event, row.name)}
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              "aria-labelledby": labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell align="right">{row.id}</TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
                         >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              onClick={(event) => handleClick(event, row.name)}
-                              color="primary"
-                              checked={isItemSelected}
-                              inputProps={{
-                                "aria-labelledby": labelId,
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            padding="none"
-                          >
-                            {row.name}
-                          </TableCell>
-                          <TableCell align="right">{row.calories}</TableCell>
-                          <TableCell align="right">{row.fat}</TableCell>
-                          <TableCell align="right">{row.carbs}</TableCell>
-                          <TableCell align="right">{row.protein}</TableCell>
-                          <TableCell align="right">
-                            <Button onClick={OnclickA()}>
-                              <UpgradeIcon />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
+                          {row.name}
+                        </TableCell>
+                        <TableCell align="right">{row.calories}</TableCell>
+                        <TableCell align="right">{row.fat}</TableCell>
+                        <TableCell align="right">{row.carbs}</TableCell>
+                        <TableCell align="right">{(row.protein==1?"nhanvien":'admin')}</TableCell>
+                        
+                        <TableCell align="right">
+                          <Button onClick={(id)=>{handleDelete(row.id)}}>
+                            <UpgradeIcon />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                   : null}
                 {paddingHeight > 0 && (
                   <TableRow
