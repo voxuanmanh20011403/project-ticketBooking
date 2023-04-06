@@ -27,10 +27,6 @@ import { Button } from "@mui/material";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 import { db } from "data/firebase";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
-import Data from "./Data";
-
-
-
 
 //Filter
 function descendingComparator(a, b, orderBy) {
