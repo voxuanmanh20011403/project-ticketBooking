@@ -25,6 +25,7 @@ import Dashboard from "./layouts/dashboard";
 import Billing from "./layouts/billing";
 
 import UserTable from "./layouts/AddUser/ShowUsers";
+import TestAddCar from "./layouts/TestAddCar";
 
 
 export default function Admin() {
@@ -126,7 +127,7 @@ export default function Admin() {
     setSelectedValue(value);
   };
   const renderComponent = () => {
-    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <UserTable /> : <Billing />);
+    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <UserTable /> : <TestAddCar />);
   };
   return (
     <>
