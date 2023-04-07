@@ -72,6 +72,8 @@
     justify-content: space-between;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-family: 'Roboto Slab', serif !important;
+    font-weight: 400;
 }
 .start__end .noi__den{
     display: flex;
@@ -82,7 +84,7 @@
 .start__end .time{
     font-size: 14px;
     font-weight: none;
-    padding: 5px 0 10px 0;
+    padding: 5px 0px 10px 0;
 }
 .lich__trinh .ghe__trong{
     position: absolute;
@@ -90,7 +92,6 @@
     right: 0px;
     text-align: right;
     color: red;
-
 }
 .lich__trinh .tabs{
     position: absolute;
@@ -100,6 +101,15 @@
 }
 .tabs .tabs__link{
     margin-right: 10px;
+    -webkit-text-decoration: underline !important;
+    color: #0d6efd;
+    text-decoration: underline !important;
+    font-weight: 500;
+}
+.tabs .tab__btn{
+    background-color: #e65100;
+    color: wheat;
+    box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
 }
 /* Carousel */
 .container{
@@ -125,6 +135,8 @@
 .custom-arrow{
     background: none;
     border: none;
+    font-size: 28px;
+    cursor: pointer;
 }
 /* TabsUI */
 .location{
@@ -132,6 +144,36 @@
     justify-content: space-between;
 }
 /* List Seat */
-/* .btn__tt{
-    
+.table {
+    width: 100%;
+    height: 100%;
+}
+/* .table .btn__tt{
+    position: relative;
+    width: 100%;
+    height: 100%;
 } */
+.table .btn__tt .total{
+    font-size: 16px;
+    font-weight: bold;
+    /* margin-top: 5px;
+    position: absolute;
+    top: 30%;
+    left: 25%; */
+}
+.table .btn__tt .btn{
+    color: white;
+    /* position: absolute;
+    right: 0;
+    top: 100%; */
+}
+/* search */
+.TextField{
+    font-size: 20px !important;
+}
+.css-1ilul2d-MuiTableCell-root{
+    padding: 0 !important;
+}
+.MuiTableCell-root{
+    padding: 0 !important;
+}

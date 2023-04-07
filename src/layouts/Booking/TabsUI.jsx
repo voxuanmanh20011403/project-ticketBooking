@@ -49,7 +49,7 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   color: theme.palette.text.secondary,
 }));
-const TabsUI = () => {
+const TabsUI = ({items}) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
