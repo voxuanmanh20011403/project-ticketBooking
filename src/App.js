@@ -23,6 +23,8 @@ import NotFoundPage from "layouts/404/NotFoundPage";
 import SignIn from "layouts/Login";
 import Register from "layouts/Register";
 import Booking from "layouts/Booking/Booking";
+import Footer from "layouts/Footer/Footer";
+import Home from "layouts/Home/Home";
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -30,13 +32,12 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
+        <Route path="/" element={<Home/>}></Route>
         <Route path="/admin" element={<Admin />} />
-        <Route path="/" element={<SignIn />} />
+        <Route path="/SignIN" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="/booking" element={<Booking />}></Route>
         <Route path="*" element={<NotFoundPage />} />
-
-
       </Routes>
     </ThemeProvider>
   );
