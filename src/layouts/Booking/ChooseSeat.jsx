@@ -12,60 +12,60 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { seatEmptyUI, seatChooseUI, seatNullUI } from "./UISeat";
 import ListSeat from "./ListSeat";
+import Test from "./Test";
 
+const ChooseSeat = ({ items }) => {
+  const card = (
+    <React.Fragment>
+      <CssBaseline />
+      <Container fixed>
+        <Grid spacing={2} container>
+          {/* Gird chú thích */}
+          <Grid item xs={3} container>
+            <Grid item xs direction="column" spacing={2}>
+              <Grid item xs={12}>
+                <Typography gutterBottom variant="subtitle1">
+                  Chú thích
+                </Typography>
+                {/* Ghế trống */}
+                <Typography
+                  variant="body2"
+                  gutterBottom
+                  className="seat seat__note"
+                >
+                  {seatEmptyUI()}
+                  <span className="note__name">Còn trống</span>
+                </Typography>
+                {/* Ghế được chọn */}
+                <Typography variant="body2" className=" seat seat__note_choose">
+                  {seatChooseUI()}
+                  <span className="note__name">Đang chọn</span>
+                </Typography>
+                {/* Ghế k bán */}
+                <Typography variant="body2" className=" seat seat__note_null">
+                  {seatNullUI()}
 
-const card = (
-  <React.Fragment>
-    <CssBaseline />
-    <Container fixed>
-      <Grid spacing={2} container>
-        {/* Gird chú thích */}
-        <Grid item xs={6} container>
-          <Grid item xs direction="column" spacing={2}>
-            <Grid item xs={12}>
-              <Typography gutterBottom variant="subtitle1">
-                Chú thích
-              </Typography>
-              {/* Ghế trống */}
-              <Typography
-                variant="body2"
-                gutterBottom
-                className="seat seat__note"
-              >
-                {seatEmptyUI()}
-                <span className="note__name">Còn trống</span>
-              </Typography>
-              {/* Ghế được chọn */}
-              <Typography variant="body2" className=" seat seat__note_choose">
-                {seatChooseUI()}
-                <span className="note__name">Đang chọn</span>
-              </Typography>
-              {/* Ghế k bán */}
-              <Typography variant="body2" className=" seat seat__note_null">
-                {seatNullUI()}
-
-                <span className="note__name">Ghế đã đặt</span>
-              </Typography>
+                  <span className="note__name">Ghế đã đặt</span>
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* Gird sơ đồ ghế */}
+          <Grid item xs={9} sm container>
+            <Grid item xs container direction="column" spacing={2}>
+              <Grid item xs>
+                <Typography gutterBottom variant="subtitle1" component="div">
+                  <ListSeat items={items} />
+                  {/* <Test /> */}
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-        {/* Gird sơ đồ ghế */}
-        <Grid item xs={6} sm container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                <ListSeat />
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <br />
-    </Container>
-  </React.Fragment>
-);
-
-const ChooseSeat = () => {
+        <br />
+      </Container>
+    </React.Fragment>
+  );
   return (
     <Container maxWidth="xl">
       <Box sx={{ minWidth: "xl" }}>

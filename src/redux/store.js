@@ -1,9 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit'
-import cartSlice from './slices/cartSlice';
+import {configureStore} from '@reduxjs/toolkit';
+import thunkMiddleware from "redux-thunk";
+import tripsSilce from './slices/tripsSilce';
 
 const store = configureStore({
     reducer: {
-        cart: cartSlice,
-    }
+        trip: tripsSilce,
+    },
+    middleware: [thunkMiddleware],
 });
-export default store
+
+
+export default store;
