@@ -23,6 +23,7 @@ import NotFoundPage from "layouts/404/NotFoundPage";
 import SignIn from "layouts/Login";
 import Register from "layouts/Register";
 import Booking from "layouts/Booking/Booking";
+import Chatbot from "layouts/chatbot/chatbot";
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -35,6 +36,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/booking" element={<Booking />}></Route>
         <Route path="*" element={<NotFoundPage />} />
+         <Route path="/chatbot" element={<Chatbot />} />
 
 
       </Routes>

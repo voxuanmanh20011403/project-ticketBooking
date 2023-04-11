@@ -1,0 +1,79 @@
+/* Style cho khung chatbox */
+.khungchat {
+	background-color: #f2f2f2;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	height: 400px;
+	width: 300px;
+	padding: 10px;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+  }
+  
+  /* Style cho tiêu đề */
+  .header {
+	font-weight: bold;
+	font-size: 18px;
+	margin-bottom: 10px;
+  }
+  
+  /* Style cho khung chat */
+  .message-container {
+	height: 300px;
+	overflow-y: scroll;
+  }
+  
+  /* Style cho tin nhắn */
+  .message {
+	padding: 5px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+  }
+  
+  /* Style cho tin nhắn từ tôi */
+  .from-me {
+	background-color: #4CAF50;
+	color: #fff;
+	float: right;
+  }
+  
+  /* Style cho tin nhắn từ họ */
+  .from-them {
+	background-color: #ddd;
+	color: #000;
+	float: left;
+  }
+  
+  /* Style cho khung nhập tin nhắn */
+  .input-container {
+	margin-top: 10px;
+  }
+  
+  /* Style cho ô nhập tin nhắn */
+  .input-message {
+	width: 80%;
+	padding: 10px;
+	border-radius: 5px;
+	border: none;
+	outline: none;
+	font-size: 14px;
+  }
+  
+  /* Style cho nút gửi */
+  .send-button {
+	width: 15%;
+	background-color: #008CBA;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	padding: 10px;
+	cursor: pointer;
+	font-size: 14px;
+	margin-left: 2%;
+  }
+  
+  /* Style cho hover của nút gửi */
+  .send-button:hover {
+	background-color: #005F6B;
+  }
+  
