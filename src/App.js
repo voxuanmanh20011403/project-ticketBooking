@@ -25,6 +25,7 @@ import Register from "layouts/Register";
 import Booking from "layouts/Booking/Booking";
 import Footer from "layouts/Footer/Footer";
 import Home from "layouts/Home/Home";
+import Payment from "layouts/Payment/Payment";
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="/SignIN" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="/booking" element={<Booking />}></Route>
+        <Route path="/payment" element={<Payment />}></Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </ThemeProvider>
