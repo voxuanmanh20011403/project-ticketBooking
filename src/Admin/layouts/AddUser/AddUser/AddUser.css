@@ -94,7 +94,7 @@
 .modal__footer__left {
     padding-left: 10px;
     font-weight: 500;
-    margin-top: auto;
+  
     text-align: center;
     display: flex;
     align-items: center;
@@ -104,4 +104,8 @@
 .modal__footer11 {
     width: 100%;
     background-color: rgb(138, 162, 235);
+}
+.Garage{
+    width: 96%;
+    margin: 2% !important;
 }

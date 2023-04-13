@@ -20,7 +20,7 @@ import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
 import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
-import AddPost from "./Moda1";
+import AddGarage from "./AddGarage/AddGarage";
 import { createData, getComparator, headCells, stableSort } from "./Garage.constants";
 
 const DEFAULT_ORDER = "asc";
@@ -263,8 +263,18 @@ export default function Garage() {
                 >
 
                   <MDTypography variant="h6" color="white">
-                    Quản lý danh sách nhà xe
-                    <Button onClick={() => setActiveButton(true)} style={{ backgroundColor: 'black', marginLeft: '78%' }}>Thêm</Button>
+
+
+
+
+
+                    <div style={{ width: '100%', display: 'flex' }}>
+                      <h3 className="h3Title" > Quản lý danh sách nhà xe</h3>
+                      <div className="btnAdd" >
+                        <Button className="btnAddd" onClick={() => setActiveButton(true)} style={{ backgroundColor: 'black' }}>Thêm</Button>
+                      </div>
+
+                    </div>
                   </MDTypography>
 
                 </MDBox>
@@ -365,7 +375,7 @@ export default function Garage() {
           </Grid>
         </MDBox>
       </Grid>
-      {activeButton ? <AddPost activeButton={activeButton} setActiveButton={setActiveButton} /> : <></>}
+      {activeButton ? <AddGarage activeButton={activeButton} setActiveButton={setActiveButton} /> : <></>}
 
     </DashboardLayout>
   );

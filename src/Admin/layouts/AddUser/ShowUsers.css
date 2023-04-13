@@ -1,8 +1,19 @@
 .css-1h4cpht-MuiTableRow-root.Mui-selected:hover {
-    background-color:unset ;
+    background-color: unset;
 }
 
 .css-tdxonj-MuiTableHead-root {
-    display: contents !important ;
+    display: contents !important;
 }
 
+.btnAdd {
+    width: 30%;
+   
+}
+.btnAddd{
+    float: right ;
+}
+
+.h3Title {
+    width: 70%;
+}

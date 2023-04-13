@@ -12,12 +12,9 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
@@ -30,6 +27,7 @@ import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
 import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
+import AddUser from "./AddUser/AddGarage";
 
 //Filter
 function descendingComparator(a, b, orderBy) {
@@ -48,10 +46,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -64,7 +58,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-//render Header tables
 //GET DATA TO TABLE VENUE
 
 
@@ -243,6 +236,7 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
+  const [activeButton, setActiveButton] = useState(false);
   function createData(name, calories, fat, carbs, protein, id) {
     return {
       name,
@@ -421,10 +415,15 @@ export default function EnhancedTable() {
                   borderRadius="lg"
                   coloredShadow="info"
                 >
-
                   <MDTypography variant="h6" color="white">
-                   Quản lý tài khoản người dùng và nhân viên
-
+                    <div style={{width:'100%', display:'flex'}}>
+                    <h3 className="h3Title" >Quản lý tài khoản người dùng và nhân viên</h3>
+                    <div className="btnAdd" >
+                    <Button  onClick={() => setActiveButton(true)} className="btnAddd"  style={{ backgroundColor: 'black'}}>Thêm</Button>
+                    </div>
+                 
+                    </div>
+                   
                   </MDTypography>
                  
                 </MDBox>
@@ -524,7 +523,7 @@ export default function EnhancedTable() {
         </MDBox>
       </Grid>
 
-
+      {activeButton ? <AddUser activeButton={activeButton} setActiveButton={setActiveButton} /> : <></>}
     </DashboardLayout>
   );
 }
