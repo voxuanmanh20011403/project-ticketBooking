@@ -24,6 +24,8 @@ import SignIn from "layouts/Login";
 import Register from "layouts/Register";
 import Booking from "layouts/Booking/Booking";
 import TestAddCar from "Admin/layouts/TestAddCar";
+import Garage from "Admin/layouts/Garage/Garage";
+import AddPost from "Admin/layouts/Garage/Moda1";
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -37,6 +39,7 @@ export default function App() {
         <Route path="/booking" element={<Booking />}></Route>
         <Route path="*" element={<NotFoundPage />} />
         <Route path="TestAddCar" element={<TestAddCar/>} />
+        <Route path="garage" element={<AddPost/>} />
       </Routes>
     </ThemeProvider>
   );

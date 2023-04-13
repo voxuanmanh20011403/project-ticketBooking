@@ -10,100 +10,18 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
-import { Button } from "@mui/material";
+import { Button, Card, Grid } from "@mui/material";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 import { db } from "data/firebase";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
-
-//Filter
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-//render Header tables
-//GET DATA TO TABLE VENUE
-
-
-const headCells = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: false,
-    label: "UID",
-  },
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "Tên nhà xe",
-  },
-  {
-    id: "calories",
-    numeric: true,
-    disablePadding: false,
-    label: "Chủ sở hữu",
-  },
-  {
-    id: "fat",
-    numeric: true,
-    disablePadding: false,
-    label: "Địa chỉ",
-  },
-  {
-    id: "carbs",
-    numeric: true,
-    disablePadding: false,
-    label: "Hotline",
-  },
-  {
-    id: "protein",
-    numeric: true,
-    disablePadding: false,
-    label: "Số xe ",
-  },
- 
-];
-
+import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
+import MDBox from "Admin/components/MDBox";
+import MDTypography from "Admin/components/MDTypography";
+import AddPost from "./Moda1";
+import { createData, getComparator, headCells, stableSort } from "./Garage.constants";
 
 const DEFAULT_ORDER = "asc";
 const DEFAULT_ORDER_BY = "calories";
@@ -171,64 +89,6 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Manage Account
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-}
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 export default function Garage() {
   const [order, setOrder] = React.useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = React.useState(DEFAULT_ORDER_BY);
@@ -239,31 +99,26 @@ export default function Garage() {
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
-  function createData(name, calories, fat, carbs, protein,id) {
-    return {
-      name,
-      calories,
-      fat,
-      carbs,
-      protein,
-      id
-    };
-  }
- 
+
+
+
   useEffect(() => {
     async function fetchData() {
       const accountsCol = collection(db, 'Garage');
       const accountsSnapshot = await getDocs(accountsCol);
-      const accountsList = accountsSnapshot.docs.map((doc) =>{ return {
-        id: doc.id,
-        ...doc.data()
-      }});
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data()
+        }
+      });
       setData(accountsList);
-      console.log(data);
+
     }
     fetchData();
-  },[data]);
-  const rows = data.map((item) => createData(item.Name, item.Owner, item.Address, item.Hotline, item.Number,item.id));
+
+  }, []);
+  const rows = data.map((item) => createData(item.Name, item.Owner, item.Address, item.Hotline, item.Number, item.id));
   useEffect(() => {
     let rowsOnMount = stableSort(
       rows,
@@ -275,8 +130,9 @@ export default function Garage() {
       0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
     );
 
+
     setVisibleRows(rowsOnMount);
-  },[data] );
+  }, [data]);
 
   const handleRequestSort = React.useCallback(
     (event, newOrderBy) => {
@@ -371,13 +227,9 @@ export default function Garage() {
     [order, orderBy]
   );
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const OnclickA = () => {
-    // console.log("A");
-  };
+  const [show, setShow] = useState(false);
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
       try {
@@ -388,100 +240,133 @@ export default function Garage() {
       }
     }
   };
+  const [activeButton, setActiveButton] = useState(false);
   return (
-    <DashboardLayout>
-      
-      <Box sx={{ width: "100%" }}>
-        <Paper sx={{ width: "100%", mb: 2 }}>
-          
-          <TableContainer>
-            <Table
-              sx={{ minWidth: 250 }}
-              aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-            >
-              <EnhancedTableHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={rows.length}
-              />
-              <TableBody>
-                {visibleRows
-                  ? visibleRows.map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.name}
-                        selected={isItemSelected}
-                        sx={{ cursor: "pointer" }}
-                        className="abc"
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            onClick={(event) => handleClick(event, row.name)}
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              "aria-labelledby": labelId,
+    <DashboardLayout>
+      <DashboardNavbar />
+
+      <Grid item md={6}>
+        <MDBox pt={6} pb={3}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Card>
+                <MDBox
+                  mx={2}
+                  mt={-3}
+                  py={3}
+                  px={2}
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="info"
+                >
+
+                  <MDTypography variant="h6" color="white">
+                    Quản lý danh sách nhà xe
+                    <Button onClick={() => setActiveButton(true)} style={{ backgroundColor: 'black', marginLeft: '78%' }}>Thêm</Button>
+                  </MDTypography>
+
+                </MDBox>
+
+                <Box sx={{ width: "100%" }}>
+
+
+
+                  <TableContainer>
+                    <Table
+                      sx={{ minWidth: 250 }}
+                      aria-labelledby="tableTitle"
+                      size={dense ? "small" : "medium"}
+                    >
+                      <EnhancedTableHead
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={handleSelectAllClick}
+                        onRequestSort={handleRequestSort}
+                        rowCount={rows.length}
+                      />
+                      <TableBody>
+                        {visibleRows
+                          ? visibleRows.map((row, index) => {
+                            const isItemSelected = isSelected(row.name);
+                            const labelId = `enhanced-table-checkbox-${index}`;
+
+                            return (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                aria-checked={isItemSelected}
+                                tabIndex={-1}
+                                key={row.name}
+                                selected={isItemSelected}
+                                sx={{ cursor: "pointer" }}
+                                className="abc"
+                              >
+                                <TableCell padding="checkbox">
+                                  <Checkbox
+                                    onClick={(event) => handleClick(event, row.name)}
+                                    color="primary"
+                                    checked={isItemSelected}
+                                    inputProps={{
+                                      "aria-labelledby": labelId,
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell align="right">{row.id}</TableCell>
+                                <TableCell
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
+                                  padding="none"
+                                >
+                                  {row.name}
+                                </TableCell>
+                                <TableCell align="right">{row.calories}</TableCell>
+                                <TableCell align="right">{row.fat}</TableCell>
+                                <TableCell align="right">{row.carbs}</TableCell>
+                                <TableCell align="right">{(row.protein)}</TableCell>
+
+                                <TableCell align="right">
+                                  <Button onClick={(id) => { handleDelete(row.id) }}>
+                                    <UpgradeIcon />
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })
+                          : null}
+                        {paddingHeight > 0 && (
+                          <TableRow
+                            style={{
+                              height: paddingHeight,
                             }}
-                          />
-                        </TableCell>
-                        <TableCell align="right">{row.id}</TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
-                        <TableCell align="right">{(row.protein)}</TableCell>
-                        
-                        <TableCell align="right">
-                          <Button onClick={(id)=>{handleDelete(row.id)}}>
-                            <UpgradeIcon />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                  : null}
-                {paddingHeight > 0 && (
-                  <TableRow
-                    style={{
-                      height: paddingHeight,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-      </Box>
-      <Button>Thêm</Button>
+                          >
+                            <TableCell colSpan={6} />
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+
+                </Box>
+              </Card>
+            </Grid>
+          </Grid>
+        </MDBox>
+      </Grid>
+      {activeButton ? <AddPost activeButton={activeButton} setActiveButton={setActiveButton} /> : <></>}
+
     </DashboardLayout>
   );
 }

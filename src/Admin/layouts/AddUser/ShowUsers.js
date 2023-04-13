@@ -23,10 +23,13 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import "./ShowUsers.css";
-import { Button } from "@mui/material";
+import { Button, Card, Grid } from "@mui/material";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 import { db } from "data/firebase";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
+import MDBox from "Admin/components/MDBox";
+import MDTypography from "Admin/components/MDTypography";
 
 //Filter
 function descendingComparator(a, b, orderBy) {
@@ -102,7 +105,7 @@ const headCells = [
     disablePadding: false,
     label: "Quyền",
   },
- 
+
 ];
 
 
@@ -240,7 +243,7 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
-  function createData(name, calories, fat, carbs, protein,id) {
+  function createData(name, calories, fat, carbs, protein, id) {
     return {
       name,
       calories,
@@ -250,20 +253,22 @@ export default function EnhancedTable() {
       id
     };
   }
- 
+
   useEffect(() => {
     async function fetchData() {
       const accountsCol = collection(db, 'Account');
       const accountsSnapshot = await getDocs(accountsCol);
-      const accountsList = accountsSnapshot.docs.map((doc) =>{ return {
-        id: doc.id,
-        ...doc.data()
-      }});
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data()
+        }
+      });
       setData(accountsList);
     }
     fetchData();
-  },[data]);
-  const rows = data.map((item) => createData(item.Email, item.Name, item.NumberPhone, item.Password, item.Role,item.id));
+  }, [data]);
+  const rows = data.map((item) => createData(item.Email, item.Name, item.NumberPhone, item.Password, item.Role, item.id));
   useEffect(() => {
     let rowsOnMount = stableSort(
       rows,
@@ -276,7 +281,7 @@ export default function EnhancedTable() {
     );
 
     setVisibleRows(rowsOnMount);
-  },[data] );
+  }, [data]);
 
   const handleRequestSort = React.useCallback(
     (event, newOrderBy) => {
@@ -301,7 +306,7 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -379,6 +384,7 @@ export default function EnhancedTable() {
     // console.log("A");
   };
   const handleDelete = async (id) => {
+    console.log(id);
     if (window.confirm('Are you sure you want to delete this post?')) {
       try {
         console.log(id);
@@ -388,99 +394,137 @@ export default function EnhancedTable() {
       }
     }
   };
-  return (
-    <DashboardLayout>
-      
-      <Box sx={{ width: "100%" }}>
-        <Paper sx={{ width: "100%", mb: 2 }}>
-          
-          <TableContainer>
-            <Table
-              sx={{ minWidth: 250 }}
-              aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-            >
-              <EnhancedTableHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={rows.length}
-              />
-              <TableBody>
-                {visibleRows
-                  ? visibleRows.map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+  //BUTTON RENDER COMPONENT 
+  const [refreshCount, setRefreshCount] = useState(0);
 
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.name}
-                        selected={isItemSelected}
-                        sx={{ cursor: "pointer" }}
-                        className="abc"
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            onClick={(event) => handleClick(event, row.name)}
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              "aria-labelledby": labelId,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell align="right">{row.id}</TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
-                        <TableCell align="right">{(row.protein==1?"nhanvien":'admin')}</TableCell>
-                        
-                        <TableCell align="right">
-                          <Button onClick={(id)=>{handleDelete(row.id)}}>
-                            <UpgradeIcon />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                  : null}
-                {paddingHeight > 0 && (
-                  <TableRow
-                    style={{
-                      height: paddingHeight,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-      </Box>
+
+  return (
+    // <DashboardLayout>
+    //   <Button onClick={() => { setRefreshCount(refreshCount + 1) }}></Button>
+
+    // </DashboardLayout>
+    <DashboardLayout>
+      <DashboardNavbar />
+
+      <Grid item md={6}>
+        <MDBox pt={6} pb={3}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Card>
+                <MDBox
+                  mx={2}
+                  mt={-3}
+                  py={3}
+                  px={2}
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="info"
+                >
+
+                  <MDTypography variant="h6" color="white">
+                   Quản lý tài khoản người dùng và nhân viên
+
+                  </MDTypography>
+                 
+                </MDBox>
+                <Box sx={{ width: "100%" }}>
+
+
+<TableContainer>
+  <Table
+    sx={{ minWidth: 250 }}
+    aria-labelledby="tableTitle"
+    size={dense ? "small" : "medium"}
+  >
+    <EnhancedTableHead
+      numSelected={selected.length}
+      order={order}
+      orderBy={orderBy}
+      onSelectAllClick={handleSelectAllClick}
+      onRequestSort={handleRequestSort}
+      rowCount={rows.length}
+    />
+    <TableBody>
+      {visibleRows
+        ? visibleRows.map((row, index) => {
+          const isItemSelected = isSelected(row.id);
+          const labelId = `enhanced-table-checkbox-${index}`;
+
+          return (
+            <TableRow
+              hover
+              role="checkbox"
+              aria-checked={isItemSelected}
+              tabIndex={-1}
+              key={row.name}
+              selected={isItemSelected}
+              sx={{ cursor: "pointer" }}
+              className="abc"
+            >
+              <TableCell padding="checkbox">
+                <Checkbox
+                  onClick={(event) => handleClick(event, row.id)}
+                  color="primary"
+                  checked={isItemSelected}
+                  inputProps={{
+                    "aria-labelledby": labelId,
+                  }}
+                />
+              </TableCell>
+              <TableCell align="right">{row.id}</TableCell>
+              <TableCell
+                component="th"
+                id={labelId}
+                scope="row"
+                padding="none"
+              >
+                {row.name}
+              </TableCell>
+              <TableCell align="right">{row.calories}</TableCell>
+              <TableCell align="right">{row.fat}</TableCell>
+              <TableCell align="right">{row.carbs}</TableCell>
+              <TableCell align="right">{(row.protein == 1 ? "nhanvien" : 'admin')}</TableCell>
+
+              <TableCell align="right">
+                <Button onClick={(id) => { handleDelete(row.id) }}>
+                  <UpgradeIcon />
+                </Button>
+              </TableCell>
+            </TableRow>
+          );
+        })
+        : null}
+      {paddingHeight > 0 && (
+        <TableRow
+          style={{
+            height: paddingHeight,
+          }}
+        >
+          <TableCell colSpan={6} />
+        </TableRow>
+      )}
+    </TableBody>
+  </Table>
+</TableContainer>
+<TablePagination
+  rowsPerPageOptions={[5, 10, 25]}
+  component="div"
+  count={rows.length}
+  rowsPerPage={rowsPerPage}
+  page={page}
+  onPageChange={handleChangePage}
+  onRowsPerPageChange={handleChangeRowsPerPage}
+/>
+
+</Box>
+              </Card>
+            </Grid>
+          </Grid>
+        </MDBox>
+      </Grid>
+
+
     </DashboardLayout>
   );
 }

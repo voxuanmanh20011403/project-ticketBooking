@@ -1,6 +1,8 @@
 import { Button, FormControl, InputLabel, NativeSelect, TextField } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import DashboardLayout from 'Admin/examples/LayoutContainers/DashboardLayout';
 import { db } from 'data/firebase';
+import dayjs from 'dayjs';
 import { addDoc, collection } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
 
@@ -9,7 +11,7 @@ export default function TestAddCar() {
     const [seat, setSeat] = useState(0)
     const [formData, setFormData] = useState({});
     const [type, settype] = useState(['Giường nằm', 'Xe ghế'])
-    // const [nameGarage, setNameGarage] = useState(['Phương Trang', 'Thành Bười', 'Hoàng trung'])
+    // const [nameGarage, d] = useState(['Phương Trang', 'Thành Bười', 'Hoàng trung'])
     const [noidi, setNoidi] = useState(['Hà nội', 'Quảng Bình']);
 
     useEffect(() => {

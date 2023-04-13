@@ -124,10 +124,13 @@ function Sidenav(props, { color, brand, brandName, routes, ...rest }) {
       />
       <List style={{ display: "inline-grid" }}>
         <Button onClick={() => onClickTaskValue(1)}>DashBoard</Button>
-        <Button onClick={() => onClickTaskValue(2)}>Account</Button>
-        <Button onClick={() => onClickTaskValue(3)}>Garage</Button>
+        <Button onClick={() => onClickTaskValue(2)}>Quản lý tài khoản</Button>
+        <Button onClick={() => onClickTaskValue(3)}>Quản lý nhà xe</Button>
+        <Button onClick={() => onClickTaskValue(3)}>Quản lý danh sách xe</Button>
         {/* <Button onClick={() => onClickTaskValue(4)}>Garage</Button> */}
-        
+        <Button onClick={() => onClickTaskValue(3)}>Quản lý Chuyến xe</Button>
+        <Button onClick={() => onClickTaskValue(3)}>Quản lý đặt vé</Button>
+
       </List>
     </SidenavRoot>
   );

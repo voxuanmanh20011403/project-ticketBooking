@@ -27,6 +27,7 @@ import Billing from "./layouts/billing";
 import UserTable from "./layouts/AddUser/ShowUsers";
 import TestAddCar from "./layouts/TestAddCar";
 import Garage from "./layouts/Garage/Garage";
+import Tables from "./layouts/tables";
 
 
 export default function Admin() {
