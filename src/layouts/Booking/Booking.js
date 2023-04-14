@@ -12,7 +12,7 @@ const Booking = () => {
   }, [dispatch]);
   // nhận dữ liệu cho fetchData 
   const fetchData = useSelector((state) => state.trip.data)
-  console.log("fetchData: " + fetchData)
+  console.log("fetchData: " + JSON.stringify(fetchData));
   
   return (
     <Trip fetchData={fetchData} />
