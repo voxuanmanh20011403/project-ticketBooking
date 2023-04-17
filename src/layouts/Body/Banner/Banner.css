@@ -1,0 +1,9 @@
+.form__title{
+    display: flex;
+    background-image: url(../../../assets/img/Banner.jpg);
+    width: 1200px;
+    height: 100%;
+    /* vertical-align: middle; */
+    vertical-align: middle;
+    border-style: none;
+}
