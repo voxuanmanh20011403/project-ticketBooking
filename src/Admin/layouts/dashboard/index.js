@@ -53,7 +53,7 @@ function Dashboard() {
                 color="dark"
                 icon="weekend"
                 title="Bookings"
-            
+                count="2,300"
                 percentage={{
                   color: 120 > 100 ? "success" : "primary",
                   amount: percent,
@@ -114,7 +114,7 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsBarChart
                   color="info"
-                  title="website views"
+                  title="Ticket bookings by bus operator"
                   description="Last Campaign Performance"
                   date="campaign sent 2 days ago"
                   chart={reportsBarChartData}
@@ -125,10 +125,10 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
-                  title="daily sales"
+                  title="Booking"
                   description={
                     <>
-                      (<strong>+15%</strong>) increase in today sales.
+                      (<strong>+15%</strong>) .
                     </>
                   }
                   date="updated 4 min ago"
@@ -140,7 +140,7 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="dark"
-                  title="completed tasks"
+                  title="Total new car "
                   description="Last Campaign Performance"
                   date="just updated"
                   chart={tasks}

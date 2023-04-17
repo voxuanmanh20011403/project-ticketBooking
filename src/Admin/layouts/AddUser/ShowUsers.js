@@ -27,7 +27,7 @@ import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
 import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
-import AddUser from "./AddUser/AddGarage";
+import AddUser from "./AddUser/AddUser";
 
 //Filter
 function descendingComparator(a, b, orderBy) {

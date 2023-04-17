@@ -25,6 +25,7 @@ import Register from "layouts/Register";
 import Booking from "layouts/Booking/Booking";
 import TestAddCar from "Admin/layouts/TestAddCar";
 import Garage from "Admin/layouts/Garage/Garage";
+import AddUser from "Admin/layouts/AddUser/AddUser/AddUser";
 
 
 export default function App() {
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/booking" element={<Booking />}></Route>
         <Route path="*" element={<NotFoundPage />} />
         <Route path="TestAddCar" element={<TestAddCar/>} />
+        <Route path="addusser" element={<AddUser/>} />
       
       </Routes>
     </ThemeProvider>

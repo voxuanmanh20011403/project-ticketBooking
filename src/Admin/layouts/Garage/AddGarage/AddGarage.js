@@ -22,7 +22,7 @@ import {
 import { v4 as uuid } from 'uuid';
 import DashboardLayout from 'Admin/examples/LayoutContainers/DashboardLayout';
 import { db } from "data/firebase";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 
 
 function AddGarage(props) {
@@ -102,7 +102,7 @@ function AddGarage(props) {
             // if not file input provided
             uploadToFirebaseDB(uploadData.file.data);
         } else {
-            swal("😕 Input field can not be empty");
+
         }
     };
 
@@ -118,75 +118,6 @@ function AddGarage(props) {
         }
         return fileName;
     };
-
-    const imageUploadHandler = async (e, type) => {
-        const inputFile = e.target.files[0];
-        const _inputFile = inputFile.type.split("/");
-        const inputFileType = _inputFile[0];
-        const inputFileExec = _inputFile[1];
-        const inputFileName = fileNameCompressor(inputFile.name, 20);
-
-        const fileSize = inputFile.size / (1024 * 1024);
-
-        const acceptedImageFormats = ["png", "jpg", "jpeg", "gif"];
-        const acceptedVideoFormats = ["mp4", "mkv", "3gp", "avi", "webm"];
-
-        switch (type) {
-            case "image":
-                if (!acceptedImageFormats.some((format) => format.includes(inputFileExec))) {
-                    swal("🔴 Please select image format of png , jpg , jpeg , gif ");
-                    e.target.value = "";
-                    return;
-                }
-                if (fileSize > 2) {
-                    swal("🔴 Please select an image less than 2MB file size");
-                    e.target.value = "";
-                    return;
-                }
-                break;
-            default:
-                swal("😮 OOPS...!!! Invalid file format");
-                e.target.value = "";
-                return;
-        }
-
-        let compressedInputFile = inputFile;
-        if (inputFileType === "image") {
-            //compression algorithm
-            const compressionOptions = {
-                maxSizeMB: 1,
-                maxWidthOrHeight: 1920,
-                useWebWorker: true,
-            };
-
-            try {
-                compressedInputFile = await imageCompression(inputFile, compressionOptions);
-            } catch (error) {
-                alert(error);
-            }
-        }
-
-        let inputFileDataBase64;
-        const file = new FileReader();
-        if (compressedInputFile) {
-            file.onloadend = (fileLoadedEvent) => {
-                inputFileDataBase64 = fileLoadedEvent.target.result;
-                setUploadData({
-                    ...uploadData,
-                    file: {
-                        type: inputFileType,
-                        name: inputFileName,
-                        data: inputFileDataBase64,
-                    },
-                });
-            };
-            file.readAsDataURL(compressedInputFile);
-        }
-
-        // clear the file input event value
-        e.target.value = "";
-    };
-
     const resetState = () => {
         setUploadData({
             description: "",
@@ -202,52 +133,23 @@ function AddGarage(props) {
     const [state, setstate] = useState([])
     const [seat, setSeat] = useState(0)
     const [formData, setFormData] = useState({});
-    const [type, settype] = useState(['Giường nằm', 'Xe ghế'])
-    // const [nameGarage, d] = useState(['Phương Trang', 'Thành Bười', 'Hoàng trung'])
-    const [noidi, setNoidi] = useState(['Hà nội', 'Quảng Bình']);
-
-    useEffect(() => {
-        let id = 0;
-        let name = "A";
-        let newState = [];
-        for (var i = 1; i <= seat; i++) {
-            id++;
-            newState.push({
-                id: id,
-                name: name + i,
-                status: "empty",
-                ui: "",
-            });
-
-        }
-        setstate(newState);
-        console.log(state);
-    }, [seat])
-
     const handleChangeValue = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
-        console.log(state);
         try {
-            const docRef = await addDoc(collection(db, 'Trips'), {
-                // ...formData,
-                seat:
-                    state.map((seat) => {
-                        return {
-                            id: seat.id,
-                            name: seat.name,
-                            status: "empty",
-                            ui: ""
-                        }
-                    })
+            const docRef = await addDoc(collection(db, 'a'), {
+                ...formData,
+
             });
             console.log('Document written with ID: ', docRef.id);
         } catch (e) {
 
         }
+
+
 
     }
     //TODO: LẤY DANH SÁCH TÊN NHÀ XE HIỆN CÓ 
@@ -339,73 +241,38 @@ function AddGarage(props) {
                                                 placeholder="Hotline"
                                                 className='Garage'
                                             />
+                                           
+                                            <div className="modal__body">
+                                                <form onSubmit={handleSubmitButton}>
+                                                    <div className="modal__footer">
+                                                        <Grid container xs={10} className="modal__footer__left ">
+                                                            <p>Thêm hình ảnh minh hoạ cho nhà xe</p>
+                                                        </Grid>
+                                                        <Grid container xs={2} className="">
+
+                                                            <IconButton>
+                                                                <label htmlFor="upload-image">
+                                                                    <PhotoLibraryIcon className='modal__footer__rigth' style={{ color: 'green', textAlign: 'center' }} />
+                                                                </label>
+                                                            </IconButton>
+
+                                                        </Grid>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <Button
+                                                variant="contained"
+                                                className="modal__footer11"
+                                                color="primary"
+                                                type="submit"
+                                            >
+                                                Thêm mới nhà xe
+                                            </Button>
+                                           
                                         </fieldset>
                                     </form>
                                 </div>
-                                <div className="modal__body">
-                                    <form onSubmit={handleSubmitButton}>
-                                        {/*input save name image-video */}
-                                        <input
-                                            id="upload-image"
-                                            type="file"
-                                            accept="image/*"
-                                            hidden
-                                            onChange={(e) => imageUploadHandler(e, 'image')}
-                                        />
-                                        {uploadData.file.name && !progress && (
-                                            <div>
-                                                <Chip
-                                                    color="primary"
-                                                    size="small"
-                                                    onDelete={resetState}
-                                                    icon={
-                                                        uploadData.file.type === 'image' ? (
-                                                            <PhotoLibraryIcon />
-                                                        ) : (
-                                                            <></>
-                                                        )
-                                                    }
-                                                    label={uploadData.file.name}
-                                                />
-                                            </div>
-                                        )}
-                                        {progress ? (
-                                            <div>
-                                                <LinearProgress
-                                                    variant="determinate"
-                                                    value={progress}
-                                                />
-                                                <p>{progress} %</p>
-                                            </div>
-                                        ) : (
-                                            ''
-                                        )}
-                                        <Divider />
-                                        <div className="modal__footer">
-                                            <Grid container xs={10} className="modal__footer__left ">
-                                                <p>Thêm hình ảnh minh hoạ cho nhà xe</p>
-                                            </Grid>
-                                            <Grid container xs={2} className="">
 
-                                                <IconButton>
-                                                    <label htmlFor="upload-image">
-                                                        <PhotoLibraryIcon className='modal__footer__rigth' style={{ color: 'green' , textAlign:'center' }} />
-                                                    </label>
-                                                </IconButton>
-
-                                            </Grid>
-                                        </div>
-
-                                        <Button
-                                            variant="contained"
-                                            className="modal__footer11"
-                                            color="primary"
-                                            type="submit"
-                                        >
-                                            Thêm mới nhà xe
-                                        </Button>
-                                    </form>
-                                </div>
                             </div>
                         </Paper>
                     </Box>
