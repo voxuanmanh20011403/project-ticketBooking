@@ -1,57 +1,41 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { db } from '../../data/firebase'
-import {
-    collection,
-    query,
-    onSnapshot,
-    updateDoc,
-    doc,
-    addDoc,
-    deleteDoc,
-    getDocs,
-    collectionGroup,
-    where,
-} from "firebase/firestore";
-
-export const fetchTrips = createAsyncThunk("trips/fetchTrips", async () => {
-
-    const q = query(collection(db, "Trips")); //,where("ID_Car","==", "car01")
-    const querySnapshot = await getDocs(q);
-    const data = [];
-    querySnapshot.forEach((doc) => {
-        data.push({ ...doc.data() });
-    });
-    console.log("data Trips from firestore: " +  data);
-    return data;
-})
-
+import { createSlice ,createAsyncThunk } from "@reduxjs/toolkit";
+import thunk from 'redux-thunk';
+const initialState = {
+    stateSearch: [],
+    stateBooking: [],
+}
 const tripSlice = createSlice({
     name: "trip",
-    initialState: {
-        data: [],
-        loading: false,
-        error: null,
-    },
+    initialState,
     reducers: {
-       
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(fetchTrips.pending, (state, action) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(fetchTrips.fulfilled, (state, action) => {
-                state.loading = false;
-                state.error = null;
-                state.data = action.payload;
-            })
-            .addCase(fetchTrips.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message;
-            });
-    },
+        addSearch:(state, action) =>{
+            console.log("Test reducers addSearch");
+            state.stateSearch.push(action.payload); 
+        },
+        addBooking:(state,action) => {
+            console.log("Test reducers addbooking")
+            state.stateBooking.push(action.payload); 
+            // return {
+            //     ...state,
+            //     stateBooking: [...state.stateBooking, (action.payload)],
+            // }
+        },
+    }
 })
+export const asyncAddBooking = createAsyncThunk(
+    'trip/addBooking',
+    async (bookingData, thunkAPI) => {
+      const response = await fetch('/booking', {
+        method: 'POST',
+        body: JSON.stringify(bookingData),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = await response.json();
+      return data;
+    }
+  );
 
 // export các action trong reducers
 export const tripActions = tripSlice.actions;

@@ -131,11 +131,9 @@ const VNPayButton = ({ amount, description, returnUrl, vnp_TmnCode, vnp_HashSecr
     //     </Grid>
     //   </Grid>
     // </Container>
-    <div>
       <Button variant="contained" color="success" className='btn_checkout' onClick={handleVNPayButtonClick}>
         Thanh toán
       </Button>
-    </div>
   );
 };
 

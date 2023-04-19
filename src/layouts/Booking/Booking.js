@@ -1,21 +1,38 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTrips } from 'redux/slices/tripsSilce';
 import Trip from './Trip'
-
+import {
+  collection,
+  query,
+  onSnapshot,
+  where,
+} from "firebase/firestore";
+import { db } from "./../../data/firebase";
+import { tripActions } from 'redux/slices/tripsSilce';
 
 const Booking = () => {
+  const [data, setData] = useState([]);
   const dispatch = useDispatch();
-  // const [fetchData, setFetchData] = useState([]);
+
+  // const stateSearch = useSelector(state => state.trip.stateSearch);
+  // console.log(dispatch(tripActions.addSearch()))
+  // console.log("stateSearch: " + stateSearch);
+
   useEffect(() => {
-    dispatch(fetchTrips())
-  }, [dispatch]);
-  // nhận dữ liệu cho fetchData 
-  const fetchData = useSelector((state) => state.trip.data)
-  console.log("fetchData: " + JSON.stringify(fetchData));
+    const q = query(collection(db, "Trips")); //,where("ID_Car","==", "car01")
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let tempDB = [];
+      querySnapshot.forEach((doc) => {
+        tempDB.push({ ...doc.data() });
+      });
+      // console.log("data Trips from firestore: ", tempDB);
+      setData(tempDB);
+    });
+    return () => unsubscribe();
+  }, []);
   
   return (
-    <Trip fetchData={fetchData} />
+    <Trip fetchData={data} />
   )
 }
 

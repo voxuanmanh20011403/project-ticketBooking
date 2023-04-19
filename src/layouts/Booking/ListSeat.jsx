@@ -11,10 +11,15 @@ import { seatEmptyUI, seatChooseUI, seatNullUI } from "./UISeat";
 import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+// redux
+import { tripActions } from "redux/slices/tripsSilce";
+import { useDispatch, useSelector } from "react-redux";
+// Router
+import { useNavigate } from "react-router-dom";
 
 const ListSeat = ({ items }) => {
   let listSeat = items.seat;
-  // console.log("trước: "+ listSeat);
+  // console.log("trước: "+ JSON.stringify(listSeat));
 
   const newListSeat = listSeat.map((seat) => {
     if (seat.status === "empty") {
@@ -31,12 +36,17 @@ const ListSeat = ({ items }) => {
       return seat;
     }
   });
-  // console.log("sau: " + newListSeat);
+  console.log("sau: " + JSON.stringify(newListSeat));
 
   const [choNgoi, setChoNgoi] = useState(newListSeat);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedSeatNames, setSelectedSeatNames] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+
+  // localStorage.setItem("localDB: ", items);
+  // const localDB = localStorage.getItem(localDB);
+  // console.log("get data: " +localDB );
+
 
   const handleChoNgoi = (id, name) => {
     setSelectedSeats((prevSelectedSeats) => {
@@ -209,6 +219,9 @@ const ListSeat = ({ items }) => {
     </TableCell>
   );
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const SeatTable = ({ choNgoi }) => (
     <div className="table">
       <TableContainer
@@ -238,14 +251,40 @@ const ListSeat = ({ items }) => {
         <span>Tổng số lượng ghế: {selectedSeatNames.length}</span>
       </div>
       <div className="btn__tt">
-        <div className="total">Tổng tiền: {totalPrice} đ</div>
-        <Button variant="contained" size="small" className="btn">
+        <div className="total">Tổng tiền: {totalPrice} VND</div>
+        <Button
+          variant="contained"
+          size="small"
+          className="btn"
+          onClick={handleContinue}
+        >
           Tiếp tục
           <ArrowRightAltIcon className="icon" />
         </Button>
       </div>
     </div>
   );
+
+
+  const handleContinue = () => {
+    // console.log("data: " + JSON.stringify(items));
+
+    dispatch(
+      tripActions.addBooking({
+        NameGarage: items.NameGarage,
+        NameTrip: items.NameTrip,
+        StartTime: items.StartTime,
+        PakingStart: items.PakingStart,
+        PakingEnd: items.PakingEnd,
+        price: items.Price,
+        totalSeat: selectedSeatNames.length,
+        listSeated: selectedSeatNames,
+        totalPrice,
+      })
+    );
+
+    navigate("/payment");
+  };
   return <SeatTable choNgoi={choNgoi} />;
 };
 

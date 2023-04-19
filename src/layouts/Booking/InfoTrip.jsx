@@ -115,10 +115,10 @@ const InfoTrip = ({ items }) => {
                 <UIFT />
               </div>
               <div className="start__end">
-                <span className="noi__den">{hoursS+ ":" + minutesS }- Bến xe phía Đông</span>
+                <span className="noi__den">{hoursS+ ":" + minutesS }- {items.PakingStart}</span>
                 <span className="time"> {items.duration} </span>
                 <span className="noi__den">
-                {hours + ":" + minutes } - Bến xe Trung tâm {items.EndPoint}
+                {hours + ":" + minutes } - {items.PakingEnd}
                 </span>
               </div>
               <div className="ghe__trong">

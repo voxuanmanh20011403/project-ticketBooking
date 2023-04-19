@@ -15,10 +15,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Skeleton from "@mui/material/Skeleton";
 
-// redux
-import { useDispatch, useSelector } from "react-redux";
-import { fetchTrips } from "redux/slices/tripsSilce";
-
 import "./style.css";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -59,7 +55,7 @@ const Trip = ({ fetchData }) => {
       );
     }
   });
-  console.log("filteredData: " + filteredData);
+  // console.log("filteredData: " + filteredData);
   return (
     <React.Fragment>
       <CssBaseline />
