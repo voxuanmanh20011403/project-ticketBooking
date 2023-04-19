@@ -28,6 +28,7 @@ import UserTable from "./layouts/AddUser/ShowUsers";
 import TestAddCar from "./layouts/TestAddCar";
 import Garage from "./layouts/Garage/Garage";
 import Tables from "./layouts/tables";
+import ListCar from "./layouts/ListCar/ListCar";
 
 
 export default function Admin() {
@@ -129,7 +130,7 @@ export default function Admin() {
     setSelectedValue(value);
   };
   const renderComponent = () => {
-    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <UserTable /> : <Garage />);
+    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <UserTable /> : (selectedValue === 3 ? <Garage /> : <ListCar/>));
   };
   return (
     <>
