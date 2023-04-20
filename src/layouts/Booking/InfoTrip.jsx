@@ -50,7 +50,8 @@ const UIFT = () => {
 const InfoTrip = ({ items }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showListSeat, setShowListSeat] = useState(false);
-
+  
+  
   const timeStart = items.StartTime;
   const dateS = new Date(timeStart.seconds * 1000);
   const dayS = dateS.getDate();

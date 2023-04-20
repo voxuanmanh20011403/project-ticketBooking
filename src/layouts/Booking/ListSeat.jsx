@@ -18,8 +18,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const ListSeat = ({ items }) => {
+  console.log("data: " + JSON.stringify(items.id))
+
   let listSeat = items.seat;
-  // console.log("trước: "+ JSON.stringify(listSeat));
 
   const newListSeat = listSeat.map((seat) => {
     if (seat.status === "empty") {
@@ -36,7 +37,6 @@ const ListSeat = ({ items }) => {
       return seat;
     }
   });
-  console.log("sau: " + JSON.stringify(newListSeat));
 
   const [choNgoi, setChoNgoi] = useState(newListSeat);
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -271,6 +271,8 @@ const ListSeat = ({ items }) => {
 
     dispatch(
       tripActions.addBooking({
+        id: items.id,
+        IdTrip: items.ID_Trip,
         NameGarage: items.NameGarage,
         NameTrip: items.NameTrip,
         StartTime: items.StartTime,

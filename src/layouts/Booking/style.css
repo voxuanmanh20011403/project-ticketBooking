@@ -1,6 +1,7 @@
 .seat{
     display: flex;
     align-items: center;
+    margin-top: 12rem !important;
 }
 
 .seat .note__name{

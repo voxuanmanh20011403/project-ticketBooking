@@ -9,7 +9,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 
 import { db } from "data/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, where, getDocs, query, getDoc, updateDoc,doc } from "firebase/firestore";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -61,6 +61,7 @@ function Return() {
       async function addDB() {
         try {
           const docRef = await addDoc(collection(db, 'Checkout'), {
+            IdTrip: getLocalUserDB.dataBooking[0].IdTrip,
             FullName: getLocalUserDB.data.firstName + ' ' + getLocalUserDB.data.lastName,
             NumberPhone: getLocalUserDB.data.phoneNumber,
             Email: getLocalUserDB.data.phoneNumber,
@@ -80,20 +81,49 @@ function Return() {
       }
       addDB();
       setRemoveLocal(true);
-      // localStorage.removeItem('getLocalUserDB');
     } else {
       console.log("error")
     }
   }, [vnpResponseCode]);
 
-  if(removeLocal === true) {
-    setTimeout(() => {
-       localStorage.removeItem('getLocalUserDB');
-    }, 60000);
+
+
+  if (removeLocal === true) {
+    const listSeated = getLocalUserDB.dataBooking[0].listSeated;
+    const id = getLocalUserDB.dataBooking[0].id;
+
+    const tripRef = doc(collection(db, "Trips"), id);
+
+    const updateTrip = async () => {
+      try {
+        const docSnap = await getDoc(tripRef);
+        const data = docSnap.data();
+        const updatedSeat = data.seat.map(s => {
+          if (listSeated.includes(s.name)) {
+            return { ...s, status: "book" };
+          }
+          return s;
+        });
+        await updateDoc(tripRef, { seat: updatedSeat });
+        console.log("Seats updated successfully!");
+      } catch (e) {
+        console.error("Error updating seats: ", e);
+      }
+    };
+    updateTrip();
   }
-  window.addEventListener('beforeunload', function(e) {
-    localStorage.clear();
-  });
+
+
+
+  // if (removeLocal === true) {
+  //   setTimeout(() => {
+  //     localStorage.removeItem('getLocalUserDB');
+  //   }, 60000);
+  // }
+
+  // window.addEventListener('beforeunload', function (e) {
+  //   localStorage.clear();
+  // });
 
   // console.log("returnUrl: " + returnUrl);
 
@@ -108,18 +138,18 @@ function Return() {
           </Grid>
           <Grid item xs={4}>
             <Item>
-                <div className='return__card'>
-                  <h2>THANH TOÁN THÀNH CÔNG <CheckCircleOutlineIcon color="success" /></h2>
-                  <br></br>
-                  <h4 >Mã giao dịch <span>{returnUrl[2]}</span></h4>
-                  <h4>Ngân hàng thanh toán<span>{returnUrl[1]}</span></h4>
-                  <h4>
-                    Thanh toán với<span>{returnUrl[3]}</span>
-                  </h4>
-                  <h4>Thời gian thanh toán<span> {returnUrl[4]}</span></h4>
-                  <h4>Tổng tiền thanh toán<span>{returnUrl[0]} VNĐ</span></h4>
-                </div>
-             
+              <div className='return__card'>
+                <h2>THANH TOÁN THÀNH CÔNG <CheckCircleOutlineIcon color="success" /></h2>
+                <br></br>
+                <h4 >Mã giao dịch <span>{returnUrl[2]}</span></h4>
+                <h4>Ngân hàng thanh toán<span>{returnUrl[1]}</span></h4>
+                <h4>
+                  Thanh toán với<span>{returnUrl[3]}</span>
+                </h4>
+                <h4>Thời gian thanh toán<span> {returnUrl[4]}</span></h4>
+                <h4>Tổng tiền thanh toán<span>{returnUrl[0]} VNĐ</span></h4>
+              </div>
+
             </Item>
           </Grid>
           <Grid item xs={4}>

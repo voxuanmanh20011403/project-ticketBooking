@@ -23,7 +23,7 @@ const Booking = () => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       let tempDB = [];
       querySnapshot.forEach((doc) => {
-        tempDB.push({ ...doc.data() });
+        tempDB.push({ ...doc.data() , id: doc.id});
       });
       // console.log("data Trips from firestore: ", tempDB);
       setData(tempDB);
