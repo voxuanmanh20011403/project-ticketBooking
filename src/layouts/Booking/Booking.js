@@ -1,14 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import Trip from './Trip'
-import {
-  collection,
-  query,
-  onSnapshot,
-  where,
-} from "firebase/firestore";
-import { db } from "./../../data/firebase";
-import { tripActions } from 'redux/slices/tripsSilce';
 import Header from 'layouts/Header/Header';
 import Footer from 'layouts/Footer/Footer';
 
