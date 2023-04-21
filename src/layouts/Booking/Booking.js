@@ -9,6 +9,8 @@ import {
 } from "firebase/firestore";
 import { db } from "./../../data/firebase";
 import { tripActions } from 'redux/slices/tripsSilce';
+import Header from 'layouts/Header/Header';
+import Footer from 'layouts/Footer/Footer';
 
 const Booking = () => {
   const [data, setData] = useState([]);
@@ -32,7 +34,11 @@ const Booking = () => {
   }, []);
   
   return (
-    <Trip fetchData={data} />
+    <>
+    <Header />
+    <Trip fetchData={fetchData} />
+    <Footer />
+    </>
   )
 }
 
