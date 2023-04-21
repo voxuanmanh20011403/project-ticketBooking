@@ -28,11 +28,13 @@ import Home from "layouts/Home/Home";
 import Payment from "layouts/Payment/Payment";
 import Return from "./layouts/Payment/Return"
 
+
 export default function App() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   return (
-    <ThemeProvider theme={darkMode ? themeDark : theme}>
+    
+  <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
         <Route path="/" element={<Home/>}></Route>
         <Route path="/admin" element={<Admin />} />

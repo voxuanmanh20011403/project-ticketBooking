@@ -27,7 +27,7 @@ const Carousel = () => {
           className="glider-container"
           draggable
           hasDots
-          slidesToShow={1}
+          slidesToShow={2}
           scrollLock
           hasArrows
           arrows={{

@@ -4,6 +4,7 @@ import Trip from './Trip'
 import Header from 'layouts/Header/Header';
 import Footer from 'layouts/Footer/Footer';
 
+
 const Booking = () => {
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
