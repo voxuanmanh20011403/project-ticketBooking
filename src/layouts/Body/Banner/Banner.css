@@ -1,9 +1,42 @@
-.form__title{
+
+.banner__img{
+    background: url(../../../assets/img/banner.png);
+    width: 855;
+    height: 260px;
     display: flex;
-    background-image: url(../../../assets/img/Banner.jpg);
-    width: 1200px;
-    height: 100%;
-    /* vertical-align: middle; */
-    vertical-align: middle;
-    border-style: none;
+    flex-wrap: wrap;
+    gap:1.5rem;
+    min-height: 80vh;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+}
+.banner__img .banner_form{
+    text-align: center ;
+    color: white;
+    /* border-radius: 25px; */
+
+}
+.wrap__form{
+    font-family: Arial, Helvetica, sans-serif;
+    /* background: white; */
+    color: #2474e5;
+    width: 1050px;
+    margin-left: 80px;
+    margin-right: 80px;
+    font-size: 25px;
+    float: left;
+}
+.form__title{
+    /* flex:1 1 40rem; */
+    display: flex;
+    justify-content: center;
+     width: 1050px; 
+    /* height: 100%; */
+    /* background: white; */
+    /* border: 2px solid red; */
+   
+}
+.btn{
+    color: white;
 }
