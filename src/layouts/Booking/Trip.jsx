@@ -14,7 +14,14 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Skeleton from "@mui/material/Skeleton";
-
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+// redux
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTrips } from "redux/slices/tripsSilce";
 import "./style.css";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -56,6 +63,25 @@ const Trip = ({ fetchData }) => {
     }
   });
   // console.log("filteredData: " + filteredData);
+  console.log("filteredData: " + JSON.stringify(filteredData));
+
+  const breadcrumbs = [
+    <Link underline="hover" key="1" color="inherit" onClick={handleClick}>
+      Home
+    </Link>,
+    <Link underline="hover" key="2" color="inherit" onClick={handleClick}>
+      Tìm vé
+    </Link>,
+    <Typography key="3" color="text.primary">
+      Tên chuyến đi !!!!
+    </Typography>,
+  ];
+  // CircularProgress for {fetchData.length}
+  const [showNumber, setShowNumber] = useState(false);
+
+  setTimeout(() => {
+    setShowNumber(true);
+  }, 4000);
   return (
     <React.Fragment>
       <CssBaseline />
