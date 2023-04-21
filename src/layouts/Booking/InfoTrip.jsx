@@ -86,7 +86,7 @@ const InfoTrip = ({ items }) => {
     setShowListSeat(!showListSeat);
   };
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }} className="listtrip">
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Item>

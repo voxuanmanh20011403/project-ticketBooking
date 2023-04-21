@@ -208,7 +208,7 @@ const ListSeat = ({ items }) => {
       ))}
     </TableCell>
   );
-
+  
   const SeatTable = ({ choNgoi }) => (
     <div className="table">
       <TableContainer
@@ -230,7 +230,7 @@ const ListSeat = ({ items }) => {
         </Table>
       </TableContainer>
       <div>
-        <span>Danh sách ghế đang đặt:</span>
+        <span>Ghế đang đặt:</span>
         {selectedSeatNames.map((name) => (
           <span key={name}>{name} </span>
         ))}
@@ -246,6 +246,7 @@ const ListSeat = ({ items }) => {
       </div>
     </div>
   );
+  
   return <SeatTable choNgoi={choNgoi} />;
 };
 
