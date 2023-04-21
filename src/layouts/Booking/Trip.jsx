@@ -21,7 +21,6 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTrips } from "redux/slices/tripsSilce";
-
 import "./style.css";
 
 const Item = styled(Paper)(({ theme }) => ({

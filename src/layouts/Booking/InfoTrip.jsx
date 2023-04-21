@@ -50,7 +50,8 @@ const UIFT = () => {
 const InfoTrip = ({ items }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showListSeat, setShowListSeat] = useState(false);
-
+  
+  
   const timeStart = items.StartTime;
   const dateS = new Date(timeStart.seconds * 1000);
   const dayS = dateS.getDate();
@@ -107,7 +108,7 @@ const InfoTrip = ({ items }) => {
                   4.2(42)
                 </span>
               </span>
-              <span className="cost">{items.Price}/ghế</span>
+              <span className="cost">{items.Price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/ghế</span>
             </div>
             <div className="type">{items.TypeVehicle}</div>
             <div className="lich__trinh">
@@ -115,10 +116,10 @@ const InfoTrip = ({ items }) => {
                 <UIFT />
               </div>
               <div className="start__end">
-                <span className="noi__den">{hoursS+ ":" + minutesS }- Bến xe phía Đông</span>
+                <span className="noi__den">{hoursS+ ":" + minutesS }- {items.PakingStart}</span>
                 <span className="time"> {items.duration} </span>
                 <span className="noi__den">
-                {hours + ":" + minutes } - Bến xe Trung tâm {items.EndPoint}
+                {hours + ":" + minutes } - {items.PakingEnd}
                 </span>
               </div>
               <div className="ghe__trong">

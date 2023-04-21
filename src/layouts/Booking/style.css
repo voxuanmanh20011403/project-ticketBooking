@@ -17,6 +17,7 @@
     stroke: rgb(2, 97, 42);
     fill: transparent;
 }
+
 /* Ghế k bán */
 .seat__note_null svg .rect__seat_null {
     cursor: not-allowed;
