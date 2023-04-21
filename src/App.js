@@ -26,11 +26,13 @@ import Booking from "layouts/Booking/Booking";
 import Footer from "layouts/Footer/Footer";
 import Home from "layouts/Home/Home";
 
+
 export default function App() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   return (
-    <ThemeProvider theme={darkMode ? themeDark : theme}>
+    
+  <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
         <Route path="/" element={<Home/>}></Route>
         <Route path="/admin" element={<Admin />} />
