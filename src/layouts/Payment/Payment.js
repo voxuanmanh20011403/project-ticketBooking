@@ -76,11 +76,11 @@ const Payment = () => {
       .matches(phoneRegExp, 'Phone number is not valid')
       .required('NumberPhone is required'),
   });
-  const { register, handleSubmit, formState: { errors }, }
+  const { register, handleSubmit }
     = useForm(
-      {
-        resolver: yupResolver(validationSchema),
-      }
+      // {
+      //   resolver: yupResolver(validationSchema),
+      // }
     );
 
 
@@ -88,8 +88,6 @@ const Payment = () => {
     console.log(data);
     try {
       await dispatch(asyncAddBooking([...dataBooking, data]));
-
-      // console.log("dataBooking lại: " + JSON.stringify(localData));
 
       localStorage.setItem("getLocalUserDB", JSON.stringify({ data, dataBooking }));
       const getLocalUserDB = localStorage.getItem('getLocalUserDB');
@@ -132,34 +130,44 @@ const Payment = () => {
                         name="firstname"
                         label="Họ đệm"
                         fullWidth
+                        required
                         margin="normal"
-                        {...register('firstName', { required: true })}
-                        error={errors.firstName ? true : false}
+                        {...register('firstName')}
+                        // error={errors.firstName ? true : false}
                         InputProps={{ startAdornment: <TextFieldsIcon fontSize="medium" /> }}
                         onChange={(e) => {
                           setFirstName(e.target.value);
                         }}
                       />
-                      <Typography variant="inherit" color="red">
+                      {/* 
+                         <Typography variant="inherit" color="red">
                         {errors.firstname?.message}
-                      </Typography>
+                      </Typography> 
+                      */}
+                    
+                      
                       <TextField
                         label="Tên"
+                        required
                         id="lastname"
                         name="lastname"
                         fullWidth
                         margin="normal"
-                        {...register('lastName', { required: true })}
-                        error={errors.lastname ? true : false}
+                        {...register('lastName')}
+                        // error={errors.lastname ? true : false}
                         InputProps={{ startAdornment: <BorderColorIcon fontSize="medium" /> }}
                         onChange={(e) => {
                           setLastName(e.target.value);
                         }}
                       />
-                      <Typography variant="inherit" color="red">
+                      {/* 
+                         <Typography variant="inherit" color="red">
                         {errors.lastname?.message}
                       </Typography>
+                      */}
+                   
                       <TextField
+                      required
                         id="phone"
                         name="phone"
                         type="tel"
@@ -167,32 +175,33 @@ const Payment = () => {
                         fullWidth
                         margin="normal"
                         inputProps={{ pattern: "[0-9]{3}-[0-9]{3}-[0-9]{4}" }}
-                        {...register('phoneNumber', { required: true })}
+                        {...register('phoneNumber')}
                         InputProps={{ startAdornment: <ContactPhoneIcon fontSize="medium" /> }}
-                        error={errors.numberphone ? true : false}
+                        // error={errors.numberphone ? true : false}
                         onChange={(e) => {
                           setNumberPhone(e.target.value);
                         }}
                       />
-                      <Typography variant="inherit" color="red">
+                      {/* <Typography variant="inherit" color="red">
                         {errors.numberphone?.message}
-                      </Typography>
+                      </Typography> */}
                       <TextField
+                      required
                         id="email"
                         name="email"
                         label="Email"
                         fullWidth
                         margin="normal"
                         InputProps={{ startAdornment: <LocalPostOfficeIcon fontSize="medium" /> }}
-                        {...register('email', { required: true })}
-                        error={errors.email ? true : false}
+                        {...register('email')}
+                        // error={errors.email ? true : false}
                         onChange={(e) => {
                           setEmal(e.target.value);
                         }}
                       />
-                      <Typography variant="inherit" color="red">
+                      {/* <Typography variant="inherit" color="red">
                         {errors.email?.message}
-                      </Typography>
+                      </Typography> */}
                       <Button variant="contained" color="success" onClick={handleSubmit(onSubmit)}>
                         Lưu
                       </Button>
