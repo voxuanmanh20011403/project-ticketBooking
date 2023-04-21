@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Trip from './Trip'
 import Header from 'layouts/Header/Header';
 import Footer from 'layouts/Footer/Footer';
-
+import {
+  collection,
+  query,
+  onSnapshot,
+  where,
+} from "firebase/firestore";
+import { db } from "./../../data/firebase";
 
 const Booking = () => {
   const [data, setData] = useState([]);
@@ -29,7 +35,7 @@ const Booking = () => {
   return (
     <>
     <Header />
-    <Trip fetchData={fetchData} />
+    <Trip fetchData={data} />
     <Footer />
     </>
   )

@@ -152,6 +152,33 @@ const ListSeat = ({ items }) => {
       ))}
     </TableCell>
   );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleContinue = () => {
+    console.log("data: " + JSON.stringify(items));
+
+    if (totalPrice === 0) {
+      console.log("1232121");
+    } else {
+      dispatch(
+        tripActions.addBooking({
+          id: items.id,
+          IdTrip: items.ID_Trip,
+          NameGarage: items.NameGarage,
+          NameTrip: items.NameTrip,
+          StartTime: items.StartTime,
+          PakingStart: items.PakingStart,
+          PakingEnd: items.PakingEnd,
+          price: items.Price,
+          totalSeat: selectedSeatNames.length,
+          listSeated: selectedSeatNames,
+          totalPrice,
+        })
+      );
+        navigate("/payment");
+    }
+  };
 
   const SeatTable = ({ choNgoi }) => (
     <div className="table">
@@ -174,10 +201,13 @@ const ListSeat = ({ items }) => {
         </Table>
       </TableContainer>
       <div>
-        <span>Ghế đang đặt:</span>
-        {selectedSeatNames.map((name) => (
-          <span key={name}>{name} </span>
-          ))}
+      <span>Danh sách ghế đang chọn: </span>
+        {selectedSeatNames.map((name, index) => (
+          <span key={index}>
+            {name}
+            {index !== selectedSeatNames.length - 1 && ", "}
+           </span>
+        ))}
         <br />
         <span>Tổng số lượng ghế: {selectedSeatNames.length}</span>
       </div>
