@@ -108,7 +108,7 @@ const InfoTrip = ({ items }) => {
                   4.2(42)
                 </span>
               </span>
-              <span className="cost">{items.Price}/ghế</span>
+              <span className="cost">{items.Price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/ghế</span>
             </div>
             <div className="type">{items.TypeVehicle}</div>
             <div className="lich__trinh">

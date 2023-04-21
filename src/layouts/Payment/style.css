@@ -60,3 +60,14 @@
     padding-left: 20px;
     transform: translateX(235px);
 }
+/* payment progress */
+.container__payment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+.container__payment .progress {
+    margin: 0 auto;
+}

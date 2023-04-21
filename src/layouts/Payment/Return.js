@@ -56,8 +56,8 @@ function Return() {
 
   useEffect(() => {
     setReturnUrl([amount, bankCode, bankTranNo, cardType, formattedDateString, vnpResponseCode]);
+    // create collection checkout 
     if (vnpResponseCode === '00') {
-
       async function addDB() {
         try {
           const docRef = await addDoc(collection(db, 'Checkout'), {
@@ -87,7 +87,7 @@ function Return() {
   }, [vnpResponseCode]);
 
 
-
+  // update data trips after checkout success
   if (removeLocal === true) {
     const listSeated = getLocalUserDB.dataBooking[0].listSeated;
     const id = getLocalUserDB.dataBooking[0].id;
@@ -115,15 +115,15 @@ function Return() {
 
 
 
-  // if (removeLocal === true) {
-  //   setTimeout(() => {
-  //     localStorage.removeItem('getLocalUserDB');
-  //   }, 60000);
-  // }
+  if (removeLocal === true) {
+    setTimeout(() => {
+      localStorage.removeItem('getLocalUserDB');
+    }, 60000);
+  }
 
-  // window.addEventListener('beforeunload', function (e) {
-  //   localStorage.clear();
-  // });
+  window.addEventListener('beforeunload', function (e) {
+    localStorage.clear();
+  });
 
   // console.log("returnUrl: " + returnUrl);
 
