@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,121 +12,46 @@ import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
-const dataTrips = [
-  {
-    id_xe: "xept",
-    ten_xe: "Phương Trang",
-    hinh_anh: "",
-    gia_ve: "300 000đ",
-    noi_xp: "Hà Nội",
-    noi_den: "Đà Nẵng",
-    h_xp: "7:00 24/03/2023",
-    h_den: "10:00 25/03/2023",
-    h_di: "27h",
-    so_ghe: 5,
-    cho_ngoi: [
-      {
-        id_cn: "01",
-        ten_ghe: "A1",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-      {
-        id_cn: "02",
-        ten_ghe: "A2",
-        trang_thai: "đã đặt",
-        nguoi_dat: "Tân",
-        ui: seatNullUI(),
-      },
-      {
-        id_cn: "03",
-        ten_ghe: "B1",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-      {
-        id_cn: "04",
-        ten_ghe: "B2",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-      {
-        id_cn: "05",
-        ten_ghe: "B3",
-        trang_thai: "đã đặt",
-        nguoi_dat: "Dũng",
-        ui: seatNullUI(),
-      },
-      {
-        id_cn: "06",
-        ten_ghe: "A1",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-      {
-        id_cn: "07",
-        ten_ghe: "A1",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-      {
-        id_cn: "12",
-        ten_ghe: "A1",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-      {
-        id_cn: "08",
-        ten_ghe: "A1",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-      {
-        id_cn: "09",
-        ten_ghe: "A1",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-      {
-        id_cn: "10",
-        ten_ghe: "A1",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-      {
-        id_cn: "11",
-        ten_ghe: "A1",
-        trang_thai: "trống",
-        nguoi_dat: "",
-        ui: seatEmptyUI(),
-      },
-    ],
-  },
-];
+// redux
+import { tripActions } from "redux/slices/tripsSilce";
+import { useDispatch, useSelector } from "react-redux";
+// Router
+import { useNavigate } from "react-router-dom";
 
-const ListSeat = () => {
-  const [choNgoi, setChoNgoi] = useState(dataTrips[0].cho_ngoi);
+const ListSeat = ({ items }) => {
+  console.log("data: " + JSON.stringify(items.id));
 
+  let listSeat = items.seat;
+
+  const newListSeat = listSeat.map((seat) => {
+    if (seat.status === "empty") {
+      return {
+        ...seat,
+        ui: seatEmptyUI(),
+      };
+    } else if (seat.status === "book") {
+      return {
+        ...seat,
+        ui: seatNullUI(),
+      };
+    } else {
+      return seat;
+    }
+  });
+
+  const [choNgoi, setChoNgoi] = useState(newListSeat);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [selectedSeatNames, setSelectedSeatNames] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const handleChoNgoi = (id_cn, ten_ghe) => {
+  const handleChoNgoi = (id, name) => {
     setSelectedSeats((prevSelectedSeats) => {
-      if (prevSelectedSeats.includes(id_cn)) {
-        setTotalPrice(totalPrice - parseFloat(dataTrips[0].gia_ve));
-        return prevSelectedSeats.filter((seatId) => seatId !== id_cn);
+      if (prevSelectedSeats.includes(id)) {
+        setTotalPrice(totalPrice - parseFloat(items.Price));
+        return prevSelectedSeats.filter((seatid) => seatid !== id);
       } else {
-        setTotalPrice(totalPrice + parseFloat(dataTrips[0].gia_ve));
-        return [...prevSelectedSeats, id_cn];
+        setTotalPrice(totalPrice + parseFloat(items.Price));
+        return [...prevSelectedSeats, id];
       }
     });
 
@@ -134,17 +59,17 @@ const ListSeat = () => {
     // console.log(
     //   "Trạng thái ban đầu: " +
     //     "Trạng thái - " +
-    //     JSON.stringify(newChoNgoi[0].trang_thai) +
+    //     JSON.stringify(newChoNgoi[0].status) +
     //     "Người đặt - " +
     //     JSON.stringify(newChoNgoi[0].nguoi_dat)
     // );
 
     const updatedChoNgoi = newChoNgoi.map((item) => {
-      if (item.id_cn === id_cn) {
+      if (item.id === id) {
         return {
           ...item,
-          trang_thai: item.trang_thai === "trống" ? "đã đặt" : "trống",
-          nguoi_dat: item.trang_thai === "trống" ? "username" : "",
+          status: item.status === "empty" ? "book" : "empty",
+          // nguoi_dat: item.status === "empty" ? "username" : "",
         };
       } else {
         return item;
@@ -153,55 +78,116 @@ const ListSeat = () => {
     // console.log(
     //   "Trạng thái sau khi click: " +
     //     "Trạng thái - " +
-    //     JSON.stringify(updatedChoNgoi[0].trang_thai) +
+    //     JSON.stringify(updatedChoNgoi[0].status) +
     //     "Người đặt - " +
     //     JSON.stringify(updatedChoNgoi[0].nguoi_dat)
     // );
     setChoNgoi(updatedChoNgoi);
   };
+
+  useEffect(() => {
+    const names = choNgoi
+      .filter((seat) => selectedSeats.includes(seat.id))
+      .map((seat) => seat.name);
+    setSelectedSeatNames(names);
+  }, [selectedSeats, choNgoi]);
+
   const renderSeatColumns = (choNgoi) => {
-    const numSeats = choNgoi.length;
-    const numCols = 4; // số cột muốn hiển thị
-    const seatsPerCol = Math.ceil(numSeats / numCols);
     const seatCols = [];
+    if (choNgoi.length === 20) {
+      const numSeats = choNgoi.length;
+      const numCols = 4; // số cột muốn hiển thị
+      const seatsPerCol = Math.ceil(numSeats / numCols);
 
-    for (let i = 0; i < numCols; i++) {
-      const colStart = i * seatsPerCol;
-      const colEnd = colStart + seatsPerCol;
-      const seatCol = choNgoi.slice(colStart, colEnd);
-      seatCols.push(seatCol);
+      for (let i = 0; i < numCols; i++) {
+        const colStart = i * seatsPerCol;
+        const colEnd = colStart + seatsPerCol;
+        const seatCol = choNgoi.slice(colStart, colEnd);
+        seatCols.push(seatCol);
+      }
+    } else if (choNgoi.length === 34) {
+      const numSeats = choNgoi.length;
+      const numCols = 6; // số cột muốn hiển thị
+      const seatsPerCol = Math.ceil(numSeats / numCols);
+
+      for (let i = 0; i < numCols; i++) {
+        const colStart = i * seatsPerCol;
+        const colEnd = colStart + seatsPerCol;
+        const seatCol = choNgoi.slice(colStart, colEnd);
+        seatCols.push(seatCol);
+      }
+    } else {
+      const numSeats = choNgoi.length;
+      const numCols = 10;
+      const seatsPerCol = [6, 1, 6, 1, 6, 6, 1, 6, 1, 6];
+
+      let currentIndex = 0;
+
+      for (let i = 0; i < numCols; i++) {
+        const numSeatsInCol = seatsPerCol[i];
+        const seatCol = choNgoi.slice(
+          currentIndex,
+          currentIndex + numSeatsInCol
+        );
+        seatCols.push(seatCol);
+        currentIndex += numSeatsInCol;
+      }
     }
-
     return seatCols.map((col, colIndex) => (
       <TableColumn key={colIndex} seats={col} />
     ));
   };
   const TableColumn = ({ seats }) => (
-    <TableCell>
+    <TableCell size="small">
       {seats.map((seat) => (
         <div
-          key={seat.id_cn}
-          onClick={() => handleChoNgoi(seat.id_cn, seat.ten_ghe)}
-          className={
-            selectedSeats.includes(seat.id_cn) ? "seat__note_choose" : ""
-          }
+          key={seat.id}
+          onClick={() => handleChoNgoi(seat.id, seat.name)}
+          className={selectedSeats.includes(seat.id) ? "seat__note_choose" : ""}
         >
-          <Tooltip title={seat.ten_ghe} placement="top">
+          <Tooltip title={seat.name} placement="top">
             {seat.ui}
           </Tooltip>
         </div>
       ))}
     </TableCell>
   );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleContinue = () => {
+    console.log("data: " + JSON.stringify(items));
+
+    if (totalPrice === 0) {
+      console.log("1232121");
+    } else {
+      dispatch(
+        tripActions.addBooking({
+          id: items.id,
+          IdTrip: items.ID_Trip,
+          NameGarage: items.NameGarage,
+          NameTrip: items.NameTrip,
+          StartTime: items.StartTime,
+          PakingStart: items.PakingStart,
+          PakingEnd: items.PakingEnd,
+          price: items.Price,
+          totalSeat: selectedSeatNames.length,
+          listSeated: selectedSeatNames,
+          totalPrice,
+        })
+      );
+        navigate("/payment");
+    }
+  };
 
   const SeatTable = ({ choNgoi }) => (
-    <div>
+    <div className="table">
       <TableContainer
         component={Paper}
-        size="small"
-        sx={{ width: "100px", height: "auto", minWidth: 300 }}
+        size="large"
+        sx={{ width: "300 ", height: "auto", minWidth: 400 }}
       >
-        <Table sx={{ minWidth: 100 }} aria-label="simple table">
+        <Table sx={{ minWidth: 300 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="center">
@@ -214,11 +200,27 @@ const ListSeat = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <div>
+      <span>Danh sách ghế đang chọn: </span>
+        {selectedSeatNames.map((name, index) => (
+          <span key={index}>
+            {name}
+            {index !== selectedSeatNames.length - 1 && ", "}
+           </span>
+        ))}
+        <br />
+        <span>Tổng số lượng ghế: {selectedSeatNames.length}</span>
+      </div>
       <div className="btn__tt">
-        <div>Tổng tiền: {totalPrice} đ</div>
-        <Button variant="contained" size="small">
+        <div className="total">Tổng tiền: {totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</div>
+        <Button
+          variant="contained"
+          size="small"
+          className="btn"
+          onClick={handleContinue}
+        >
           Tiếp tục
-          <ArrowRightAltIcon />
+          <ArrowRightAltIcon className="icon" />
         </Button>
       </div>
     </div>

@@ -6,9 +6,9 @@ import Grid from "@mui/material/Grid";
 import StarIcon from "@mui/icons-material/Star";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
-import TabsUI from "./TabsUI";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import TabsUI from "./TabsUI";
 import ChooseSeat from "./ChooseSeat";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -47,10 +47,39 @@ const UIFT = () => {
   );
 };
 
-const InfoTrip = () => {
+const InfoTrip = ({ items }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showListSeat, setShowListSeat] = useState(false);
+  
+  
+  const timeStart = items.StartTime;
+  const dateS = new Date(timeStart.seconds * 1000);
+  const dayS = dateS.getDate();
+  const monthS = dateS.getMonth() + 1;
+  const yearS = dateS.getFullYear();
+  const hoursS = dateS.getHours();
+  const minutesS = dateS.getMinutes();
+  
 
+  const endTime = items.EndTime;
+  const date = new Date(endTime.seconds * 1000);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+ 
+  const seatEmpty = () => {
+    let countSeat = 0;
+    const listSeat = items.seat;
+    listSeat.forEach((item) =>{
+      if(item.status === "empty"){
+        countSeat++;
+      }
+    })
+   return countSeat;
+  }
   const handleStateDetails = () => {
     setShowDetails(!showDetails);
   };
@@ -58,7 +87,7 @@ const InfoTrip = () => {
     setShowListSeat(!showListSeat);
   };
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }} className="listtrip">
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Item>
@@ -73,28 +102,28 @@ const InfoTrip = () => {
           <Item>
             <div className="v__info">
               <span className="ten__xe">
-                Phương Trang
+                {items.NameGarage}
                 <span className="star">
                   <StarIcon sx={{ fontSize: 15 }} />
                   4.2(42)
                 </span>
               </span>
-              <span className="cost">200.000đ/ghế</span>
+              <span className="cost">{items.Price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/ghế</span>
             </div>
-            <div className="type">Limousine VIP </div>
+            <div className="type">{items.TypeVehicle}</div>
             <div className="lich__trinh">
               <div>
                 <UIFT />
               </div>
               <div className="start__end">
-                <span className="noi__den">7:00 - Bến xe phía Đông</span>
-                <span className="time"> 300km - 2h</span>
+                <span className="noi__den">{hoursS+ ":" + minutesS }- {items.PakingStart}</span>
+                <span className="time"> {items.duration} </span>
                 <span className="noi__den">
-                  12:00 - Bến xe Trung tâm Đà Nẵng
+                {hours + ":" + minutes } - {items.PakingEnd}
                 </span>
               </div>
               <div className="ghe__trong">
-                <h6>Còn 12 ghế trống</h6>
+                <h4>{seatEmpty()} ghế trống</h4>
               </div>
               <div className="tabs">
                 <Link
@@ -108,8 +137,9 @@ const InfoTrip = () => {
                 {/*  */}
                 <Button
                   variant="contained"
-                  color="warning"
+                  color="success"
                   size="small"
+                  className="tab__btn"
                   onClick={handleShowListSeat}
                 >
                   Chọn vị trí
@@ -119,8 +149,8 @@ const InfoTrip = () => {
           </Item>
         </Grid>
         <Grid item xs={12} className="info__main popup">
-          <Item>{showDetails && <TabsUI />}</Item>
-          <Item>{showListSeat && <ChooseSeat />}</Item>
+          <Item>{showDetails && <TabsUI items={items} />}</Item>
+          <Item>{showListSeat && <ChooseSeat items={items} />}</Item>
         </Grid>
       </Grid>
     </Box>

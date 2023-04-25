@@ -27,21 +27,31 @@ import TestAddCar from "Admin/layouts/TestAddCar";
 import Garage from "Admin/layouts/Garage/Garage";
 import AddUser from "Admin/layouts/AddUser/AddUser/AddUser";
 
+import Footer from "layouts/Footer/Footer";
+import Home from "layouts/Home/Home";
+import Payment from "layouts/Payment/Payment";
+import Return from "./layouts/Payment/Return"
+
 
 export default function App() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   return (
-    <ThemeProvider theme={darkMode ? themeDark : theme}>
+    
+  <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
+        <Route path="/" element={<Home/>}></Route>
         <Route path="/admin" element={<Admin />} />
-        <Route path="/" element={<SignIn />} />
+        <Route path="/SignIN" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="/booking" element={<Booking />}></Route>
+        <Route path="/payment" element={<Payment />}></Route>
+        <Route path="/return" element={<Return />}></Route>
         <Route path="*" element={<NotFoundPage />} />
         <Route path="TestAddCar" element={<TestAddCar/>} />
         <Route path="addusser" element={<AddUser/>} />
       
+
       </Routes>
     </ThemeProvider>
   );
