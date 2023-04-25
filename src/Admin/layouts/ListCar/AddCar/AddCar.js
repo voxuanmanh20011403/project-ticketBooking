@@ -39,8 +39,26 @@ import {
   getDocs,
   onSnapshot,
 } from "firebase/firestore";
+import { format } from "date-fns/esm";
+
 
 function AddCar(props) {
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+//   const handleStartDateChange = (date) => {
+   
+//     const month = date.getMonth() + 1; // tháng bắt đầu từ 0, nên phải cộng thêm 1
+//     const year = date.getFullYear();
+//     // console.log(`${day}-${month}-${year}`);
+//     setStartDate(`${month}-${year}`);
+//   };
+// console.log('startDate',startDate);
+//   const handleEndDateChange = (date) => {
+//     const formattedDate = format(date, 'dd/MM/yyyy');
+    
+//     setEndDate(formattedDate);
+//   };
+
   const { activeButton, setActiveButton } = props;
   //set show/hide form
   const [open, setOpen] = React.useState(true);
@@ -151,19 +169,17 @@ function AddCar(props) {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    try {
-      const docRef = await addDoc(collection(db, "a"), {
-        ...formData,
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {}
+    console.log('formData', formData);
+    // try {
+    //   const docRef = await addDoc(collection(db, "a"), {
+    //     ...formData,
+    //   });
+    //   console.log("Document written with ID: ", docRef.id);
+    // } catch (e) {}
   };
   const [garages, setGarages] = useState([]);
   const [selectedGarage, setSelectedGarage] = useState("");
   const [garageInfo, setGarageInfo] = useState([]);
-  const [carInfo, setCarInfo] = useState({});
-
   // Lấy danh sách ID từ bảng Garage
   useEffect(() => {
     const garagesCol = collection(db, "Garage");
@@ -204,6 +220,7 @@ function AddCar(props) {
   const isDateDisabled = (date) => {
     return date.isBefore(today, "day");
   };
+  console.log('formData', formData);
   return (
     <DashboardLayout>
       <div className="addpost">
@@ -248,29 +265,21 @@ function AddCar(props) {
                         label="ID Garage"
                         defaultValue="ID Garage"
                         variant="outlined"
-                        name="IdGarage"
+                        name="ID_Garage"
                         value={garageInfo.ID_Garage}
                         onChange={handleChangeValue}
                         placeholder="ID Nhà xe"
                         className="RenderFromGarage Garage"
                       />
-                      {/* <TextField
-                        name="IdGarage"
-                        value={garageInfo.idGarage}
-                        onChange={handleChangeValue}
-                        disabled="true"
-                        placeholder="Nhà xe"
-                        className="Garage"
-                      /> */}
                       <TextField
                         disabled
                         id="standard-disabled"
                         label="Hotline"
                         defaultValue="Hotline"
                         variant="outlined"
-                        name="hotline"
+                        name="Hotline"
                         value={garageInfo.Hotline}
-                        onChange={handleChangeValue}
+
                         placeholder="Hotline"
                         className="RenderFromGarage Garage"
                       />
@@ -278,8 +287,8 @@ function AddCar(props) {
                         id="outlined-basic"
                         label="Điểm đi"
                         variant="outlined"
-                        name="IdGarage"
-                        value={formData.IdGarage}
+                        name="PakingStart"
+                        value={formData.PakingStart}
                         onChange={handleChangeValue}
                         placeholder="Điểm đi"
                         className="Garage RenderFromGarage"
@@ -288,8 +297,8 @@ function AddCar(props) {
                         id="outlined-basic"
                         label="Điểm đến"
                         variant="outlined"
-                        name="NameGarage "
-                        value={formData.NameGarage}
+                        name="PakingEnd "
+                        value={formData.PakingEnd}
                         onChange={handleChangeValue}
                         placeholder="Điểm đến"
                         className="Garage RenderFromGarage "
@@ -298,10 +307,13 @@ function AddCar(props) {
                         <InputLabel
                           style={{ backgroundColor: "white" }}
                           id="demo-simple-select-required-label"
+                          name="Price"
+                          value={formData.Price}
+                          onChange={handleChangeValue}
                         >
                           Giá vé
                         </InputLabel>
-                        <OutlinedInput
+                        {/* <OutlinedInput
                           value={formData.Owner}
                           onChange={handleChangeValue}
                           placeholder="Giá vé"
@@ -313,33 +325,15 @@ function AddCar(props) {
                           inputProps={{
                             "aria-label": "weight",
                           }}
-                        />
+                        /> */}
                       </FormControl>
-                      <FormControl
-                        className="Garage RenderFromGarage"
-                        sx={{ m: 1, minWidth: 120 }}
-                      >
-                        <InputLabel id="demo-simple-select-required-label">
-                          Loại xe
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-required-label"
-                          id="demo-simple-select-required"
-                          className="Type"
-                          label="Age *"
-                          defaultValue={1}
-                        >
-                          <MenuItem value={1}>Xe giường nằm 20 chỗ </MenuItem>
-                          <MenuItem value={2}>Xe giường nằm 34 chỗ </MenuItem>
-                          <MenuItem value={3}>Xe giường nằm 44 chỗ </MenuItem>
-                        </Select>
-                      </FormControl>
+
                       <TextField
                         id="outlined-basic"
                         label="Biển số"
                         variant="outlined"
-                        name="Address RenderFromGarage"
-                        value={formData.Address}
+                        name="LicensePlate"
+                        value={formData.LicensePlate}
                         onChange={handleChangeValue}
                         placeholder="Biển số"
                         className="Garage RenderFromGarage"
@@ -357,52 +351,35 @@ function AddCar(props) {
                           className="Type  "
                           label="Age *"
                           defaultValue={1}
+                          name="Seat"
+                          value={formData.Seat}
+                          onChange={handleChangeValue}
                         >
-                          <MenuItem value={1}>20 ghế</MenuItem>
-                          <MenuItem value={2}>34 ghế</MenuItem>
-                          <MenuItem value={3}>44 ghế</MenuItem>
+                          <MenuItem value={20}>Xe giường nằm 20 chỗ </MenuItem>
+                          <MenuItem value={34}>Xe giường nằm 34 chỗ</MenuItem>
+                          <MenuItem value={44}>Xe giường nằm 44 chỗ</MenuItem>
                         </Select>
                       </FormControl>
-
-                      {/* <TextField
-                        id="outlined-basic"
-                        label="Ngày đăng kí bắt đầu chạy"
-                        variant="outlined"
-                        name="Hotline"
-                        value={formData.Hotline}
-                        onChange={handleChangeValue}
-                        placeholder="Ngày đăng kí bắt đầu chạy "
-                        className="Garage RenderFromGarage "
-                      /> */}
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Ngày đăng kí bắt đầu chạy"
                           shouldDisableDate={isDateDisabled}
                           className="Garage RenderFromGarage "
+                          // value={startDate}
+                          // onChange={handleStartDateChange}
                         ></DatePicker>
-                         <DatePicker
+                        <DatePicker
                           className="Garage RenderFromGarage "
                           label="Ngày đăng kí quay xe"
                           shouldDisableDate={isDateDisabled}
                         ></DatePicker>
                       </LocalizationProvider>
-                      {/* <TextField
-                        id="outlined-basic"
-                        label="Ngày đăng kí quay xe"
-                        variant="outlined"
-                        name="Hotline"
-                        value={formData.Hotline}
-                        onChange={handleChangeValue}
-                        placeholder="Ngày đăng kí quay xe"
-                        className="Garage RenderFromGarage"
-                      /> */}
-
                       <TextField
                         id="outlined-basic"
                         label="Thời gian di chuyển toàn tuyến"
                         variant="outlined"
-                        name="Hotline"
-                        value={formData.Hotline}
+                        name="duration"
+                        value={formData.duration}
                         onChange={handleChangeValue}
                         placeholder="Thời gian di chuyển toàn tuyến"
                         className="Garage"
