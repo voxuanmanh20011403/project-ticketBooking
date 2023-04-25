@@ -4,6 +4,10 @@ import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import CloseIcon from "@mui/icons-material/Close";
 import imageCompression from "browser-image-compression";
 import { Box } from "@mui/system";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 import {
   Button,
   Chip,
@@ -195,6 +199,11 @@ function AddCar(props) {
     };
     unsub();
   }, [selectedGarage]);
+  //test day
+  const today = dayjs().startOf("day");
+  const isDateDisabled = (date) => {
+    return date.isBefore(today, "day");
+  };
   return (
     <DashboardLayout>
       <div className="addpost">
@@ -354,8 +363,8 @@ function AddCar(props) {
                           <MenuItem value={3}>44 ghế</MenuItem>
                         </Select>
                       </FormControl>
-                      
-                      <TextField
+
+                      {/* <TextField
                         id="outlined-basic"
                         label="Ngày đăng kí bắt đầu chạy"
                         variant="outlined"
@@ -364,7 +373,19 @@ function AddCar(props) {
                         onChange={handleChangeValue}
                         placeholder="Ngày đăng kí bắt đầu chạy "
                         className="Garage RenderFromGarage "
-                      />
+                      /> */}
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="Ngày đăng kí bắt đầu chạy"
+                          shouldDisableDate={isDateDisabled}
+                          className="Garage RenderFromGarage "
+                        ></DatePicker>
+                         <DatePicker
+                          className="Garage RenderFromGarage "
+                          label="Ngày đăng kí quay xe"
+                          shouldDisableDate={isDateDisabled}
+                        ></DatePicker>
+                      </LocalizationProvider>
                       {/* <TextField
                         id="outlined-basic"
                         label="Ngày đăng kí quay xe"
@@ -375,7 +396,7 @@ function AddCar(props) {
                         placeholder="Ngày đăng kí quay xe"
                         className="Garage RenderFromGarage"
                       /> */}
-                      
+
                       <TextField
                         id="outlined-basic"
                         label="Thời gian di chuyển toàn tuyến"
