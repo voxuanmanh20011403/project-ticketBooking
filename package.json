@@ -56,14 +56,11 @@
     "slick-carousel": "^1.8.1",
     "stylis": "4.0.13",
     "stylis-plugin-rtl": "2.1.1",
-<<<<<<< HEAD
     "sweetalert": "^2.1.2",
     "sweetalert-with-react": "^2.0.2",
-=======
     "timers": "^0.1.1",
     "unidecode": "^0.1.8",
     "vn-payments": "^1.1.0",
->>>>>>> bd780e71fb9ec109d65b92594dce20ceb7758788
     "web-vitals": "2.1.4",
     "yup": "0.32.11"
   },
