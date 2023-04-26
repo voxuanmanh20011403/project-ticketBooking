@@ -111,6 +111,7 @@ const InfoTrip = ({ items }) => {
               <span className="cost">{items.Price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/ghế</span>
             </div>
             <div className="type">{items.TypeVehicle}</div>
+            <div className="type">Ngày khởi hành: {dayS + "-" + monthS + "-" + yearS }</div>
             <div className="lich__trinh">
               <div>
                 <UIFT />
