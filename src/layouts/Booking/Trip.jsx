@@ -76,7 +76,7 @@ const Trip = ({ fetchData }) => {
       );
     }
   });
-  console.log("filteredData: " + JSON.stringify(filteredData));
+  // console.log("filteredData: " + JSON.stringify(filteredData));
 
   const breadcrumbs = [
     <Link underline="hover" key="1" color="inherit" onClick={handleClick}>
