@@ -22,10 +22,23 @@ import {
 import { v4 as uuid } from "uuid";
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import { db } from "data/firebase";
-import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import { CustomTextField } from "../../../components/CustomTextField";
 import { CustomDatePicker } from "Admin/components/CustomDatePicker";
 import "./AddCar.css";
+import {
+  DatePicker,
+  LocalizationProvider,
+  MobileDateTimePicker,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function AddCar(props) {
   const { activeButton, setActiveButton } = props;
@@ -127,13 +140,15 @@ function AddCar(props) {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("formData", formData);
-    // try {
-    //   const docRef = await addDoc(collection(db, "a"), {
-    //     ...formData,
-    //   });
-    //   console.log("Document written with ID: ", docRef.id);
-    // } catch (e) {}
+    console.log(formData);
+    try {
+      const docRef = await addDoc(collection(db, "a"), {
+        ...formData,
+        Price: price,
+        StartTime: timestamp,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {}
   };
   const [garages, setGarages] = useState([]);
   const [selectedGarage, setSelectedGarage] = useState("");
@@ -173,7 +188,32 @@ function AddCar(props) {
     };
     unsub();
   }, [selectedGarage]);
- 
+  //Format price
+  const [price, setPrice] = useState("");
+
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    // xóa dấu phân cách hàng nghìn trong giá trị nhập vào
+    const newValue = inputValue.replace(/,/g, "");
+    // kiểm tra giá trị nhập vào có phải là số không
+    if (!isNaN(newValue)) {
+      // định dạng giá trị đã nhập
+      const formattedValue = newValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      setPrice(formattedValue);
+    }
+  };
+  //format time 
+  const [selectDate, setSelectDate] = useState(dayjs());
+  const today = dayjs().startOf("day");
+  const isDateDisabled = (date) => {
+    return date.isBefore(today, "day");
+  };
+  const handleChangeDate = (date) => {
+    setSelectDate(date);
+  };
+  const date = new Date(selectDate);
+  const timestamp = Timestamp.fromDate(date);
+
   return (
     <DashboardLayout>
       <div className="addpost">
@@ -232,7 +272,6 @@ function AddCar(props) {
                         variant="outlined"
                         name="Hotline"
                         value={garageInfo.Hotline}
-
                         placeholder="Hotline"
                         className="RenderFromGarage Garage"
                       />
@@ -264,8 +303,8 @@ function AddCar(props) {
                           Giá vé
                         </InputLabel>
                         <OutlinedInput
-                          value={formData.Owner}
-                          onChange={handleChangeValue}
+                          value={price}
+                          onChange={handleInputChange}
                           placeholder="Giá vé"
                           id="outlined-adornment-weight"
                           endAdornment={
@@ -297,7 +336,7 @@ function AddCar(props) {
                           id="demo-simple-select-required"
                           className="Type  "
                           label="Age *"
-                          defaultValue={1}
+                          defaultValue={20}
                           name="Seat"
                           value={formData.Seat}
                           onChange={handleChangeValue}
@@ -314,14 +353,15 @@ function AddCar(props) {
                         onChange={handleChangeValue}
                         placeholder="Thời gian hành trình"
                       />
-                      <CustomDatePicker
-                        label="Ngày bắt đầu chạy"
-                        className="Garage RenderFromGarage "
-                      />
-                      <CustomDatePicker
-                        label="Ngày quay xe"
-                        className="Garage RenderFromGarage "
-                      />
+
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDateTimePicker
+                          value={selectDate}
+                          onChange={handleChangeDate}
+                          shouldDisableDate={isDateDisabled}
+                          className="Garage "
+                        />
+                      </LocalizationProvider>
 
                       <div className="modal__body">
                         <form onSubmit={handleSubmitButton}>
