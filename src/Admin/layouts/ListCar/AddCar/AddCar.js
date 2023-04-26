@@ -31,7 +31,6 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { CustomTextField } from "../../../components/CustomTextField";
-import { CustomDatePicker } from "Admin/components/CustomDatePicker";
 import "./AddCar.css";
 import {
   DatePicker,
@@ -202,7 +201,7 @@ function AddCar(props) {
       setPrice(formattedValue);
     }
   };
-  //format time 
+  //format time
   const [selectDate, setSelectDate] = useState(dayjs());
   const today = dayjs().startOf("day");
   const isDateDisabled = (date) => {
@@ -247,7 +246,12 @@ function AddCar(props) {
                         >
                           {garages.map((item) => {
                             return (
-                              <option value={item.value}>{item.label}</option>
+                              <option
+                                className="selectGarage"
+                                value={item.value}
+                              >
+                                {item.label}
+                              </option>
                             );
                           })}
                         </NativeSelect>
@@ -308,7 +312,12 @@ function AddCar(props) {
                           placeholder="Giá vé"
                           id="outlined-adornment-weight"
                           endAdornment={
-                            <InputAdornment position="end">vnd</InputAdornment>
+                            <InputAdornment
+                              style={{ fontSize: "inherit" }}
+                              position="end"
+                            >
+                              vnd
+                            </InputAdornment>
                           }
                           aria-describedby="outlined-weight-helper-text"
                           inputProps={{
@@ -359,7 +368,7 @@ function AddCar(props) {
                           value={selectDate}
                           onChange={handleChangeDate}
                           shouldDisableDate={isDateDisabled}
-                          className="Garage "
+                          className="Garage datapicker "
                         />
                       </LocalizationProvider>
 
