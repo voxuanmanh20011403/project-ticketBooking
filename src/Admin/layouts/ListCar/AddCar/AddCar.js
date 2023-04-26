@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from "react";
-import "./AddCar.css";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import CloseIcon from "@mui/icons-material/Close";
-import imageCompression from "browser-image-compression";
 import { Box } from "@mui/system";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import {
   Button,
-  Chip,
-  Divider,
   FormControl,
   Grid,
   IconButton,
   InputAdornment,
   InputLabel,
-  LinearProgress,
   MenuItem,
   Modal,
   NativeSelect,
@@ -30,35 +22,12 @@ import {
 import { v4 as uuid } from "uuid";
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import { db } from "data/firebase";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-} from "firebase/firestore";
-import { format } from "date-fns/esm";
-
+import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { CustomTextField } from "../../../components/CustomTextField";
+import { CustomDatePicker } from "Admin/components/CustomDatePicker";
+import "./AddCar.css";
 
 function AddCar(props) {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-//   const handleStartDateChange = (date) => {
-   
-//     const month = date.getMonth() + 1; // tháng bắt đầu từ 0, nên phải cộng thêm 1
-//     const year = date.getFullYear();
-//     // console.log(`${day}-${month}-${year}`);
-//     setStartDate(`${month}-${year}`);
-//   };
-// console.log('startDate',startDate);
-//   const handleEndDateChange = (date) => {
-//     const formattedDate = format(date, 'dd/MM/yyyy');
-    
-//     setEndDate(formattedDate);
-//   };
-
   const { activeButton, setActiveButton } = props;
   //set show/hide form
   const [open, setOpen] = React.useState(true);
@@ -140,17 +109,6 @@ function AddCar(props) {
   };
 
   // if file name is too long.. compress it
-  const fileNameCompressor = (str, limit) => {
-    let fileName = str;
-    const arr = str.split(".");
-    const name = arr[0];
-    const ext = arr[arr.length - 1];
-
-    if (name.length > limit) {
-      fileName = name.substring(0, limit).trim() + "... ." + ext;
-    }
-    return fileName;
-  };
   const resetState = () => {
     setUploadData({
       description: "",
@@ -169,7 +127,7 @@ function AddCar(props) {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('formData', formData);
+    console.log("formData", formData);
     // try {
     //   const docRef = await addDoc(collection(db, "a"), {
     //     ...formData,
@@ -215,12 +173,7 @@ function AddCar(props) {
     };
     unsub();
   }, [selectedGarage]);
-  //test day
-  const today = dayjs().startOf("day");
-  const isDateDisabled = (date) => {
-    return date.isBefore(today, "day");
-  };
-  console.log('formData', formData);
+ 
   return (
     <DashboardLayout>
       <div className="addpost">
@@ -283,25 +236,22 @@ function AddCar(props) {
                         placeholder="Hotline"
                         className="RenderFromGarage Garage"
                       />
-                      <TextField
-                        id="outlined-basic"
+
+                      <CustomTextField
                         label="Điểm đi"
-                        variant="outlined"
                         name="PakingStart"
                         value={formData.PakingStart}
                         onChange={handleChangeValue}
                         placeholder="Điểm đi"
                         className="Garage RenderFromGarage"
                       />
-                      <TextField
-                        id="outlined-basic"
+                      <CustomTextField
                         label="Điểm đến"
-                        variant="outlined"
-                        name="PakingEnd "
+                        name="PakingEnd"
                         value={formData.PakingEnd}
                         onChange={handleChangeValue}
                         placeholder="Điểm đến"
-                        className="Garage RenderFromGarage "
+                        className="Garage RenderFromGarage"
                       />
                       <FormControl className="Garage RenderFromGarage">
                         <InputLabel
@@ -313,7 +263,7 @@ function AddCar(props) {
                         >
                           Giá vé
                         </InputLabel>
-                        {/* <OutlinedInput
+                        <OutlinedInput
                           value={formData.Owner}
                           onChange={handleChangeValue}
                           placeholder="Giá vé"
@@ -325,13 +275,10 @@ function AddCar(props) {
                           inputProps={{
                             "aria-label": "weight",
                           }}
-                        /> */}
+                        />
                       </FormControl>
-
-                      <TextField
-                        id="outlined-basic"
+                      <CustomTextField
                         label="Biển số"
-                        variant="outlined"
                         name="LicensePlate"
                         value={formData.LicensePlate}
                         onChange={handleChangeValue}
@@ -360,30 +307,22 @@ function AddCar(props) {
                           <MenuItem value={44}>Xe giường nằm 44 chỗ</MenuItem>
                         </Select>
                       </FormControl>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Ngày đăng kí bắt đầu chạy"
-                          shouldDisableDate={isDateDisabled}
-                          className="Garage RenderFromGarage "
-                          // value={startDate}
-                          // onChange={handleStartDateChange}
-                        ></DatePicker>
-                        <DatePicker
-                          className="Garage RenderFromGarage "
-                          label="Ngày đăng kí quay xe"
-                          shouldDisableDate={isDateDisabled}
-                        ></DatePicker>
-                      </LocalizationProvider>
-                      <TextField
-                        id="outlined-basic"
-                        label="Thời gian di chuyển toàn tuyến"
-                        variant="outlined"
+                      <CustomTextField
+                        label="Thời gian hành trình"
                         name="duration"
                         value={formData.duration}
                         onChange={handleChangeValue}
-                        placeholder="Thời gian di chuyển toàn tuyến"
-                        className="Garage"
+                        placeholder="Thời gian hành trình"
                       />
+                      <CustomDatePicker
+                        label="Ngày bắt đầu chạy"
+                        className="Garage RenderFromGarage "
+                      />
+                      <CustomDatePicker
+                        label="Ngày quay xe"
+                        className="Garage RenderFromGarage "
+                      />
+
                       <div className="modal__body">
                         <form onSubmit={handleSubmitButton}>
                           <div className="modal__footer">
