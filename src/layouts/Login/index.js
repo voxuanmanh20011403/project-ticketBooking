@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
@@ -8,24 +8,25 @@ import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { auth } from "data/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Notification from "layouts/notication/Notification";
-import './login.css'
+import "./login.css";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "data/firebase";
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const history = useNavigate();
   //CUSTOM VALIDATION USING YUP!
   const validationSchema = Yup.object().shape({
     username: Yup.string()
-      .required('Bạn chưa nhập email hoặc số điện thoại.')
-      .required('Username is required'),
-    password: Yup.string().required('Password is required'),
+      .required("Bạn chưa nhập email hoặc số điện thoại.")
+      .required("Username is required"),
+    password: Yup.string().required("Password is required"),
   });
   const {
     register,
@@ -35,28 +36,63 @@ function SignIn() {
     resolver: yupResolver(validationSchema),
   });
   //Onclick submit
+  const [accounts, setAccounts] = useState([]);
+  useEffect(() => {
+    const getAccounts = async () => {
+      const querySnapshot = await getDocs(collection(db, "Account"));
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setAccounts(data);
+    };
+    getAccounts();
+  }, []);
+  console.log("setAccounts", accounts);
   const onSubmit = async (data) => {
     try {
-      const user = await signInWithEmailAndPassword(
-        auth,
-        data.username,
-        data.password,
-      ); 
-      const token = user?.user?.accessToken;
-      localStorage.setItem('token', token);
-     
-      history('/admin');
-     
+      for (let i = 0; i < accounts.length; i++) {
+        if (
+          data.username === accounts[i].Email &&
+          data.password === accounts[i].Password
+        ) {
+          // Thực hiện hành động mong muốn nếu email và password khớp với dữ liệu người dùng
+          console.log("accounts[i]", accounts[i]);
+          const user = await signInWithEmailAndPassword(
+            auth,
+            data.username,
+            data.password
+          );
+          //Update +1 views in month while login success
 
-    } catch (e) { 
+          //end
+          const token = user?.user?.accessToken;
+          localStorage.setItem("token", token);
+          var accountJSON = JSON.stringify({
+            id: accounts[i].id,
+            NumberPhone: accounts[i].NumberPhone,
+            Password: accounts[i].Password,
+            CreateTime: accounts[i].CreateTime,
+            Email: accounts[i].Email,
+            Name: accounts[i].Name,
+            Role: accounts[i].Role,
+          });
+
+          localStorage.setItem("account", accountJSON);
+          {
+            accounts[i].Role === "1" ? history("/admin") : history("/");
+          }
+          break;
+        }
+      }
+    } catch (e) {
       setShowError(true);
       setTimeout(() => {
         setShowError(false);
-      }, 1000); 
+      }, 1000);
     }
   };
-
-
+  
   return (
     <BasicLayout image={bgImage}>
       <Card>
@@ -72,14 +108,15 @@ function SignIn() {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            <marquee style={{ fontSize: ' 70%' }}  >Chào mừng bạn đến với SwiftRide - Hệ thống đặt vé xe đường dài UY TÍN - CHẤT LƯỢNG  </marquee>
+            <marquee style={{ fontSize: " 70%" }}>
+              Chào mừng bạn đến với SwiftRide - Hệ thống đặt vé xe đường dài UY
+              TÍN - CHẤT LƯỢNG{" "}
+            </marquee>
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
-            <MDBox mb={2}>
-
-            </MDBox>
+            <MDBox mb={2}></MDBox>
             <MDBox mb={2}>
               <Grid className="row2__input">
                 <TextField
@@ -89,8 +126,7 @@ function SignIn() {
                   fullWidth
                   placeholder="Email hoặc số điện thoại"
                   variant="outlined"
-
-                  {...register('username')}
+                  {...register("username")}
                   error={errors.username ? true : false}
                 />
                 <Typography variant="inherit" color="textSecondary">
@@ -109,7 +145,7 @@ function SignIn() {
                   placeholder="Mật khẩu"
                   variant="outlined"
                   // margin="dense"
-                  {...register('password')}
+                  {...register("password")}
                   error={errors.password ? true : false}
                 />
                 <Typography variant="inherit" color="textSecondary">
@@ -133,8 +169,8 @@ function SignIn() {
               <Button
                 variant="contained"
                 style={{
-                  width: '60%',
-                  margin: '0 20% 0 20%'
+                  width: "60%",
+                  margin: "0 20% 0 20%",
                 }}
                 color="error"
                 onClick={handleSubmit(onSubmit)}
@@ -159,7 +195,14 @@ function SignIn() {
             </MDBox>
           </MDBox>
         </MDBox>
-        { showError ? <Notification message="Login failed. Please try again." severity="error" /> : <></>}
+        {showError ? (
+          <Notification
+            message="Login failed. Please try again."
+            severity="error"
+          />
+        ) : (
+          <></>
+        )}
       </Card>
     </BasicLayout>
   );
