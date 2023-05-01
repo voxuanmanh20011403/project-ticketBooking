@@ -41,6 +41,25 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function AddCar(props) {
   const { activeButton, setActiveButton } = props;
+  const [state, setstate] = useState([]);
+  const [seat, setSeat] = useState(0);
+  useEffect(() => {
+    let id = 0;
+    let name = "A";
+    let newState = [];
+    for (var i = 1; i <= seat; i++) {
+      id++;
+      newState.push({
+        id: id,
+        name: name + i,
+        status: "empty",
+        ui: "",
+      });
+    }
+    setstate(newState);
+    console.log('newState',newState);
+    console.log(state);
+  }, [seat]);
   //set show/hide form
   const [open, setOpen] = React.useState(true);
   // const [post, setPost] = useState();
@@ -145,6 +164,14 @@ function AddCar(props) {
         ...formData,
         Price: price,
         StartTime: timestamp,
+        seat: state.map((seat) => {
+          return {
+            id: seat.id,
+            name: seat.name,
+            status: "empty",
+            ui: "",
+          };
+        }),
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {}
@@ -347,8 +374,9 @@ function AddCar(props) {
                           label="Age *"
                           defaultValue={20}
                           name="Seat"
-                          value={formData.Seat}
-                          onChange={handleChangeValue}
+                          value={seat}
+                          // onChange={handleChangeValue}
+                          onChange={(e) => setSeat(e.target.value)}
                         >
                           <MenuItem value={20}>Xe giường nằm 20 chỗ </MenuItem>
                           <MenuItem value={34}>Xe giường nằm 34 chỗ</MenuItem>

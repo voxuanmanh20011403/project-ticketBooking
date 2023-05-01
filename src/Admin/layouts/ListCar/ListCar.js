@@ -104,7 +104,7 @@ export default function ListCar() {
 
   useEffect(() => {
     async function fetchData() {
-      const accountsCol = collection(db, 'ListCar');
+      const accountsCol = collection(db, 'Trips');
       const accountsSnapshot = await getDocs(accountsCol);
       const accountsList = accountsSnapshot.docs.map((doc) => {
         return {
@@ -118,6 +118,7 @@ export default function ListCar() {
     fetchData();
 
   }, []);
+  console.log('data.data',data.length);
   const rows = data.map((item) => createData(item.id,item.Namegarage, item.TypeVehicle, item.Seat, item.PakingStart + "-" + item.EndPoint, item.LicensePlate,  item.Hotline));
   console.log('rows',rows);
   useEffect(() => {

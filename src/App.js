@@ -36,9 +36,24 @@ import Return from "./layouts/Payment/Return"
 export default function App() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
+  var accountJSON = localStorage.getItem("account");
+
+  // chuyển đối tượng từ dạng JSON sang đối tượng JavaScript
+
+ 
+  const [account, setAccount] = useState(null);
+
+  useEffect(() => {
+    // Lấy dữ liệu từ localStorage
+    var accountJSON = localStorage.getItem("account");
+
+    
+    setAccount(accountJSON);
+  }, []);
+  console.log('account',account);
   return (
     
-  <ThemeProvider theme={darkMode ? themeDark : theme}>
+    <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
         <Route path="/" element={<Home/>}></Route>
         <Route path="/admin" element={<Admin />} />
