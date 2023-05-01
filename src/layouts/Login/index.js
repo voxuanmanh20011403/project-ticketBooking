@@ -92,7 +92,6 @@ function SignIn() {
       }, 1000);
     }
   };
-
   return (
     <BasicLayout image={bgImage}>
       <Card>
