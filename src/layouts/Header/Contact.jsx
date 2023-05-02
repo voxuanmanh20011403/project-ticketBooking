@@ -1,40 +1,3 @@
-// import React from 'react'
-// import PhoneIcon from '@mui/icons-material/Phone';
-// import styles from './Header.css';
-
-
-
-// const Contact = () => {
-//   // const navigate = useNavigate();
-//   return (
-//     <>
-//       <div className='logo'>
-//         <div
-//           onClick={() => {
-//             // navigate('/');
-//           }}
-//           className='logo__img' >
-//           {/* {<img src="assets\img/logo.png" alt="logo" width='160px' height='33px' />} */}
-//         </div>
-//       </div>
-//        <div className='contact'>
-//     <div className='contact__phone' >
-//               <PhoneIcon/>
-//               <span>1900 888684</span>
-//               <div>
-//               <span>Thuê Xe</span>
-//               </div>
-//               <div><span>Quản lý đơn hàng</span></div>
-//               <div><span>Trở thành đối tác</span></div> 
-//        </div> 
-//        </div> 
-//     </>
-//   )
-// }
-
-// export default Contact
-
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -50,6 +13,7 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
 export default function AccountMenu() {
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -61,22 +25,20 @@ export default function AccountMenu() {
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography className='logo__img' sx={{ minWidth: 200}}></Typography>
-        <div className='logo'>SwiftRide</div>
-        <Typography sx={{ minWidth: 150 }}>Tìm Chuyến</Typography>
-        <Typography sx={{ minWidth: 150 }}>Tuyến Đường Phổ Biến</Typography>
-        <Typography sx={{ minWidth: 150 }}>Ưu Đãi Nổi Bật</Typography>
-        <Typography sx={{ minWidth: 150 }}>Bến Xe Khách</Typography>
+        <Typography className='logo__img' sx={{ minWidth: 500}}></Typography>
+        <Typography fontSize="large" sx={{ minWidth: 150 }} >Tìm Chuyến</Typography>
+        <Typography fontSize="large" sx={{ minWidth: 150 }} >Tuyến Phổ Biến</Typography>
+        <Typography fontSize="large" sx={{ minWidth: 150 }} >Bến Xe Khách</Typography>
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 2 }}
+            sx={{ ml: 15 }}
             aria-controls={open ? 'account-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+            <Avatar sx={{ width: 50, height: 45 }}></Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -122,24 +84,6 @@ export default function AccountMenu() {
            Đăng Ký
         </MenuItem>
         <Divider />
-        {/* <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem> */}
-        {/* <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem> */}
-        {/* <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem> */}
       </Menu>
     </React.Fragment>
   );

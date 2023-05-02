@@ -12,34 +12,39 @@ import TabPanelUnstyled from '@mui/base/TabPanelUnstyled';
 import { buttonUnstyledClasses } from '@mui/base/ButtonUnstyled';
 import TabUnstyled, { tabUnstyledClasses } from '@mui/base/TabUnstyled';
 import Cart from '../Cart/Cart';
+import Intro from '../Intro/Intro';
+import Quality from '../Quality/Quality';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import ReactDOM from 'react-dom/client'
+import Bg from '../Cart/Bg';
 
 const blue = {
-    50: '#F0F7FF',
-    100: '#C2E0FF',
-    200: '#80BFFF',
-    300: '#66B2FF',
-    400: '#3399FF',
-    500: '#007FFF',
-    600: '#0072E5',
-    700: '#0059B2',
-    800: '#004C99',
-    900: '#003A75',
-  };
-  
-  const grey = {
-    50: '#f6f8fa',
-    100: '#eaeef2',
-    200: '#d0d7de',
-    300: '#afb8c1',
-    400: '#8c959f',
-    500: '#6e7781',
-    600: '#57606a',
-    700: '#424a53',
-    800: '#32383f',
-    900: '#24292f',
-  };
+  50: '#F0F7FF',
+  100: '#C2E0FF',
+  200: '#80BFFF',
+  300: '#66B2FF',
+  400: '#3399FF',
+  500: '#007FFF',
+  600: '#0072E5',
+  700: '#0059B2',
+  800: '#004C99',
+  900: '#003A75',
+};
 
-  const Tab = styled(TabUnstyled)`
+const grey = {
+  50: '#f6f8fa',
+  100: '#eaeef2',
+  200: '#d0d7de',
+  300: '#afb8c1',
+  400: '#8c959f',
+  500: '#6e7781',
+  600: '#57606a',
+  700: '#424a53',
+  800: '#32383f',
+  900: '#24292f',
+};
+
+const Tab = styled(TabUnstyled)`
   font-family: IBM Plex Sans, sans-serif;
   color: white;
   cursor: pointer;
@@ -82,7 +87,7 @@ const TabPanel = styled(TabPanelUnstyled)`
 
 const TabsList = styled(TabsListUnstyled)(
   ({ theme }) => `
-  min-width: 400px;
+  min-width: 1000px;
   background-color: ${blue[500]};
   border-radius: 12px;
   margin-bottom: 16px;
@@ -90,41 +95,44 @@ const TabsList = styled(TabsListUnstyled)(
   align-items: center;
   justify-content: center;
   align-content: space-between;
-//   box-shadow: 0px 4px 8px ${theme.palette.mode === 'dark' ? grey[900] : grey[200]};
-//   `,
+  //  box-shadow: 0px 4px 8px ${theme.palette.mode === 'dark' ? grey[900] : grey[200]};
+  //  `,
 );
 
 const Banner = () => {
-    return (
-        <div className='banner'>
-            <div className="banner__img"  >
-                <div className="banner_form">
-                    <h2>SwiftRide - Cam kết hoàn 150% nếu nhà xe không giữ vé</h2>
-                    <div className="wrap__form">
-                        <TabsUnstyled defaultValue={2}>
-                            <TabsList>
-                                <Tab value={1}>
-                                    <DirectionsBusIcon></DirectionsBusIcon>Xe Khách
-                                </Tab>
-                            </TabsList>
-                        </TabsUnstyled>
-                        {/* <DirectionsBusIcon></DirectionsBusIcon>   Xe khách */}
-                        <div className="form__title">
-                            <TabsUnstyled defaultValue={1}>
-                            <TabsList>
-                                <Tab value={1}>
-                                <BannerSearch />
-                                </Tab>
-                            </TabsList>
-                        </TabsUnstyled>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <h3>Tuyến Đường Phổ Biến</h3>
-            <Cart></Cart>
+  return (
+    <div className='banner'>
+      <div className="banner__img"  >
+        <div className="banner_form">
+          <h2>SwiftRide - Cam kết hoàn 150% nếu nhà xe không giữ vé</h2>
+          <div className="wrap__form">
+            <TabsUnstyled defaultValue={2}>
+              <TabsList>
+                <Tab value={1}>
+                  <DirectionsBusIcon></DirectionsBusIcon>Xe Khách
+                </Tab>
+              </TabsList>
+            </TabsUnstyled>
+          </div>
+          
+          <div className="form__title">
+            <TabsUnstyled defaultValue={1}>
+              <TabsList>
+                <Tab value={1}>
+                  <BannerSearch />
+                </Tab>
+              </TabsList>
+            </TabsUnstyled>
+          </div>
         </div>
-    )
+      </div>
+      <Intro/>
+      <Cart/> 
+      <Quality/>
+      <Bg/>
+  </div>
+    
+  )
 }
 
 export default Banner

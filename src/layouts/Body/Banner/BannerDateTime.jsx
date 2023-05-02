@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-
+import './Banner.css'
 
 export default function BannerDateTime() {
     const today = dayjs().startOf('day');
@@ -19,13 +19,15 @@ export default function BannerDateTime() {
         label="Ngày đi"
         shouldDisableDate={isDateDisabled}>
       </DatePicker>
+      <div className='button'>
       <Stack direction="row" 
       // spacing={2}
       >
-      <Button variant="contained" disableElevation >
-          <h3 className='btn'>Tìm Chuyến</h3>
-      </Button>                           
+        <Button variant="contained" disableElevation >
+          <h4 className='btn'>Tìm Chuyến</h4>
+      </Button>                  
        </Stack>
+       </div>
     </LocalizationProvider>
    
   );

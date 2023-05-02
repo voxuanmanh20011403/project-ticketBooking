@@ -15,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import AdjustIcon from '@mui/icons-material/Adjust';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
 const filterOptions = createFilterOptions({
   matchFrom: 'start',
@@ -105,6 +106,7 @@ export default function BannerSearch() {
           <TextField {...params}   label=  "Nơi xuất phát" />}
         />
       </div>
+      <SwapHorizIcon/>
       <div>
         {/* <div>{`value: ${toLocation !== null ? `'${toLocation}'` : 'null'}`}</div> */}
         {/* <div>{`inputValue: '${inputValue1}'`}</div> */}
