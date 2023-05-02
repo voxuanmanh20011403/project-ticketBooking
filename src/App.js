@@ -27,11 +27,34 @@ import Footer from "layouts/Footer/Footer";
 import Home from "layouts/Home/Home";
 import Payment from "layouts/Payment/Payment";
 import Return from "./layouts/Payment/Return"
+import { useDispatch, useSelector } from "react-redux";
+import { auth } from "data/firebase";
+import { LoginAction } from "redux/slices/auth";
+import { LogoutAction } from "redux/slices/auth";
+import { in4 } from "redux/slices/auth";
+import { Infor } from "redux/slices/auth";
 
 
 export default function App() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
+  const [uid, setUid] = useState();
+ 
+  const dispatch = useDispatch();
+  const { displayName } = useSelector((state) => state.user);
+  
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("acount"));
+
+    auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        dispatch(LoginAction(authUser));
+      } else {
+        dispatch(LogoutAction());
+      }
+      setUid(authUser.uid);
+    });
+  }, [dispatch]);
   return (
     
   <ThemeProvider theme={darkMode ? themeDark : theme}>
