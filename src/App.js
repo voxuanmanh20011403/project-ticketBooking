@@ -30,32 +30,52 @@ import AddUser from "Admin/layouts/AddUser/AddUser/AddUser";
 import Footer from "layouts/Footer/Footer";
 import Home from "layouts/Home/Home";
 import Payment from "layouts/Payment/Payment";
-import Return from "./layouts/Payment/Return"
-
+import Return from "./layouts/Payment/Return";
+import { useDispatch, useSelector } from "react-redux";
+import { auth } from "data/firebase";
+import { LoginAction } from "redux/slices/auth";
+import { LogoutAction } from "redux/slices/auth";
+import { in4 } from "redux/slices/auth";
+import { Infor } from "redux/slices/auth";
 
 export default function App() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
+
   var accountJSON = localStorage.getItem("account");
 
   // chuyển đối tượng từ dạng JSON sang đối tượng JavaScript
 
- 
   const [account, setAccount] = useState(null);
 
   useEffect(() => {
     // Lấy dữ liệu từ localStorage
     var accountJSON = localStorage.getItem("account");
 
-    
     setAccount(accountJSON);
   }, []);
-  console.log('account',account);
+  console.log("account", account);
+  const [uid, setUid] = useState();
+
+  const dispatch = useDispatch();
+  const { displayName } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("acount"));
+
+    auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        dispatch(LoginAction(authUser));
+      } else {
+        dispatch(LogoutAction());
+      }
+      setUid(authUser.uid);
+    });
+  }, [dispatch]);
   return (
-    
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
-        <Route path="/" element={<Home/>}></Route>
+        <Route path="/" element={<Home />}></Route>
         <Route path="/admin" element={<Admin />} />
         <Route path="/SignIN" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
@@ -63,10 +83,8 @@ export default function App() {
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/return" element={<Return />}></Route>
         <Route path="*" element={<NotFoundPage />} />
-        <Route path="TestAddCar" element={<TestAddCar/>} />
-        <Route path="addusser" element={<AddUser/>} />
-      
-
+        <Route path="TestAddCar" element={<TestAddCar />} />
+        <Route path="addusser" element={<AddUser />} />
       </Routes>
     </ThemeProvider>
   );

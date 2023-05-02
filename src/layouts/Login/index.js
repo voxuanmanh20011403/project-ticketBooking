@@ -10,12 +10,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { Button, Grid, TextField, Typography } from "@mui/material";
-import { auth } from "data/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Notification from "layouts/notication/Notification";
 import "./login.css";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "data/firebase";
+import { db, auth } from "data/firebase";
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showError, setShowError] = useState(false);
