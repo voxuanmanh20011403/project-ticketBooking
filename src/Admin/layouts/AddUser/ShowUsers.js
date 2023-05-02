@@ -28,6 +28,8 @@ import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
 import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
 import AddUser from "./AddUser/AddUser";
+import UpdateUser from "./UpdateUser/UpdateUser";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 //Filter
 function descendingComparator(a, b, orderBy) {
@@ -59,7 +61,6 @@ function stableSort(array, comparator) {
 }
 
 //GET DATA TO TABLE VENUE
-
 
 const headCells = [
   {
@@ -98,9 +99,7 @@ const headCells = [
     disablePadding: false,
     label: "Quyền",
   },
-
 ];
-
 
 const DEFAULT_ORDER = "asc";
 const DEFAULT_ORDER_BY = "calories";
@@ -237,6 +236,8 @@ export default function EnhancedTable() {
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
   const [activeButton, setActiveButton] = useState(false);
+  const [ActiveButtonUpdate, setActiveButtonUpdate] = useState(false);
+
   function createData(name, calories, fat, carbs, protein, id) {
     return {
       name,
@@ -244,25 +245,34 @@ export default function EnhancedTable() {
       fat,
       carbs,
       protein,
-      id
+      id,
     };
   }
 
   useEffect(() => {
     async function fetchData() {
-      const accountsCol = collection(db, 'Account');
+      const accountsCol = collection(db, "Account");
       const accountsSnapshot = await getDocs(accountsCol);
       const accountsList = accountsSnapshot.docs.map((doc) => {
         return {
           id: doc.id,
-          ...doc.data()
-        }
+          ...doc.data(),
+        };
       });
       setData(accountsList);
     }
     fetchData();
   }, [data]);
-  const rows = data.map((item) => createData(item.Email, item.Name, item.NumberPhone, item.Password, item.Role, item.id));
+  const rows = data.map((item) =>
+    createData(
+      item.Email,
+      item.Name,
+      item.NumberPhone,
+      item.Password,
+      item.Role,
+      item.id
+    )
+  );
   useEffect(() => {
     let rowsOnMount = stableSort(
       rows,
@@ -374,23 +384,28 @@ export default function EnhancedTable() {
     setDense(event.target.checked);
   };
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const OnclickA = () => {
-    // console.log("A");
-  };
+
   const handleDelete = async (id) => {
     console.log(id);
-    if (window.confirm('Are you sure you want to delete this post?')) {
+    if (window.confirm("Are you sure you want to delete this post?")) {
       try {
         console.log(id);
-        await deleteDoc(doc(db, 'Account', id));
+        await deleteDoc(doc(db, "Account", id));
       } catch (error) {
         console.log(error);
       }
     }
   };
-  //BUTTON RENDER COMPONENT 
-  const [refreshCount, setRefreshCount] = useState(0);
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
 
+  const handleUpdate = (id, name) => {
+    console.log("av", name);
+    setId(id);
+    setName(name);
+  };
+  //BUTTON RENDER COMPONENT
+  const [refreshCount, setRefreshCount] = useState(0);
 
   return (
     // <DashboardLayout>
@@ -416,114 +431,151 @@ export default function EnhancedTable() {
                   coloredShadow="info"
                 >
                   <MDTypography variant="h6" color="white">
-                    <div style={{width:'100%', display:'flex'}}>
-                    <h3 className="h3Title" >Quản lý tài khoản người dùng và nhân viên</h3>
-                    <div className="btnAdd" >
-                    <Button  onClick={() => setActiveButton(true)} className="btnAddd"  style={{ backgroundColor: 'black'}}>Thêm</Button>
+                    <div style={{ width: "100%", display: "flex" }}>
+                      <h3 className="h3Title">
+                        Quản lý tài khoản người dùng và nhân viên
+                      </h3>
+                      <div className="btnAdd">
+                        <Button
+                          onClick={() => setActiveButton(true)}
+                          className="btnAddd"
+                          style={{ backgroundColor: "black" }}
+                        >
+                          Thêm
+                        </Button>
+                      </div>
                     </div>
-                 
-                    </div>
-                   
                   </MDTypography>
-                 
                 </MDBox>
                 <Box sx={{ width: "100%" }}>
+                  <TableContainer>
+                    <Table
+                      sx={{ minWidth: 250 }}
+                      aria-labelledby="tableTitle"
+                      size={dense ? "small" : "medium"}
+                    >
+                      <EnhancedTableHead
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={handleSelectAllClick}
+                        onRequestSort={handleRequestSort}
+                        rowCount={rows.length}
+                      />
+                      <TableBody>
+                        {visibleRows
+                          ? visibleRows.map((row, index) => {
+                              const isItemSelected = isSelected(row.id);
+                              const labelId = `enhanced-table-checkbox-${index}`;
 
+                              return (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  aria-checked={isItemSelected}
+                                  tabIndex={-1}
+                                  key={row.name}
+                                  selected={isItemSelected}
+                                  sx={{ cursor: "pointer" }}
+                                  className="abc"
+                                >
+                                  <TableCell padding="checkbox">
+                                    <Checkbox
+                                      onClick={(event) =>
+                                        handleClick(event, row.id)
+                                      }
+                                      color="primary"
+                                      checked={isItemSelected}
+                                      inputProps={{
+                                        "aria-labelledby": labelId,
+                                      }}
+                                    />
+                                  </TableCell>
+                                  <TableCell align="right">{row.id}</TableCell>
+                                  <TableCell
+                                    component="th"
+                                    id={labelId}
+                                    scope="row"
+                                    padding="none"
+                                  >
+                                    {row.name}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.calories}
+                                  </TableCell>
+                                  <TableCell align="right">{row.fat}</TableCell>
+                                  <TableCell align="right">
+                                    {row.carbs}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.protein == 1 ? "nhanvien" : "admin"}
+                                  </TableCell>
 
-<TableContainer>
-  <Table
-    sx={{ minWidth: 250 }}
-    aria-labelledby="tableTitle"
-    size={dense ? "small" : "medium"}
-  >
-    <EnhancedTableHead
-      numSelected={selected.length}
-      order={order}
-      orderBy={orderBy}
-      onSelectAllClick={handleSelectAllClick}
-      onRequestSort={handleRequestSort}
-      rowCount={rows.length}
-    />
-    <TableBody>
-      {visibleRows
-        ? visibleRows.map((row, index) => {
-          const isItemSelected = isSelected(row.id);
-          const labelId = `enhanced-table-checkbox-${index}`;
-
-          return (
-            <TableRow
-              hover
-              role="checkbox"
-              aria-checked={isItemSelected}
-              tabIndex={-1}
-              key={row.name}
-              selected={isItemSelected}
-              sx={{ cursor: "pointer" }}
-              className="abc"
-            >
-              <TableCell padding="checkbox">
-                <Checkbox
-                  onClick={(event) => handleClick(event, row.id)}
-                  color="primary"
-                  checked={isItemSelected}
-                  inputProps={{
-                    "aria-labelledby": labelId,
-                  }}
-                />
-              </TableCell>
-              <TableCell align="right">{row.id}</TableCell>
-              <TableCell
-                component="th"
-                id={labelId}
-                scope="row"
-                padding="none"
-              >
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{(row.protein == 1 ? "nhanvien" : 'admin')}</TableCell>
-
-              <TableCell align="right">
-                <Button onClick={(id) => { handleDelete(row.id) }}>
-                  <UpgradeIcon />
-                </Button>
-              </TableCell>
-            </TableRow>
-          );
-        })
-        : null}
-      {paddingHeight > 0 && (
-        <TableRow
-          style={{
-            height: paddingHeight,
-          }}
-        >
-          <TableCell colSpan={6} />
-        </TableRow>
-      )}
-    </TableBody>
-  </Table>
-</TableContainer>
-<TablePagination
-  rowsPerPageOptions={[5, 10, 25]}
-  component="div"
-  count={rows.length}
-  rowsPerPage={rowsPerPage}
-  page={page}
-  onPageChange={handleChangePage}
-  onRowsPerPageChange={handleChangeRowsPerPage}
-/>
-
-</Box>
+                                  <TableCell align="right">
+                                    <Button
+                                      onClick={(id) => {
+                                        handleDelete(row.id);
+                                      }}
+                                    >
+                                      <DeleteOutlineIcon />
+                                    </Button>
+                                    <Button
+                                      onClick={(id) => {
+                                        setActiveButtonUpdate(true);
+                                        handleUpdate(row.id, row.name);
+                                      }}
+                                    >
+                                      <UpgradeIcon />
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })
+                          : null}
+                        {paddingHeight > 0 && (
+                          <TableRow
+                            style={{
+                              height: paddingHeight,
+                            }}
+                          >
+                            <TableCell colSpan={6} />
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </Box>
               </Card>
             </Grid>
           </Grid>
         </MDBox>
       </Grid>
-
-      {activeButton ? <AddUser activeButton={activeButton} setActiveButton={setActiveButton} /> : <></>}
+      {ActiveButtonUpdate ? (
+        <UpdateUser
+          ActiveButtonUpdate={ActiveButtonUpdate}
+          setActiveButtonUpdate={setActiveButtonUpdate}
+          name={name}
+        />
+      ) : (
+        <></>
+      )}
+      {activeButton ? (
+        <AddUser
+          activeButton={activeButton}
+          setActiveButton={setActiveButton}
+        />
+      ) : (
+        <></>
+      )}
     </DashboardLayout>
   );
 }
