@@ -11,6 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 
 export default function AccountMenu() {
 
@@ -21,6 +22,20 @@ export default function AccountMenu() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    // Lưu dữ liệu vào localStorage
+    localStorage.setItem('isLoggedIn', true);
+
+    // Chuyển hướng đến tab login
+    navigate('/SignIn');
+  };
+  const handleRegisterClick = () => {
+    localStorage.setItem('isLoggedIn', true)
+    navigate('/Register');
   };
   return (
     <React.Fragment>
@@ -77,10 +92,10 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleLoginClick}>
            Đăng Nhập
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleRegisterClick}>
            Đăng Ký
         </MenuItem>
         <Divider />
