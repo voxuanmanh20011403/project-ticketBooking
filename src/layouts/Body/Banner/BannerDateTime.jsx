@@ -15,6 +15,7 @@ import { tripActions } from "redux/slices/tripsSilce";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 export default function BannerDateTime({
   origin,
   destination,
@@ -30,7 +31,7 @@ export default function BannerDateTime({
   const handleChangeDate = (date) => {
     setSelectDate(date);
   };
-
+console.log("selectDate: " + selectDate);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

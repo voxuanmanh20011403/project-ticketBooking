@@ -156,7 +156,7 @@ const ListSeat = ({ items }) => {
   const navigate = useNavigate();
 
   const handleContinue = () => {
-    console.log("data: " + JSON.stringify(items));
+    // console.log("data: " + JSON.stringify(items));
 
     if (totalPrice === 0) {
       console.log("1232121");

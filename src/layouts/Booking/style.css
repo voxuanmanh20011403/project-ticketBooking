@@ -183,8 +183,8 @@
 .ctn__trip{
     background: #fff !important;
 }
-.ctn__trip .breadcrumb{
-    padding-top: 3rem;
+.ctn__trip .css-4pdmu4-MuiBreadcrumbs-ol {
+    padding-top: 6rem;
 }
 .ctn__trip .FormGroup{
     padding: 2rem;
@@ -211,15 +211,80 @@
     border-top-right-radius: 3px;
     padding: 10px 15px;
 }
+.cnt__filter .filter__title{
+    margin-left: 1rem;
+    cursor: pointer;
+    color: #111;
+    font-size: 18px;
+    text-decoration: underline;
+}
 .ctn__trip .cnt__info{
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: black;
     font-weight: 500;
     padding: 0 0 2rem 0;
-
+    margin: 0px;
+    display: inline;
 }
+
 .ctn__trip .form__search{
     padding: 4rem !important;
+}
+.ctn__trip .search__input{
+    padding: 10px;
+    transition-duration: 500ms;
+    cursor: pointer;
+    font-size: 15px;
+    border: 1px solid white;
+    overflow: hidden;
+}
+
+.result .css-1mijgri-MuiSvgIcon-root{
+    transform: translateY(.5rem);
+}
+
+.cnt__info .trip__length{
+    font-weight: normal;
+    color: #444;
+    font-style: italic;
+}
+/* .ctn__trip .search__input{
+
+} */
+.typo__sort{
+    display: inline !important;
+    margin-right: 5rem !important;
+    cursor: pointer;
+}
+.typo__sort.selected {
+    color: #0d47a1;
+    font-weight: bold;
+}
+.typo__sort .css-1mijgri-MuiSvgIcon-root{
+    transform: translateY(.8rem);
+}
+/* .css-1iod55e{
+    width: 4.5rem;
+} */
+.css-1vqs9o7-MuiButtonBase-root-MuiButton-root{
+    width: 8rem;
+}
+.time__arrive{
+    margin-bottom: 0.5rem;
+}
+.container__sort .css-w5nres-MuiButtonBase-root-MuiButton-root{
+    width: 10rem;
+    color: rgba(255, 255, 255, 0.76);
+    background-color: rgb(0, 96, 196) !important;
+    box-shadow: none;
+    border-radius: 2px;
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+    cursor: pointer;
+    margin: 1rem;
+}
+.css-1uq6pp2-MuiStack-root{
+    margin-left: 1.5rem;
+    cursor: pointer;
 }
 /* InfoTrip.jsx */
 .listtrip{

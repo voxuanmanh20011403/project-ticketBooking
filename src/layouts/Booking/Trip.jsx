@@ -18,6 +18,22 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import Button from "@mui/material/Button";
+import Rating from "@mui/material/Rating";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import {
+  collection,
+  query,
+  onSnapshot,
+  where,
+  Timestamp,
+} from "firebase/firestore";
+import { db } from "./../../data/firebase";
+// Router
+import { useNavigate, useHistory } from "react-router-dom";
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTrips } from "redux/slices/tripsSilce";
@@ -38,7 +54,7 @@ function handleClick(event) {
 }
 const SkeletonCustom = () => {
   return (
-    <Stack  spacing={1}  direction="row">
+    <Stack spacing={1} direction="row">
       {/* For other variants, adjust the size with `width` and `height` */}
       {/* <Skeleton variant="circular" width={40} height={40} /> */}
       <Skeleton variant="rectangular" width={210} height={180} />
@@ -50,6 +66,60 @@ const SkeletonCustom = () => {
 const Trip = ({ fetchData }) => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  let [filteredData, setFilteredData] = useState();
+  //Typography
+  const [selectedTypography, setSelectedTypography] = useState("");
+  const [statusSeat, setStatusSeat] = useState(false);
+
+  filteredData = fetchData.filter((item) => {
+    if (selectedCheckboxes.length === 0) {
+      return item.NameGarage.toLowerCase().includes(searchValue.toLowerCase());
+    } else {
+      const startTime = item.StartTime;
+      const startHour = new Date(startTime.seconds * 1000).getHours();
+      if (
+        selectedCheckboxes.includes("morning") &&
+        startHour >= 0 &&
+        startHour < 12
+      ) {
+        return item.NameGarage.toLowerCase().includes(
+          searchValue.toLowerCase()
+        );
+      }
+      if (
+        selectedCheckboxes.includes("afternoon") &&
+        startHour >= 12 &&
+        startHour < 18
+      ) {
+        return item.NameGarage.toLowerCase().includes(
+          searchValue.toLowerCase()
+        );
+      }
+      if (
+        selectedCheckboxes.includes("evening") &&
+        startHour >= 18 &&
+        startHour < 24
+      ) {
+        return item.NameGarage.toLowerCase().includes(
+          searchValue.toLowerCase()
+        );
+      } else {
+        return (
+          item.TypeVehicle === selectedCheckboxes[0] &&
+          item.NameGarage.toLowerCase().includes(searchValue.toLowerCase())
+        );
+      }
+    }
+    return false;
+    // if (selectedCheckboxes.length === 0) {
+    //   return item.NameGarage.toLowerCase().includes(searchValue.toLowerCase());
+    // } else {
+    //   return (
+    //     item.TypeVehicle === selectedCheckboxes[0] &&
+    //     item.NameGarage.toLowerCase().includes(searchValue.toLowerCase())
+    //   );
+    // }
+  });
 
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
@@ -65,17 +135,72 @@ const Trip = ({ fetchData }) => {
       setSelectedCheckboxes([...selectedCheckboxes, value]);
     }
   };
+  // checked cho thời gian khời hành
 
-  const filteredData = fetchData.filter((item) => {
-    if (selectedCheckboxes.length === 0) {
-      return item.NameGarage.toLowerCase().includes(searchValue.toLowerCase());
-    } else {
-      return (
-        item.TypeVehicle === selectedCheckboxes[0] &&
-        item.NameGarage.toLowerCase().includes(searchValue.toLowerCase())
-      );
-    }
-  });
+  const handleCheckboxTime = (e) => {
+    const value = e.target.value;
+    console.log(value);
+    const sortedData = fetchData.filter((item) => {
+      const startTime = item.StartTime;
+      const startHour = new Date(startTime.seconds * 1000).getHours();
+      console.log("startHour: " + startHour);
+
+      return startHour >= 0 && startHour < 12;
+    });
+    console.log("sortedData: " + sortedData);
+    setFilteredData(sortedData);
+  };
+
+  // xử lý sort theo price
+  const handleClickTypography = (sortType) => {
+    setSelectedTypography(sortType);
+
+    const sortedData = fetchData.sort((a, b) => {
+      if (selectedTypography === "desc") {
+        return a.Price - b.Price;
+      } else if (selectedTypography === "asc") {
+        return b.Price - a.Price;
+      }
+    });
+    console.log("selectedTypography: " + selectedTypography);
+    setFilteredData(sortedData);
+  };
+  // xử lý sort theo chỗ ngồi
+  const handleSortSeat = () => {
+    setStatusSeat((x) => !x);
+  };
+  useEffect(() => {
+    const sortedData = fetchData.sort((a, b) => {
+      const numEmptySeatsA = a.seat.filter(
+        (seat) => seat.status === "empty"
+      ).length;
+      const numEmptySeatsB = b.seat.filter(
+        (seat) => seat.status === "empty"
+      ).length;
+
+      if (statusSeat) return numEmptySeatsA - numEmptySeatsB;
+      else return numEmptySeatsB - numEmptySeatsA;
+    });
+
+    // console.log("sortedData: " + JSON.stringify(sortedData));
+    setFilteredData(sortedData);
+  }, [statusSeat]);
+
+  // get data from redux
+  const stateSearch = useSelector((state) => state.trip.stateSearch);
+  let StartPoint = "";
+  let EndPoint = "";
+  let selectDate = "";
+  const navigate = useNavigate();
+
+  try {
+    StartPoint = stateSearch[0].origin;
+    EndPoint = stateSearch[0].destination;
+    selectDate = stateSearch[0].selectDate;
+  } catch (e) {
+    navigate("/");
+  }
+
   // console.log("filteredData: " + JSON.stringify(filteredData));
 
   const breadcrumbs = [
@@ -86,7 +211,7 @@ const Trip = ({ fetchData }) => {
       Tìm vé
     </Link>,
     <Typography key="3" color="text.primary">
-      Tên chuyến đi !!!!
+      Xe đi từ {StartPoint} đến {EndPoint}
     </Typography>,
   ];
   // CircularProgress for {fetchData.length}
@@ -94,7 +219,7 @@ const Trip = ({ fetchData }) => {
 
   setTimeout(() => {
     setShowNumber(true);
-  }, 4000);
+  }, 3000);
 
   return (
     <React.Fragment>
@@ -110,7 +235,6 @@ const Trip = ({ fetchData }) => {
             </Breadcrumbs>
           </Stack>
         </Container>
-
         <Container maxWidth="lg">
           <Grid container spacing={2}>
             <Grid item xs={8} className="form__search">
@@ -119,6 +243,7 @@ const Trip = ({ fetchData }) => {
             <Grid item xs={6}></Grid>
             <Grid item xs={6}>
               <TextField
+                className="search__input"
                 variant="outlined"
                 placeholder="Search..."
                 size="medium"
@@ -138,7 +263,7 @@ const Trip = ({ fetchData }) => {
               <Item className="cnt__filter">
                 <Typography className="filter">Lọc</Typography>
                 <FormGroup>
-                  <Typography className="">Theo loại xe:</Typography>
+                  <Typography className="filter__title">Loại xe:</Typography>
                   <FormControlLabel
                     control={<Checkbox {...label} />}
                     label="Xe giường nằm 22 chỗ"
@@ -169,21 +294,130 @@ const Trip = ({ fetchData }) => {
                 </FormGroup>
               </Item>
               <Item className="cnt__filter">
-                <Typography className="">Giá vé:</Typography>
+                <FormGroup>
+                  <Typography className="filter__title">
+                    Thời gian khởi hành:
+                  </Typography>
+                  <FormControlLabel
+                    control={<Checkbox {...label} />}
+                    label="Sáng (từ 00:00 AM - 11:59 AM)"
+                    value="morning"
+                    onChange={handleCheckboxChange}
+                    checked={selectedCheckboxes.includes("morning")}
+                  />
+                  <FormControlLabel
+                    control={<Checkbox {...label} />}
+                    label="Chiều (từ 12:00 PM - 06:59 PM)"
+                    value="afternoon"
+                    onChange={handleCheckboxChange}
+                    checked={selectedCheckboxes.includes("afternoon")}
+                  />
+                  <FormControlLabel
+                    control={<Checkbox {...label} />}
+                    label="Tối (từ 07:00 PM - 11:59 PM)"
+                    value="evening"
+                    onChange={handleCheckboxChange}
+                    checked={selectedCheckboxes.includes("evening")}
+                  />
+                </FormGroup>
+              </Item>
+              <Item>
+                <Typography className="">Đánh giá:</Typography>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Rating name="half-rating-read" defaultValue={2} readOnly />
+                  {/* <Typography variant="h5" gutterBottom component="span">trở lên</Typography> */}
+                  <Typography variant="h6" display="block" gutterBottom>
+                    trở lên
+                  </Typography>
+                  {/* <Rating name="half-rating-read" defaultValue={3} readOnly />
+                  <Rating
+                    name="half-rating-read"
+                    defaultValue={3}
+                    precision={0.5}
+                    readOnly
+                  />
+                  <Rating
+                    name="half-rating-read"
+                    defaultValue={4}
+                    precision={0.5}
+                    readOnly
+                  />
+                  <Rating name="half-rating-read" defaultValue={5} readOnly /> */}
+                </Stack>
               </Item>
             </Grid>
             <Grid item xs={8}>
               <div className="cnt__info">
                 {showNumber ? (
-                  <span className="cnt__info">
+                  <span className="cnt__info result">
                     {" "}
-                    Thông tin các chuyến xe đi từ "Nơi bắt đầu" đến "Nơi đến"
-                    gồm: {fetchData.length}
+                    Chuyến xe từ {StartPoint}{" "}
+                    <ArrowRightAltIcon fontSize="large" /> {EndPoint}{" "}
+                    <span className="trip__length">
+                      ({fetchData.length} chuyến được tìm thấy)
+                    </span>
                   </span>
                 ) : (
                   <Skeleton variant="text" sx={{ fontSize: "1.5rem" }} />
                 )}
               </div>
+              <Item className="container__sort">
+                {showNumber ? (
+                  <>
+                    <Typography
+                      variant="h5"
+                      gutterBottom
+                      className="typo__sort"
+                    >
+                      Sắp xếp:
+                    </Typography>
+                    <Typography
+                      variant="button"
+                      display="block"
+                      gutterBottom
+                      className={`typo__sort`}
+                      onClick={() => handleSortSeat()}
+                    >
+                      chỗ ngồi{" "}
+                      {statusSeat ? (
+                        <ArrowDropUpIcon fontSize="large" />
+                      ) : (
+                        <ArrowDropDownIcon fontSize="large" />
+                      )}
+                    </Typography>
+
+                    <Typography
+                      variant="button"
+                      display="block"
+                      gutterBottom
+                      className={`typo__sort ${
+                        selectedTypography === "asc" ? "selected" : ""
+                      }`}
+                      onClick={() => handleClickTypography("asc")}
+                    >
+                      Giá từ thấp đến cao
+                    </Typography>
+                    <Typography
+                      variant="button"
+                      display="block"
+                      gutterBottom
+                      className={`typo__sort ${
+                        selectedTypography === "desc" ? "selected" : ""
+                      }`}
+                      onClick={() => handleClickTypography("desc")}
+                    >
+                      Giá từ cao đến thấp
+                    </Typography>
+                  </>
+                ) : (
+                  <Skeleton variant="text" sx={{ fontSize: "1.5rem" }} />
+                )}
+              </Item>
               <Item className="cnt__listtrip">
                 {showNumber ? (
                   filteredData?.map((items, index) => (

@@ -91,7 +91,7 @@ const Payment = () => {
 
       localStorage.setItem("getLocalUserDB", JSON.stringify({ data, dataBooking }));
       const getLocalUserDB = localStorage.getItem('getLocalUserDB');
-      console.log("getLocalUserDB: " + (getLocalUserDB));
+      // console.log("getLocalUserDB: " + (getLocalUserDB));
 
     } catch (error) {
       console.error(error);

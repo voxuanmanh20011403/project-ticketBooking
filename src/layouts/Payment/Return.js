@@ -23,7 +23,7 @@ function Return() {
   const [returnUrl, setReturnUrl] = useState([
   ]);
   const [removeLocal, setRemoveLocal] = useState(false);
-
+// lấy thông tin thanh toán từ returnUrl do vnpay trả về
   const search = window.location.search;
   const params = new URLSearchParams(search);
   const vnpResponseCode = params.get('vnp_ResponseCode');
@@ -42,9 +42,9 @@ function Return() {
   const second = payDate.substr(12, 2);
   const date = new Date(year, month, day, hour, minute, second);
   const formattedDateString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-
+// get db từ localStorage
   const getLocalUserDB = JSON.parse(localStorage.getItem('getLocalUserDB'));
-  console.log("getLocalUserDB: " + (getLocalUserDB));
+  // console.log("getLocalUserDB: " + (getLocalUserDB));
 
   const timeStart = getLocalUserDB.dataBooking[0].StartTime;
   const dateS = new Date(timeStart.seconds * 1000);
@@ -57,7 +57,7 @@ function Return() {
   useEffect(() => {
     setReturnUrl([amount, bankCode, bankTranNo, cardType, formattedDateString, vnpResponseCode]);
     // create collection checkout 
-    if (vnpResponseCode === '00') {
+    if (vnpResponseCode === '00') { //checkout success
       async function addDB() {
         try {
           const docRef = await addDoc(collection(db, 'Checkout'), {
@@ -114,13 +114,13 @@ function Return() {
   }
 
 
-
+ // clear local sau 1p
   if (removeLocal === true) {
     setTimeout(() => {
       localStorage.removeItem('getLocalUserDB');
     }, 60000);
   }
-
+ // bắt sự kiện beforeunload thì clear storage
   window.addEventListener('beforeunload', function (e) {
     localStorage.clear();
   });
