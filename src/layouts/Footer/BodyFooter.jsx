@@ -44,11 +44,11 @@ const BodyFooter = () => {
     return (
         <div className='body__footer'>
             {/* //      <Container  className='footer_info'> */}
-            <Container spacing={2} className='footer__info' >
+            <Container spacing={4} className='footer__info' >
                 {about.map((about, index) => {
                     return (
                         <Grid md={12}>
-                            <Grid key={index} item md={3}>
+                            <Grid key={index} item md={12}>
                                 <h4 className='about__title' >{about.title}</h4>
                                 <ul className='about__list' >
                                     {about.iteam.map((item, indexItem) => {

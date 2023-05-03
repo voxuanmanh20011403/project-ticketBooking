@@ -14,7 +14,7 @@ import { tripActions } from "redux/slices/tripsSilce";
 // toast
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import './Banner.css'
 export default function BannerDateTime({
   origin,
   destination,
@@ -92,6 +92,17 @@ export default function BannerDateTime({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         label="Ngày đi"
+        shouldDisableDate={isDateDisabled}>
+      </DatePicker>
+      <div className='button'>
+      <Stack direction="row" 
+      // spacing={2}
+      >
+        <Button variant="contained" disableElevation >
+          <h4 className='btn'>Tìm Chuyến</h4>
+      </Button>                  
+       </Stack>
+       </div>
         value={selectDate}
         onChange={handleChangeDate}
         shouldDisableDate={isDateDisabled}
