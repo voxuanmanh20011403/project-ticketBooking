@@ -1,29 +1,4 @@
-/* .body__footer{
-    color: black;
-    background-color: darkgray;
-    display: i;
-}
-.footer__info{
-    padding-top: 60px;
-    margin-bottom: 20px;
-}
-.about__title{
-    margin-bottom: 20px;
-}
-.about__list{
-    max-width: 80px;
-}
-.about__item{
-    padding-bottom: 10px;
-    display: inline-block;
-    
-    cursor: pointer;
-    
-}
-.about__item:hover{
-    color: var(--background-btn-primary);
-}
-*/
+
 .body__footer {
     color: black;
     background-color: #f3f3f3;
@@ -44,14 +19,16 @@
 .about__title {
     /* grid-column: 1 / -1; */
     /* margin-bottom: 20px; */
-    margin-right: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }   
 
 .about__list {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    max-width: 100%;
+    max-width: 150%;
 }
 
 .about__item {
@@ -71,17 +48,17 @@
 }
     
 .banner__down_app>h3{
-        font-size: 38px;
-        color: #111;
-        font-weight: 600;
-        margin: 0;
+    font-size: 38px;
+    color: #111;
+    font-weight: 600;
+     margin: 0;
 }
 
 .btn__down{
         max-width: 768px;
-        height: 50px;
+        height: 90px;
         display: flex ;
-        margin-right: 100px !important;
+        /* margin-right: 100px !important; */
         /* justify-content: flex-start;} */}
 .btn_card{
     width: 125px;

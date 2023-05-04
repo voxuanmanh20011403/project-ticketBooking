@@ -14,7 +14,7 @@ import { tripActions } from "redux/slices/tripsSilce";
 // toast
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import './Banner.css'
 export default function BannerDateTime({
   origin,
   destination,
@@ -34,27 +34,6 @@ export default function BannerDateTime({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const handleSearch = () => {
-  //   // console.log("selectDate ban đầu: " + selectDate);
-  //   if (stateOrigin === true && stateDestination === true) {
-  //     dispatch(
-  //       tripActions.addSearch({
-  //         origin: origin,
-  //         destination: destination,
-  //         selectDate: selectDate,
-  //       })
-  //     );
-  //     setTimeout(() => {
-  //       navigate("/booking");
-  //     }, 2000);
-  //   } else if(stateOrigin === false && stateDestination === true) {
-  //     toast.error("Bạn chưa nhập nơi đi!");
-  //   } else if(stateDestination === false & stateOrigin === true){
-  //     toast.error("Bạn chưa nhập nơi đến!");
-  //   } else{
-  //     toast.error("Bạn chưa nhập nơi đi và nơi đến!");
-  //   }
-  // };
   const handleSearch = async () => {
     if (stateOrigin === true && stateDestination === true) {
       toast.loading("Đang tìm kiếm...", { duration: 1000, autoClose: true });
@@ -67,7 +46,7 @@ export default function BannerDateTime({
         });
       }, 1000);
       try {
-         await dispatch(
+        await dispatch(
           tripActions.addSearch({
             origin: origin,
             destination: destination,
@@ -80,11 +59,11 @@ export default function BannerDateTime({
       } catch (error) {
         toast.error("Tìm kiếm thất bại!");
       }
-    } else if(stateOrigin === false && stateDestination === true) {
+    } else if (stateOrigin === false && stateDestination === true) {
       toast.error("Bạn chưa nhập nơi đi!");
-    } else if(stateDestination === false && stateOrigin === true){
+    } else if (stateDestination === false && stateOrigin === true) {
       toast.error("Bạn chưa nhập nơi đến!");
-    } else{
+    } else {
       toast.error("Bạn chưa nhập nơi đi và nơi đến!");
     }
   };

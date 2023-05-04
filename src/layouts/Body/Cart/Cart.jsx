@@ -1,108 +1,85 @@
-// import React from 'react'
-// import ImageList from '@mui/material/ImageList';
-// import ImageListItem from '@mui/material/ImageListItem';
-// import ImageListItemBar from '@mui/material/ImageListItemBar';
-// import ListSubheader from '@mui/material/ListSubheader';
-// import IconButton from '@mui/material/IconButton';
-// import InfoIcon from '@mui/icons-material/Info';
-// import SliderCustom from 'layouts/slide/SliderCustom';
-// import Carousel from 'layouts/Booking/Carousel';
-// const img = [
-//   'https://storage.googleapis.com/vex-config/cms-tool/destination/images/20/img_card.png',
-//   'https://storage.googleapis.com/vex-config/cms-tool/destination/images/24/img_hero.png',
-//   'https://storage.googleapis.com/vex-config/cms-tool/destination/images/3/img_hero.png',
-//   'https://storage.googleapis.com/vex-config/cms-tool/destination/images/22/img_hero.png',
-//   'https://storage.googleapis.com/vex-config/cms-tool/destination/images/25/img_hero.png',
-// ]
-// export default function Cart() {
-//   return (
-//     <Carousel></Carousel>
-//   );
-// }
+import React from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-coverflow';
+import { EffectCoverflow, Pagination, Navigation } from 'swiper';
+import './Cart.css'
 
+import cart1 from "./../../../assets/img/Cart1.png"
+import cart2 from "./../../../assets/img/Cart2.png"
+import cart3 from "./../../../assets/img/Cart3.png"
+import cart4 from "./../../../assets/img/Cart4.png"
+import cart5 from "./../../../assets/img/Cart5.png"
+import cart6 from "./../../../assets/img/Cart16.png"
+import cart7 from "./../../../assets/img/Cart7.png"
 
-import React, { useCallback, useRef, useState } from "react";
-import Glider from "react-glider";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import "glider-js/glider.min.css";
-
- import "./Cart.css";
-
-const Cart = () => {
-  const leftArrowEl = useRef(null);
-  const rightArrowEl = useRef(null);
-  const [isReady, setIsReady] = useState(false);
-
-  const leftArrowCallbackRef = useCallback((element) => {
-    leftArrowEl.current = element;
-    setIsReady(Boolean(leftArrowEl.current && rightArrowEl.current));
-  }, []);
-
-  const rightArrowCallbackRef = useCallback((element) => {
-    rightArrowEl.current = element;
-    setIsReady(Boolean(leftArrowEl.current && rightArrowEl.current));
-  }, []);
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+function Cart() {
   return (
     <div className="container">
-      {isReady && (
-        <Glider
-          className="glider-container"
-          draggable
-          hasDots
-          slidesToShow={4}
-          scrollLock
-          hasArrows
-          arrows={{
-            prev: leftArrowEl.current,
-            next: rightArrowEl.current,
-          }}
-        >
-          <div className="slide">
-            <img src="https://storage.googleapis.com/vex-config/cms-tool/destination/images/20/img_card.png" />
+      <p className='title'>Tuyến phổ biến </p>
+      <div className="iteam">
+        <div className="row">
+          <div className="iteam-container">
+            <div className='mark'>
+              <img src={cart6} alt="" />
+              <div className='text'>
+                <h3>SÀI GÒN ⇒ ĐÀ NẴNG</h3>
+              </div>
+              <div className='detail'>
+                <LocationOnIcon />980km
+                <AccessTimeIcon />20h
+                <ConfirmationNumberIcon />395.000đ
+              </div>
+            </div>
           </div>
-          <div className="slide">
-            <img src="https://storage.googleapis.com/vex-config/cms-tool/destination/images/24/img_hero.png" />
+          <div className="iteam-container">
+            <div className='mark'>
+              <img src={cart1} alt="" />
+              <div className='text1'>
+                <h3>SÀI GÒN ⇒ HUẾ</h3>
+              </div>
+              <div className='detail'>
+                <LocationOnIcon />1050km
+                <AccessTimeIcon />22h
+                <ConfirmationNumberIcon />400.000đ
+              </div>
+            </div>
           </div>
-          <div className="slide">
-            <img src="https://storage.googleapis.com/vex-config/cms-tool/destination/images/3/img_hero.png" />
+        </div>
+          <div className="iteam-container">
+            <div className='mark'>
+              <img src={cart7} alt="" />
+              <div className='text'>
+                <h3>ĐÀ NẴNG ⇒ HÀ NỘI</h3>
+              </div>
+              <div className='detail'>
+                <LocationOnIcon />745km
+                <AccessTimeIcon />18h
+                <ConfirmationNumberIcon />360.000đ
+              </div>
+            </div>
           </div>
-          <div className="slide">
-            <img src="https://storage.googleapis.com/vex-config/cms-tool/destination/images/22/img_hero.png" />
-          </div>
-          <div className="slide">
-            <img src="https://storage.googleapis.com/vex-config/cms-tool/destination/images/25/img_hero.png" />
-          </div>
-          {/* <div className="slide">
-            <img src="https://static.vexere.com/production/images/1664766327226.jpeg" />
-          </div>
-          <div className="slide">
-            <img src="https://static.vexere.com/production/images/1664766327226.jpeg" />
-          </div> */}
-        </Glider>
-      )}
-      <div className="btn__arrow">
-        <button
-          ref={leftArrowCallbackRef}
-          type="button"
-          aria-label="Previous"
-          className="custom-arrow"
-        >
-          <KeyboardArrowLeftIcon />
-        </button>
-        <button
-          ref={rightArrowCallbackRef}
-          type="button"
-          aria-label="Next"
-          className="custom-arrow"
-        >
-          <KeyboardArrowRightIcon />
-        </button>
+          <div className="iteam-container">
+            <div className='mark'>
+              <img src={cart5} alt="" />
+              <div className='text1'>
+                <h3>HUẾ ⇒ HÀ NỘI</h3>
+              </div>
+              <div className='detail'>
+                <LocationOnIcon />654km
+                <AccessTimeIcon />12h
+                <ConfirmationNumberIcon />320.000đ
+              </div>
+            </div>
+        </div>
       </div>
     </div>
   );
-};
+}
 
-export default Cart;
-
-
+export default Cart
