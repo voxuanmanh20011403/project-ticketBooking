@@ -13,36 +13,12 @@ import OrdersOverview from "./components/OrdersOverview";
 import Projects from "./components/Projects";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "data/firebase";
+import { ChartNe } from "./Chart/LineChartViewer";
+
 
 function Dashboard() {
-  const { sales, tasks } = reportsLineChartData;
-  const [percent, setPercent] = useState();
-  const [bookings, setBookings] = useState([]);
-  //GET DATA TO TABLE VENUE
-  const BookingsRef = collection(db, "Statistics");
-  const getBookings = query(BookingsRef, orderBy("ID_month", "desc"));
-  useEffect(() => {
-    const getBooking = async () => {
-      const data = await getDocs(getBookings);
-      setBookings(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getBooking();
-  }, [BookingsRef]);
-
-  // useEffect(() => {
-  //   const fetchData =()=>{
-  //     {bookings.map((bookings) => (
-  //       console.log((bookings.Bookings))
-  //     ))}
-  //   }
-  //   fetchData();
-    // const value=190/100*100;
-    // value>=100 ? setPercent("+ "+(value-100)+" % "): setPercent(" - "+(100-value)+" % " )
-    // setCount(1209);
-  // });
   return (
     <DashboardLayout>
-      {/* Header */}
       <DashboardNavbar />
       <MDBox py={3}>
         {/* so user ở dashboard */}
@@ -51,14 +27,14 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
-                icon="weekend"
-                title="Bookings"
-                count="2,300"
-                percentage={{
-                  color: 120 > 100 ? "success" : "primary",
-                  amount: percent,
-                  label: "than lask month",
-                }}
+                // icon="weekend"
+                // title="Bookings"
+                // count="2,300"
+                // percentage={{
+                //   color: 120 > 100 ? "success" : "primary",
+                //   amount: percent,
+                //   label: "than lask month",
+                // }}
               />
             </MDBox>
           </Grid>
@@ -77,34 +53,10 @@ function Dashboard() {
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="store"
-                title="Viewer"
-                count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
-              />
-            </MDBox>
+            <MDBox mb={1.5}></MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title="Revenue month"
-                count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
-              />
-            </MDBox>
+            <MDBox mb={1.5}></MDBox>
           </Grid>
         </Grid>
         {/* phan2 : chart */}
@@ -112,57 +64,23 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="Ticket bookings by bus operator"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
+                <ChartNe />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="Booking"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) .
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
+                <ChartNe />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="Total new car "
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
-                />
+                <ChartNe />
               </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox>
-          <Grid container spacing={3}>
-            {/* bên phai */}
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-            </Grid>
-            {/* bên trái */}
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
             </Grid>
           </Grid>
         </MDBox>
       </MDBox>
-      <Footer />
+      
     </DashboardLayout>
   );
 }

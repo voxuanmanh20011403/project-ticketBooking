@@ -164,6 +164,7 @@ function AddCar(props) {
         ...formData,
         Price: price,
         StartTime: timestamp,
+        StartTimeNext: timestamp2,
         seat: state.map((seat) => {
           return {
             id: seat.id,
@@ -230,6 +231,7 @@ function AddCar(props) {
   };
   //format time
   const [selectDate, setSelectDate] = useState(dayjs());
+  const [selectDate2, setSelectDate2] = useState(dayjs());
   const today = dayjs().startOf("day");
   const isDateDisabled = (date) => {
     return date.isBefore(today, "day");
@@ -237,8 +239,13 @@ function AddCar(props) {
   const handleChangeDate = (date) => {
     setSelectDate(date);
   };
+  const handleChangeDate2 = (date) => {
+    setSelectDate2(date);
+  };
   const date = new Date(selectDate);
   const timestamp = Timestamp.fromDate(date);
+  const date2 = new Date(selectDate2);
+  const timestamp2 = Timestamp.fromDate(date2);
 
   return (
     <DashboardLayout>
@@ -391,6 +398,14 @@ function AddCar(props) {
                         placeholder="Thời gian hành trình"
                       />
 
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDateTimePicker
+                          value={selectDate}
+                          onChange={handleChangeDate}
+                          shouldDisableDate={isDateDisabled}
+                          className="Garage datapicker "
+                        />
+                      </LocalizationProvider>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDateTimePicker
                           value={selectDate}
