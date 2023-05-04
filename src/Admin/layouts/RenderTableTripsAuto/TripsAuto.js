@@ -42,9 +42,15 @@ export const TripsAuto = () => {
   useEffect(() => {
     const intervalId = setInterval(function () {
       var now = new Date();
-      if (now.getHours() === 8 && now.getMinutes() === 12) {
+      if (now.getHours() === 16 && now.getMinutes() === 4) {
         for (let i = 0; i < listCars.length; i++) {
           const car = listCars[i];
+          // Tính khoảng cách giữa 2 ngày dưới dạng số mili giây
+          const diffMillis =
+            car.StartTimeNext.toDate() - car.StartTime.toDate();
+          // Chuyển đổi số mili giây thành số ngày
+          const diffDays = Math.floor(diffMillis / (1000 * 60 * 60 * 24));
+
           if (groupedData[car.ID_Car]) {
             console.log(`Car ${car.ID_Car} tồn tại `);
             const lengData =
@@ -53,7 +59,7 @@ export const TripsAuto = () => {
 
             //cộng ngày chạy
             const date = StartTime.toDate();
-            date.setDate(date.getDate() + 2);
+            date.setDate(date.getDate() + diffDays);
             //chuyển vào fb
             const fromDate = new Date(date);
             const timestamp = Timestamp.fromDate(date);
@@ -92,9 +98,29 @@ export const TripsAuto = () => {
             } catch (e) {}
             // console.log('groupLists2',groupLists);
             clearInterval(intervalId);
-           
           } else {
-            console.log(`Car ${car.ID_Car} ko tồn tại `);
+            console.log(
+              `Car ${car.ID_Car} ko tồn tại, tiến hành tạo bảng đầu tiên `
+            );
+            try {
+              const docRef = addDoc(collection(db, "Trips"), {
+                EndPoint: car.EndPoint,
+                Hotline: car.Hotline,
+                ID_Car: car.ID_Car,
+                ID_Garage: car.ID_Garage,
+                LicensePlate: car.LicensePlate,
+                Namegarage: car.Namegarage,
+                PakingEnd: car.PakingEnd,
+                PakingStart: car.PakingStart,
+                Price: car.Price,
+                Seat: newState,
+                StartPoint: car.StartPoint,
+                TypeVehicle: car.TypeVehicle,
+                duration: car.duration,
+                StartTime: StartTime,
+              });
+              console.log("Document written with ID: ", docRef.id);
+            } catch (e) {}
 
             //dưeaj vào starttimn
             //
