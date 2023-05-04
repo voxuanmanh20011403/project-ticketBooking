@@ -50,7 +50,6 @@ const Booking = () => {
     } catch (error) {
       console.error(error);
       navigate("/");
-
     }
   }, [stateSearch, navigate]);
 

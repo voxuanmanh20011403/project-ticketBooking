@@ -11,7 +11,9 @@ import { seatEmptyUI, seatChooseUI, seatNullUI } from "./UISeat";
 import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-
+import Stack from "@mui/material/Stack";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // redux
 import { tripActions } from "redux/slices/tripsSilce";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const ListSeat = ({ items }) => {
-  console.log("data: " + JSON.stringify(items.id));
+  // console.log("data: " + JSON.stringify(items.id));
 
   let listSeat = items.seat;
 
@@ -143,7 +145,9 @@ const ListSeat = ({ items }) => {
         <div
           key={seat.id}
           onClick={() => handleChoNgoi(seat.id, seat.name)}
-          className={selectedSeats.includes(seat.id) ? "seat__note_choose" : ""}
+          className={` ${seats.length === 1 ? "seat__note_single" : ""} 
+            ${selectedSeats.includes(seat.id) ? "seat__note_choose" : ""}
+          `}
         >
           <Tooltip title={seat.name} placement="top">
             {seat.ui}
@@ -157,9 +161,9 @@ const ListSeat = ({ items }) => {
 
   const handleContinue = () => {
     // console.log("data: " + JSON.stringify(items));
-
     if (totalPrice === 0) {
-      console.log("1232121");
+      // console.log("1232121");
+      toast.error("Bạn chưa chọn vé!");
     } else {
       dispatch(
         tripActions.addBooking({
@@ -176,7 +180,9 @@ const ListSeat = ({ items }) => {
           totalPrice,
         })
       );
+      setTimeout(() => {
         navigate("/payment");
+      }, 1500);
     }
   };
 
@@ -200,29 +206,44 @@ const ListSeat = ({ items }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <div>
-      <span>Danh sách ghế đang chọn: </span>
-        {selectedSeatNames.map((name, index) => (
-          <span key={index}>
-            {name}
-            {index !== selectedSeatNames.length - 1 && ", "}
-           </span>
-        ))}
-        <br />
-        <span>Tổng số lượng ghế: {selectedSeatNames.length}</span>
-      </div>
-      <div className="btn__tt">
-        <div className="total">Tổng tiền: {totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</div>
+      <Stack
+        direction="column"
+        justifyContent="center"
+        alignItems="flex-start"
+        spacing={1}
+      >
+        <span>
+          {selectedSeatNames.length} vé: {` `}
+          {selectedSeatNames.map((name, index) => (
+            <span key={index}>
+              {name}
+              {index !== selectedSeatNames.length - 1 && ", "}
+            </span>
+          ))}
+        </span>
+        <div className="total ">
+          Tổng tiền:{" "}
+          {totalPrice.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          })}
+        </div>
+      </Stack>
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="flex-start"
+        spacing={0}
+      >
         <Button
-          variant="contained"
           size="small"
           className="btn"
           onClick={handleContinue}
         >
           Tiếp tục
-          <ArrowRightAltIcon className="icon" />
         </Button>
-      </div>
+        <ArrowRightAltIcon fontSize="large" color="white"/>
+      </Stack>
     </div>
   );
   return <SeatTable choNgoi={choNgoi} />;

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -21,15 +20,15 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   collection,
-  query,
-  onSnapshot,
-  where,
-  Timestamp,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "./../../data/firebase";
 // Router
@@ -38,6 +37,9 @@ import { useNavigate, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTrips } from "redux/slices/tripsSilce";
 import "./style.css";
+import BannerSearch from "layouts/Body/Banner/BannerSearch";
+import dayjs from "dayjs";
+import '../Body/Banner/Banner.css';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -70,6 +72,11 @@ const Trip = ({ fetchData }) => {
   //Typography
   const [selectedTypography, setSelectedTypography] = useState("");
   const [statusSeat, setStatusSeat] = useState(false);
+
+  const [startPointRedux, setStartPointRedux] = useState("");
+  const [endPointRedux, setEndPointRedux] = useState("");
+  // const [selectDate, setSelectDate] = useState("");
+  const navigate = useNavigate();
 
   filteredData = fetchData.filter((item) => {
     if (selectedCheckboxes.length === 0) {
@@ -135,21 +142,6 @@ const Trip = ({ fetchData }) => {
       setSelectedCheckboxes([...selectedCheckboxes, value]);
     }
   };
-  // checked cho thời gian khời hành
-
-  const handleCheckboxTime = (e) => {
-    const value = e.target.value;
-    console.log(value);
-    const sortedData = fetchData.filter((item) => {
-      const startTime = item.StartTime;
-      const startHour = new Date(startTime.seconds * 1000).getHours();
-      console.log("startHour: " + startHour);
-
-      return startHour >= 0 && startHour < 12;
-    });
-    console.log("sortedData: " + sortedData);
-    setFilteredData(sortedData);
-  };
 
   // xử lý sort theo price
   const handleClickTypography = (sortType) => {
@@ -188,18 +180,15 @@ const Trip = ({ fetchData }) => {
 
   // get data from redux
   const stateSearch = useSelector((state) => state.trip.stateSearch);
-  let StartPoint = "";
-  let EndPoint = "";
-  let selectDate = "";
-  const navigate = useNavigate();
-
-  try {
-    StartPoint = stateSearch[0].origin;
-    EndPoint = stateSearch[0].destination;
-    selectDate = stateSearch[0].selectDate;
-  } catch (e) {
-    navigate("/");
-  }
+  useEffect(() => {
+    try {
+      setStartPointRedux(stateSearch[0].origin);
+      setEndPointRedux(stateSearch[0].destination);
+      // setSelectDate(stateSearch[0].selectDate);
+    } catch (e) {
+      navigate("/");
+    }
+  }, []);
 
   // console.log("filteredData: " + JSON.stringify(filteredData));
 
@@ -211,7 +200,7 @@ const Trip = ({ fetchData }) => {
       Tìm vé
     </Link>,
     <Typography key="3" color="text.primary">
-      Xe đi từ {StartPoint} đến {EndPoint}
+      {startPointRedux} - {endPointRedux}
     </Typography>,
   ];
   // CircularProgress for {fetchData.length}
@@ -220,6 +209,93 @@ const Trip = ({ fetchData }) => {
   setTimeout(() => {
     setShowNumber(true);
   }, 3000);
+
+  // Search and datetime 
+  const [dataFake, setDataFake] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const accountsCol = collection(db, "Location");
+      const accountsSnapshot = await getDocs(accountsCol);
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      console.log("accountsList", accountsList);
+      setDataFake(accountsList[0].title);
+    }
+    fetchData();
+  }, []);
+
+  const locations = dataFake;
+  const [origin, setOrigin] = useState(locations);
+  const [destination, setDestination] = useState(locations);
+
+  const [stateOrigin, setStateOrigin] = useState(false);
+  const [stateDestination, setStateDestination] = useState(false);
+
+  const handleOriginChange = (event, value) => {
+    setOrigin(value);
+    setStateOrigin(true);
+  };
+  const handleDestinationChange = (event, value) => {
+    setDestination(value);
+    setStateDestination(true);
+  };
+  //handle click 1 chiều set từ đi ssang đến
+  const destinationOptions = locations.filter(
+    (location) => location !== origin
+  );
+
+  const [selectDate, setSelectDate] = useState(dayjs());
+
+  const today = dayjs().startOf("day");
+  const isDateDisabled = (date) => {
+    return date.isBefore(today, "day");
+  };
+  const handleChangeDate = (date) => {
+    setSelectDate(date);
+  };
+// console.log("selectDate: " + selectDate);
+  const dispatch = useDispatch();
+
+  const handleSearchDateTime = async () => {
+    if (stateOrigin === true && stateDestination === true) {
+      toast.loading("Đang tìm kiếm...", { duration: 1000, autoClose: true });
+      setTimeout(() => {
+        toast.dismiss(); // đóng toast
+      }, 1000);
+      setTimeout(() => {
+        toast.success("Tìm kiếm thành công!", {
+          autoClose: 1000,
+        });
+      }, 1000);
+      try {
+         await dispatch(
+          tripActions.addSearch({
+            origin: origin,
+            destination: destination,
+            selectDate: selectDate,
+          })
+        );
+        // setTimeout(() => {
+        //   navigate("/booking");
+        // }, 2500);
+      } catch (error) {
+        toast.error("Tìm kiếm thất bại!");
+      }
+
+    } else if(stateOrigin === false && stateDestination === true) {
+      toast.error("Bạn chưa nhập nơi đi!");
+    } else if(stateDestination === false && stateOrigin === true){
+      toast.error("Bạn chưa nhập nơi đến!");
+    } else{
+      toast.error("Bạn chưa nhập nơi đi và nơi đến!");
+    }
+  };
+
 
   return (
     <React.Fragment>
@@ -237,15 +313,65 @@ const Trip = ({ fetchData }) => {
         </Container>
         <Container maxWidth="lg">
           <Grid container spacing={2}>
-            <Grid item xs={8} className="form__search">
-              Đây là chỗ tìm kiếm gồm nơi đi nơi đến và datetimepicker của Dũng
+            <Grid item xs={12} className="form__search">
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={1}
+              >
+                <div>
+                  <Autocomplete
+                    value={origin}
+                    onChange={handleOriginChange}
+                    id="fromLocation"
+                    options={locations}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Nơi xuất phát" />
+                    )}
+                  />
+                </div>
+                <div>
+                  <Autocomplete
+                    value={destination}
+                    onChange={handleDestinationChange}
+                    id="toLocation"
+                    options={destinationOptions}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Nơi đến" />
+                    )}
+                  />
+                </div>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Ngày đi"
+                    value={selectDate}
+                    onChange={handleChangeDate}
+                    shouldDisableDate={isDateDisabled}
+                    disablePast
+                    showTodayButton
+                    todayLabel="Now"
+                  ></DatePicker>
+                  <Stack direction="row">
+                    <Button
+                      variant="contained"
+                      disableElevation
+                      onClick={handleSearchDateTime}
+                    >
+                      <h3 className="btn">Tìm Chuyến</h3>
+                    </Button>
+                  </Stack>
+                </LocalizationProvider>
+              </Stack>
             </Grid>
             <Grid item xs={6}></Grid>
             <Grid item xs={6}>
               <TextField
                 className="search__input"
                 variant="outlined"
-                placeholder="Search..."
+                placeholder="Tìm kiếm tên nhà xe..."
                 size="medium"
                 fullWidth
                 InputProps={{
@@ -259,7 +385,7 @@ const Trip = ({ fetchData }) => {
               />
             </Grid>
             <Grid item xs={10}></Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <Item className="cnt__filter">
                 <Typography className="filter">Lọc</Typography>
                 <FormGroup>
@@ -300,21 +426,21 @@ const Trip = ({ fetchData }) => {
                   </Typography>
                   <FormControlLabel
                     control={<Checkbox {...label} />}
-                    label="Sáng (từ 00:00 AM - 11:59 AM)"
+                    label="Sáng (từ 00:00 - 11:59)"
                     value="morning"
                     onChange={handleCheckboxChange}
                     checked={selectedCheckboxes.includes("morning")}
                   />
                   <FormControlLabel
                     control={<Checkbox {...label} />}
-                    label="Chiều (từ 12:00 PM - 06:59 PM)"
+                    label="Chiều (từ 12:00 - 18:59)"
                     value="afternoon"
                     onChange={handleCheckboxChange}
                     checked={selectedCheckboxes.includes("afternoon")}
                   />
                   <FormControlLabel
                     control={<Checkbox {...label} />}
-                    label="Tối (từ 07:00 PM - 11:59 PM)"
+                    label="Tối (từ 19:00 - 23:59)"
                     value="evening"
                     onChange={handleCheckboxChange}
                     checked={selectedCheckboxes.includes("evening")}
@@ -330,34 +456,73 @@ const Trip = ({ fetchData }) => {
                   spacing={2}
                 >
                   <Rating name="half-rating-read" defaultValue={2} readOnly />
-                  {/* <Typography variant="h5" gutterBottom component="span">trở lên</Typography> */}
                   <Typography variant="h6" display="block" gutterBottom>
                     trở lên
                   </Typography>
-                  {/* <Rating name="half-rating-read" defaultValue={3} readOnly />
+                </Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Rating name="half-rating-read" defaultValue={3} readOnly />
+                  <Typography variant="h6" display="block" gutterBottom>
+                    trở lên
+                  </Typography>
+                </Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={2}
+                >
                   <Rating
                     name="half-rating-read"
                     defaultValue={3}
                     precision={0.5}
                     readOnly
                   />
+                  <Typography variant="h6" display="block" gutterBottom>
+                    trở lên
+                  </Typography>
+                </Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={2}
+                >
                   <Rating
                     name="half-rating-read"
                     defaultValue={4}
                     precision={0.5}
                     readOnly
                   />
-                  <Rating name="half-rating-read" defaultValue={5} readOnly /> */}
+                  <Typography variant="h6" display="block" gutterBottom>
+                    trở lên
+                  </Typography>
+                </Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Rating name="half-rating-read" defaultValue={5} readOnly />
+                  <Typography variant="h6" display="block" gutterBottom>
+                    trở lên
+                  </Typography>
                 </Stack>
               </Item>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={9}>
               <div className="cnt__info">
                 {showNumber ? (
                   <span className="cnt__info result">
                     {" "}
-                    Chuyến xe từ {StartPoint}{" "}
-                    <ArrowRightAltIcon fontSize="large" /> {EndPoint}{" "}
+                    Chuyến xe từ {startPointRedux}{" "}
+                    <ArrowRightAltIcon fontSize="large" /> {endPointRedux}{" "}
                     <span className="trip__length">
                       ({fetchData.length} chuyến được tìm thấy)
                     </span>
@@ -368,7 +533,12 @@ const Trip = ({ fetchData }) => {
               </div>
               <Item className="container__sort">
                 {showNumber ? (
-                  <>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="flex-start"
+                    spacing={0}
+                  >
                     <Typography
                       variant="h5"
                       gutterBottom
@@ -378,7 +548,6 @@ const Trip = ({ fetchData }) => {
                     </Typography>
                     <Typography
                       variant="button"
-                      display="block"
                       gutterBottom
                       className={`typo__sort`}
                       onClick={() => handleSortSeat()}
@@ -400,7 +569,7 @@ const Trip = ({ fetchData }) => {
                       }`}
                       onClick={() => handleClickTypography("asc")}
                     >
-                      Giá từ thấp đến cao
+                      Giá thấp - cao
                     </Typography>
                     <Typography
                       variant="button"
@@ -411,9 +580,9 @@ const Trip = ({ fetchData }) => {
                       }`}
                       onClick={() => handleClickTypography("desc")}
                     >
-                      Giá từ cao đến thấp
+                      Giá cao - thấp
                     </Typography>
-                  </>
+                  </Stack>
                 ) : (
                   <Skeleton variant="text" sx={{ fontSize: "1.5rem" }} />
                 )}

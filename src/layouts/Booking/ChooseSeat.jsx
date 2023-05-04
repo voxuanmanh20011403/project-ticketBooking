@@ -13,6 +13,7 @@ import Grid from "@mui/material/Grid";
 import { seatEmptyUI, seatChooseUI, seatNullUI } from "./UISeat";
 import ListSeat from "./ListSeat";
 import Test from "./Test";
+import Stack from "@mui/material/Stack";
 
 const ChooseSeat = ({ items }) => {
   const card = (
@@ -22,42 +23,80 @@ const ChooseSeat = ({ items }) => {
         <Grid spacing={2} container>
           {/* Gird chú thích */}
           <Grid item xs={3} container>
-            <Grid item xs direction="column" spacing={2}>
-              <Grid item xs={12}>
-                <Typography gutterBottom variant="subtitle1">
-                  Chú thích
-                </Typography>
-                {/* Ghế trống */}
-                <Typography
-                  variant="body2"
-                  gutterBottom
-                  className="seat seat__note"
+            <Grid item xs={12} className="gird__note">
+              <Typography gutterBottom variant="subtitle1">Chú thích</Typography>
+              
+              <Stack
+                className="stack__note"
+                direction="column"
+                justifyContent="center"
+                alignItems="flex-start"
+                spacing={3}
+              >
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={2}
                 >
                   {seatEmptyUI()}
-                  <span className="note__name">Còn trống</span>
-                </Typography>
-                {/* Ghế được chọn */}
-                <Typography variant="body2" className=" seat seat__note_choose">
+                  <Typography
+                    variant="body2"
+                    gutterBottom
+                    className="seat seat__note"
+                  >
+                    Còn trống
+                  </Typography>
+                </Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={2}
+                >
                   {seatChooseUI()}
-                  <span className="note__name">Đang chọn</span>
-                </Typography>
-                {/* Ghế k bán */}
-                <Typography variant="body2" className=" seat seat__note_null">
+                  <Typography
+                    variant="body2"
+                    className=" seat seat__note_choose"
+                  >
+                    Đang chọn
+                  </Typography>
+                </Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={2}
+                >
                   {seatNullUI()}
-
-                  <span className="note__name">Ghế đã đặt</span>
-                </Typography>
-              </Grid>
+                  <Typography
+                    variant="body2"
+                    className=" seat seat__note_choose"
+                  >
+                    Ghế đã đặt
+                  </Typography>
+                </Stack>
+              </Stack>
             </Grid>
           </Grid>
           {/* Gird sơ đồ ghế */}
           <Grid item xs={9} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
-                <Typography gutterBottom variant="subtitle1" component="div">
-                  <ListSeat items={items} />
-                  {/* <Test /> */}
-                </Typography>
+                <Stack
+                  direction="row"
+                  justifyContent="space-around"
+                  alignItems="flex-start"
+                  spacing={2}
+                >
+                  <Typography gutterBottom variant="h5" component="div">
+                    Tầng dưới
+                  </Typography>
+                  <Typography gutterBottom variant="h5" component="div">
+                    Tầng trên
+                  </Typography>
+                </Stack>
+                <ListSeat items={items} />
               </Grid>
             </Grid>
           </Grid>
