@@ -38,7 +38,11 @@ import { LoginAction } from "redux/slices/auth";
 import { LogoutAction } from "redux/slices/auth";
 import { in4 } from "redux/slices/auth";
 import { Infor } from "redux/slices/auth";
+
+import User from "layouts/User/User";
+
 import { TripsAuto } from "Admin/layouts/RenderTableTripsAuto/TripsAuto";
+
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -100,8 +104,12 @@ export default function App() {
           )
         }
         <Route path="*" element={<NotFoundPage />} />
+
+        <Route path="/user" element={<User/>} />
+
         <Route path="TestAddCar" element={<TestAddCar />} />
         <Route path="addusser" element={<AddUser />} />
+
       </Routes>
       <TripsAuto />
     </ThemeProvider>

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React,{ useState,useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -12,6 +12,7 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import { blue } from '@mui/material/colors';
 
 export default function AccountMenu() {
 
@@ -22,6 +23,14 @@ export default function AccountMenu() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  const handleLoginSuccess = (user) => {
+    setIsLoggedIn(true);
+    setUserName(user.name);
   };
 
   const navigate = useNavigate();
@@ -40,20 +49,22 @@ export default function AccountMenu() {
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography className='logo__img' sx={{ minWidth: 500}}></Typography>
-        <Typography fontSize="large" sx={{ minWidth: 150 }} >Tìm Chuyến</Typography>
-        <Typography fontSize="large" sx={{ minWidth: 150 }} >Tuyến Phổ Biến</Typography>
-        <Typography fontSize="large" sx={{ minWidth: 150 }} >Bến Xe Khách</Typography>
+        <Typography className='logo__img' sx={{ minWidth: 300}}></Typography>
+        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" color="secondary"  >Tìm Chuyến</Typography>
+        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" color="secondary" >Tuyến Phổ Biến</Typography>
+        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" color="secondary" >Bến Xe Khách</Typography>
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 15 }}
+            sx={{ ml: 20 }}
             aria-controls={open ? 'account-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
-          >
-            <Avatar sx={{ width: 50, height: 45 }}></Avatar>
+          > <div className='icon'>
+                 {isLoggedIn ? `Xin chào,` :  <Avatar sx={{ width: 45, height: 45 }}></Avatar>}
+          </div>
+           
           </IconButton>
         </Tooltip>
       </Box>
