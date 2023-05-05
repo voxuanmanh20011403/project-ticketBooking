@@ -2,12 +2,6 @@
     display: flex;
     align-items: center;
 }
-
-.seat .note__name{
-    display: flex;
-    flex-direction: column;
-    margin-left: 10px;
-}
 /* Ghế được chọn */
 .seat__note_choose svg rect{
     stroke: rgb(39, 174, 96);
@@ -25,9 +19,19 @@
 }
 .seat__note_null svg .icon-disabled {
     fill: rgb(242, 242, 242);
+    cursor: pointer;
 }
 .seat__note_null svg .icon-selected {
     fill: rgb(39, 174, 96);
+    cursor: pointer;
+    
+}
+/* ChooseSeat */
+.gird__note{
+    padding-top: 5rem;
+}
+.gird__note .stack__note{
+    margin-top: 1rem;
 }
 /* Info Trips*/
 .info__main .v__info{
@@ -86,6 +90,7 @@
     font-size: 14px;
     font-weight: none;
     padding: 5px 0px 10px 0;
+    color: #3b6100;
 }
 .lich__trinh .ghe__trong{
     position: absolute;
@@ -101,7 +106,7 @@
 
 }
 .tabs .tabs__link{
-    margin-right: 10px;
+    margin-right: 4rem;
     -webkit-text-decoration: underline !important;
     color: #0d6efd;
     text-decoration: underline !important;
@@ -144,30 +149,7 @@
     display: flex;
     justify-content: space-between;
 }
-/* List Seat */
-.table {
-    width: 100%;
-    height: 100%;
-}
-/* .table .btn__tt{
-    position: relative;
-    width: 100%;
-    height: 100%;
-} */
-.table .btn__tt .total{
-    font-size: 16px;
-    font-weight: bold;
-    /* margin-top: 5px;
-    position: absolute;
-    top: 30%;
-    left: 25%; */
-}
-.table .btn__tt .btn{
-    color: white;
-    /* position: absolute;
-    right: 0;
-    top: 100%; */
-}
+
 /* search */
 .TextField{
     font-size: 20px !important;
@@ -183,8 +165,8 @@
 .ctn__trip{
     background: #fff !important;
 }
-.ctn__trip .breadcrumb{
-    padding-top: 3rem;
+.ctn__trip .css-4pdmu4-MuiBreadcrumbs-ol {
+    padding-top: 6rem;
 }
 .ctn__trip .FormGroup{
     padding: 2rem;
@@ -211,15 +193,84 @@
     border-top-right-radius: 3px;
     padding: 10px 15px;
 }
+.cnt__filter .filter__title{
+    margin-left: 1rem;
+    cursor: pointer;
+    color: #111;
+    font-size: 18px;
+    text-decoration: underline;
+}
 .ctn__trip .cnt__info{
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: black;
     font-weight: 500;
     padding: 0 0 2rem 0;
-
+    margin: 0px;
+    display: inline;
 }
+
 .ctn__trip .form__search{
     padding: 4rem !important;
+}
+.ctn__trip .search__input{
+    padding: 10px;
+    transition-duration: 500ms;
+    cursor: pointer;
+    font-size: 15px;
+    border: 1px solid white;
+    overflow: hidden;
+}
+
+.result .css-1mijgri-MuiSvgIcon-root{
+    transform: translateY(.5rem);
+}
+
+.cnt__info .trip__length{
+    font-weight: normal;
+    color: #444;
+    font-style: italic;
+}
+/* .ctn__trip .search__input{
+
+} */
+.typo__sort{
+    cursor: pointer;
+}
+.typo__sort.selected {
+    color: #0d47a1;
+    font-weight: bold;
+}
+.css-17nabyk-MuiTypography-root{
+    transform: translateY(-1rem);
+    
+}
+.typo__sort .css-1mijgri-MuiSvgIcon-root{
+    transform: translateY(.8rem);
+}
+
+.css-1vqs9o7-MuiButtonBase-root-MuiButton-root{
+    width: 8rem;
+}
+.time__arrive{
+    margin-bottom: 0.5rem;
+}
+.container__sort{
+    margin-top: 1rem;
+
+}
+.container__sort .css-w5nres-MuiButtonBase-root-MuiButton-root{
+    width: 10rem;
+    color: rgba(255, 255, 255, 0.76);
+    background-color: rgb(0, 96, 196) !important;
+    box-shadow: none;
+    border-radius: 2px;
+    box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+    cursor: pointer;
+    margin: 1rem;
+}
+.css-1uq6pp2-MuiStack-root{
+    margin-left: 1.5rem;
+    cursor: pointer;
 }
 /* InfoTrip.jsx */
 .listtrip{
@@ -235,3 +286,38 @@
     border-radius: 0 !important;
     box-shadow: none !important;
 }
+/* ListSeat.jsx css cho sơ đồ ghế */
+/* List Seat */
+.table {
+    width: 100%;
+    height: 100%;
+}
+
+.table .total{
+    font-size: 16px;
+    font-weight: bold;
+
+}
+.seat__note_single{
+    margin-top: 12.5rem;
+}
+/* ui ds + total */
+.css-1iurrjr-MuiStack-root{
+    transform: translateX(-10rem);
+    margin-top: 2rem;
+}
+/* button tiếp tục */
+.css-1567iro-MuiStack-root{
+    border: none;
+    border-radius: 24px;
+    background-color: #ef5222;
+    padding: .5rem;
+    transform: translate(26rem, -3rem);
+    width: fit-content;
+}
+.css-knwngq-MuiButtonBase-root-MuiButton-root{
+    color:wheat  !important;
+    font-weight: 500;
+    font-size: 16px !important;
+}
+/* ArrowRightAltIcon */

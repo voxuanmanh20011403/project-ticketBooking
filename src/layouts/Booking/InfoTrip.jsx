@@ -94,7 +94,7 @@ const InfoTrip = ({ items }) => {
             <img
               src="https://www.oca.edu.vn/uploads/images/info/con-meo-tieng-trung-la-gi.png"
               alt=""
-              style={{ objectFit: "cover", height: "90px", width: "100px" }}
+              style={{ objectFit: "cover", height: "100%", width: "100%" }}
             />
           </Item>
         </Grid>
@@ -102,7 +102,7 @@ const InfoTrip = ({ items }) => {
           <Item>
             <div className="v__info">
               <span className="ten__xe">
-                {items.NameGarage}
+                Xe {items.NameGarage}
                 <span className="star">
                   <StarIcon sx={{ fontSize: 15 }} />
                   4.2(42)
@@ -122,7 +122,7 @@ const InfoTrip = ({ items }) => {
                 <span className="noi__den">
                 {hours + ":" + minutes } - {items.PakingEnd}
                 </span>
-              </div>
+              </div>  
               <div className="ghe__trong">
                 <h4>{seatEmpty()} ghế trống</h4>
               </div>
