@@ -7,6 +7,7 @@ import {
   Navigate,
   useLocation,
   useNavigate,
+  Redirect
 } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../src/Admin/assets/theme";
@@ -61,8 +62,14 @@ export default function App() {
   const dispatch = useDispatch();
   const { displayName } = useSelector((state) => state.user);
 
+  let role = 0;
+  const data = JSON.parse(localStorage.getItem("account"));
+  role = data.Role;
+ 
+
+
+
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("acount"));
 
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {
@@ -73,6 +80,7 @@ export default function App() {
       setUid(authUser.uid);
     });
   }, [dispatch]);
+  console.log("role: " + role)
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
@@ -83,6 +91,11 @@ export default function App() {
         <Route path="/booking" element={<Booking />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/return" element={<Return />}></Route>
+        {
+          role === "3" ? <Route path="/admin" element={<Admin />}></Route> : (
+            <Route path="*" element={<NotFoundPage />} />
+          )
+        }
         <Route path="*" element={<NotFoundPage />} />
         <Route path="TestAddCar" element={<TestAddCar />} />
         <Route path="addusser" element={<AddUser />} />
