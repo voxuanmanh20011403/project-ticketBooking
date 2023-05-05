@@ -7,7 +7,7 @@ export const headCells = [
         label: "UID",
     },
     {
-        id: "name",
+        id: "NameGarage",
         numeric: false,
         disablePadding: true,
         label: "Tên nhà xe",

@@ -160,11 +160,10 @@ function AddCar(props) {
     e.preventDefault();
     console.log(formData);
     try {
-      const docRef = await addDoc(collection(db, "a"), {
+      const docRef = await addDoc(collection(db, "ListCar"), {
         ...formData,
         Price: price,
         StartTime: timestamp,
-       
         seat: state.map((seat) => {
           return {
             id: seat.id,
@@ -186,10 +185,10 @@ function AddCar(props) {
     const unsubscribe = onSnapshot(garagesCol, (snapshot) => {
       const data = [];
       snapshot.forEach((doc) => {
-        const { Name, ID_Garage, Hotline } = doc.data();
+        const { NameGarage, ID_Garage, Hotline } = doc.data();
         data.push({
           value: doc.id,
-          label: Name,
+          label: NameGarage,
           hotline: Hotline,
           ID_Garage: ID_Garage,
         });

@@ -123,7 +123,7 @@ export default function Garage() {
   }, []);
   const rows = data.map((item) =>
     createData(
-      item.Name,
+      item.NameGarage,
       item.Owner,
       item.Address,
       item.Hotline,
@@ -168,14 +168,14 @@ export default function Garage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => n.NameGarage);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, NameGarage) => {
+    const selectedIndex = selected.indexOf(NameGarage);
     let newSelected = [];
     console.log(selectedIndex);
     if (selectedIndex === -1) {
@@ -238,7 +238,7 @@ export default function Garage() {
     [order, orderBy]
   );
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (NameGarage) => selected.indexOf(NameGarage) !== -1;
   const [show, setShow] = useState(false);
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
@@ -304,7 +304,7 @@ export default function Garage() {
                       <TableBody>
                         {visibleRows
                           ? visibleRows.map((row, index) => {
-                              const isItemSelected = isSelected(row.name);
+                              const isItemSelected = isSelected(row.NameGarage);
                               const labelId = `enhanced-table-checkbox-${index}`;
 
                               return (
@@ -313,7 +313,7 @@ export default function Garage() {
                                   role="checkbox"
                                   aria-checked={isItemSelected}
                                   tabIndex={-1}
-                                  key={row.name}
+                                  key={row.NameGarage}
                                   selected={isItemSelected}
                                   sx={{ cursor: "pointer" }}
                                   className="abc"

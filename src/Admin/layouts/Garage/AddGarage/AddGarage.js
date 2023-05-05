@@ -140,7 +140,7 @@ function AddGarage(props) {
         e.preventDefault();
         console.log(formData);
         try {
-            const docRef = await addDoc(collection(db, 'a'), {
+            const docRef = await addDoc(collection(db, 'Garage'), {
                 ...formData,
 
             });
