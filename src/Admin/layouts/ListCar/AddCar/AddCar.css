@@ -1,0 +1,20 @@
+/* .AddCar{
+    width: 60%;
+} */
+.RenderFromGarage{
+    width: 46%;
+    display: flex;
+}
+.Type{
+    height: 44px;
+}
+.selectGarage{
+    text-align: center;
+}
+.datapicker div input{
+    text-align: center;
+}
+/* custom input disable*/
+.css-5mmmz-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled {
+    -webkit-text-fill-color: #495057 !important;
+}

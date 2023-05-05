@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
@@ -13,7 +13,8 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Notification from "layouts/notication/Notification";
 import "./login.css";
-import { collection, getDocs } from "firebase/firestore";
+import { getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 import { db, auth } from "data/firebase";
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
@@ -77,6 +78,44 @@ function SignIn() {
             Role: accounts[i].Role,
           });
 
+          //start
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = now.getMonth() + 1;
+
+          // Tạo reference đến document thống kê của tháng hiện tại
+          const statisticsRef = doc(
+            collection(db, "statistics"),
+            `${year}-${month}`
+          );
+
+          // Tăng trường "viewer" lên 1 đơn vị
+          updateDoc(statisticsRef, { viewer: increment(1) })
+            .then(() => {
+              console.log(`Updated viewer count for ${year}-${month}`);
+            })
+            .catch((error) => {
+              console.error(`Error updating viewer count: ${error}`);
+            });
+
+          // Kiểm tra xem bản ghi thống kê đã tồn tại chưa
+          getDoc(statisticsRef).then((doc) => {
+            if (!doc.exists()) {
+              // Nếu chưa tồn tại, tạo bản ghi mới với trường "viewer" có giá trị là 1
+              setDoc(statisticsRef, { viewer: 1 })
+                .then(() => {
+                  console.log(
+                    `Created new statistics record for ${year}-${month}`
+                  );
+                })
+                .catch((error) => {
+                  console.error(
+                    `Error creating new statistics record: ${error}`
+                  );
+                });
+            }
+          });
+          //end
           localStorage.setItem("account", accountJSON);
           {
             accounts[i].Role === "1" ? history("/admin") : history("/");
@@ -91,7 +130,6 @@ function SignIn() {
       }, 1000);
     }
   };
-  
   return (
     <BasicLayout image={bgImage}>
       <Card>
@@ -107,9 +145,9 @@ function SignIn() {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            <marquee style={{ fontSize: " 70%" }}>
-              Chào mừng bạn đến với SwiftRide - Hệ thống đặt vé xe đường dài UY
-              TÍN - CHẤT LƯỢNG{" "}
+            <marquee style={{ fontSize: " 65%" }}>
+              {" "}
+              Hệ thống đặt vé xe đường dài - SwiftRide
             </marquee>
           </MDTypography>
         </MDBox>

@@ -9,17 +9,18 @@ const tripSlice = createSlice({
     initialState,
     reducers: {
         addSearch:(state, action) =>{
-            console.log("Test reducers addSearch");
+            // console.log("Test reducers addSearch");
             state.stateSearch.push(action.payload); 
         },
         addBooking:(state,action) => {
-            console.log("Test reducers addbooking")
+            // console.log("Test reducers addbooking")
             state.stateBooking.push(action.payload); 
-            // return {
-            //     ...state,
-            //     stateBooking: [...state.stateBooking, (action.payload)],
-            // }
+           
         },
+        clearStateSearch:(state,action) => {
+          console.log("check reducers clear")
+          state.stateSearch =[];
+        }
     }
 })
 export const asyncAddBooking = createAsyncThunk(

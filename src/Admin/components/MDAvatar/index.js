@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 
-// prop-types is a library for typechecking of props
+// prop-types is a library for  checking of props
 import PropTypes from "prop-types";
 import MDAvatarRoot from "./MDAvatarRoot";
 

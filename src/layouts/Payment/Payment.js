@@ -91,7 +91,7 @@ const Payment = () => {
 
       localStorage.setItem("getLocalUserDB", JSON.stringify({ data, dataBooking }));
       const getLocalUserDB = localStorage.getItem('getLocalUserDB');
-      console.log("getLocalUserDB: " + (getLocalUserDB));
+      // console.log("getLocalUserDB: " + (getLocalUserDB));
 
     } catch (error) {
       console.error(error);
@@ -108,7 +108,6 @@ const Payment = () => {
     <>
       <Header />
       <>
-        <Container maxWidth="xl"  >
           {
             loading ? (
               <Container maxWidth="xl" className="container__payment" >
@@ -220,7 +219,7 @@ const Payment = () => {
                       <h4>Giá vé<span>{formattedPrice}</span></h4>
                       <h4>Tổng số lượng ghế<span>{dataBooking[0].totalSeat}</span></h4>
                       <hr />
-                      <h3>TỔNG CỘNG <span>{total}</span></h3>
+                      <h3>TỔNG CỘNG <span>{total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span></h3>
                     </div>
                     <div>
                       <VNPayButton
@@ -236,7 +235,6 @@ const Payment = () => {
                 </Grid>
               </>
           }
-        </Container>
       </>
       <Footer />
     </>
