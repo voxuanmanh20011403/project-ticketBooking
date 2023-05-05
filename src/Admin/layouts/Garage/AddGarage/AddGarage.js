@@ -152,33 +152,7 @@ function AddGarage(props) {
 
 
     }
-    //TODO: LẤY DANH SÁCH TÊN NHÀ XE HIỆN CÓ 
-    const [garage, setGarage] = useState([]);
-    const [nameGarage, setNameGarage] = useState([]);
-    useEffect(() => {
-        async function fetchData() {
-            const accountsCol = collection(db, 'Garage');
-            const accountsSnapshot = await getDocs(accountsCol);
-            const accountsList = accountsSnapshot.docs.map((doc) => {
-                return {
-                    id: doc.id,
-                    ...doc.data()
-                }
-            });
-            setGarage(accountsList);
-            const mapData = accountsList.map((item) => {
-                setGarage(item.Name);
-            })
-            setNameGarage(mapData)
-
-        }
-        fetchData();
-        console.log(garage);
-    }, []);
-
-    console.log(nameGarage);
-
-
+ 
 
     return (
         <DashboardLayout>
@@ -204,6 +178,7 @@ function AddGarage(props) {
                                             <TextField
                                                 id="outlined-basic" label="ID nhà xe" variant="outlined"
                                                 name='IdGarage'
+                                               
                                                 value={formData.IdGarage}
                                                 onChange={handleChangeValue}
                                                 placeholder="ID nhà xe"

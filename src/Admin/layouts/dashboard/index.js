@@ -10,6 +10,7 @@ import { ChartNe } from "./Chart/LineChartViewer";
 import { useMemo } from "react";
 import Projects from "./components/Projects";
 import OrdersOverview from "./components/OrdersOverview";
+import { BarChart } from "./Chart/BarChart";
 function Dashboard() {
   const [viewerLastest, setViewerLastest] = useState(0);
   const [viewerLastMonth, setViewerLastMonth] = useState(0);
@@ -49,8 +50,7 @@ function Dashboard() {
     const unsubscribe = onSnapshot(garagesCol, handleSnapshot);
     return unsubscribe;
   }, [handleSnapshot]);
-  console.log("api-1", viewerLastest);
-  console.log("api-2", viewerLastMonth);
+ 
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -149,7 +149,7 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
-                <ChartNe />
+                <BarChart/>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>

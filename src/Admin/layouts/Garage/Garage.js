@@ -21,7 +21,12 @@ import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
 import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
 import AddGarage from "./AddGarage/AddGarage";
-import { createData, getComparator, headCells, stableSort } from "./Garage.constants";
+import {
+  createData,
+  getComparator,
+  headCells,
+  stableSort,
+} from "./Garage.constants";
 
 const DEFAULT_ORDER = "asc";
 const DEFAULT_ORDER_BY = "calories";
@@ -100,25 +105,32 @@ export default function Garage() {
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
 
-
+  
 
   useEffect(() => {
     async function fetchData() {
-      const accountsCol = collection(db, 'Garage');
+      const accountsCol = collection(db, "Garage");
       const accountsSnapshot = await getDocs(accountsCol);
       const accountsList = accountsSnapshot.docs.map((doc) => {
         return {
           id: doc.id,
-          ...doc.data()
-        }
+          ...doc.data(),
+        };
       });
       setData(accountsList);
-
     }
     fetchData();
-
   }, []);
-  const rows = data.map((item) => createData(item.Name, item.Owner, item.Address, item.Hotline, item.Number, item.id));
+  const rows = data.map((item) =>
+    createData(
+      item.Name,
+      item.Owner,
+      item.Address,
+      item.Hotline,
+      item.Number,
+      item.id
+    )
+  );
   useEffect(() => {
     let rowsOnMount = stableSort(
       rows,
@@ -129,7 +141,6 @@ export default function Garage() {
       0 * DEFAULT_ROWS_PER_PAGE,
       0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
     );
-
 
     setVisibleRows(rowsOnMount);
   }, [data]);
@@ -227,14 +238,13 @@ export default function Garage() {
     [order, orderBy]
   );
 
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const [show, setShow] = useState(false);
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
+    if (window.confirm("Are you sure you want to delete this post?")) {
       try {
         console.log(id);
-        await deleteDoc(doc(db, 'Account', id));
+        await deleteDoc(doc(db, "Account", id));
       } catch (error) {
         console.log(error);
       }
@@ -242,7 +252,6 @@ export default function Garage() {
   };
   const [activeButton, setActiveButton] = useState(false);
   return (
-
     <DashboardLayout>
       <DashboardNavbar />
 
@@ -261,28 +270,23 @@ export default function Garage() {
                   borderRadius="lg"
                   coloredShadow="info"
                 >
-
                   <MDTypography variant="h6" color="white">
-
-
-
-
-
-                    <div style={{ width: '100%', display: 'flex' }}>
-                      <h3 className="h3Title" > Quản lý danh sách nhà xe</h3>
-                      <div className="btnAdd" >
-                        <Button className="btnAddd" onClick={() => setActiveButton(true)} style={{ backgroundColor: 'black' }}>Thêm</Button>
+                    <div style={{ width: "100%", display: "flex" }}>
+                      <h3 className="h3Title"> Quản lý danh sách nhà xe</h3>
+                      <div className="btnAdd">
+                        <Button
+                          className="btnAddd"
+                          onClick={() => setActiveButton(true)}
+                          style={{ backgroundColor: "black" }}
+                        >
+                          Thêm
+                        </Button>
                       </div>
-
                     </div>
                   </MDTypography>
-
                 </MDBox>
 
                 <Box sx={{ width: "100%" }}>
-
-
-
                   <TableContainer>
                     <Table
                       sx={{ minWidth: 250 }}
@@ -300,52 +304,64 @@ export default function Garage() {
                       <TableBody>
                         {visibleRows
                           ? visibleRows.map((row, index) => {
-                            const isItemSelected = isSelected(row.name);
-                            const labelId = `enhanced-table-checkbox-${index}`;
+                              const isItemSelected = isSelected(row.name);
+                              const labelId = `enhanced-table-checkbox-${index}`;
 
-                            return (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                key={row.name}
-                                selected={isItemSelected}
-                                sx={{ cursor: "pointer" }}
-                                className="abc"
-                              >
-                                <TableCell padding="checkbox">
-                                  <Checkbox
-                                    onClick={(event) => handleClick(event, row.name)}
-                                    color="primary"
-                                    checked={isItemSelected}
-                                    inputProps={{
-                                      "aria-labelledby": labelId,
-                                    }}
-                                  />
-                                </TableCell>
-                                <TableCell align="right">{row.id}</TableCell>
-                                <TableCell
-                                  component="th"
-                                  id={labelId}
-                                  scope="row"
-                                  padding="none"
+                              return (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  aria-checked={isItemSelected}
+                                  tabIndex={-1}
+                                  key={row.name}
+                                  selected={isItemSelected}
+                                  sx={{ cursor: "pointer" }}
+                                  className="abc"
                                 >
-                                  {row.name}
-                                </TableCell>
-                                <TableCell align="right">{row.calories}</TableCell>
-                                <TableCell align="right">{row.fat}</TableCell>
-                                <TableCell align="right">{row.carbs}</TableCell>
-                                <TableCell align="right">{(row.protein)}</TableCell>
+                                  <TableCell padding="checkbox">
+                                    <Checkbox
+                                      onClick={(event) =>
+                                        handleClick(event, row.name)
+                                      }
+                                      color="primary"
+                                      checked={isItemSelected}
+                                      inputProps={{
+                                        "aria-labelledby": labelId,
+                                      }}
+                                    />
+                                  </TableCell>
+                                  <TableCell align="right">{row.id}</TableCell>
+                                  <TableCell
+                                    component="th"
+                                    id={labelId}
+                                    scope="row"
+                                    padding="none"
+                                  >
+                                    {row.name}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.calories}
+                                  </TableCell>
+                                  <TableCell align="right">{row.fat}</TableCell>
+                                  <TableCell align="right">
+                                    {row.carbs}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.protein}
+                                  </TableCell>
 
-                                <TableCell align="right">
-                                  <Button onClick={(id) => { handleDelete(row.id) }}>
-                                    <UpgradeIcon />
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })
+                                  <TableCell align="right">
+                                    <Button
+                                      onClick={(id) => {
+                                        handleDelete(row.id);
+                                      }}
+                                    >
+                                      <UpgradeIcon />
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })
                           : null}
                         {paddingHeight > 0 && (
                           <TableRow
@@ -368,15 +384,20 @@ export default function Garage() {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                   />
-
                 </Box>
               </Card>
             </Grid>
           </Grid>
         </MDBox>
       </Grid>
-      {activeButton ? <AddGarage activeButton={activeButton} setActiveButton={setActiveButton} /> : <></>}
-
+      {activeButton ? (
+        <AddGarage
+          activeButton={activeButton}
+          setActiveButton={setActiveButton}
+        />
+      ) : (
+        <></>
+      )}
     </DashboardLayout>
   );
 }

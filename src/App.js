@@ -37,6 +37,7 @@ import { LoginAction } from "redux/slices/auth";
 import { LogoutAction } from "redux/slices/auth";
 import { in4 } from "redux/slices/auth";
 import { Infor } from "redux/slices/auth";
+import { TripsAuto } from "Admin/layouts/RenderTableTripsAuto/TripsAuto";
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -86,6 +87,7 @@ export default function App() {
         <Route path="TestAddCar" element={<TestAddCar />} />
         <Route path="addusser" element={<AddUser />} />
       </Routes>
+      <TripsAuto/>
     </ThemeProvider>
   );
 }
