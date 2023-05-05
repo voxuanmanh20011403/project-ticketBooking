@@ -30,6 +30,8 @@ import MDTypography from "Admin/components/MDTypography";
 import AddUser from "./AddUser/AddUser";
 import UpdateUser from "./UpdateUser/UpdateUser";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { auth } from "data/firebase";
+import { deleteUser } from "firebase/auth";
 
 //Filter
 function descendingComparator(a, b, orderBy) {
@@ -391,6 +393,10 @@ export default function EnhancedTable() {
       try {
         console.log(id);
         await deleteDoc(doc(db, "Account", id));
+        //         import { getAuth, deleteUser } from "firebase/auth";
+        //  const auth = getAuth();
+        const user = auth.currentUser;
+        deleteUser(user);
       } catch (error) {
         console.log(error);
       }
