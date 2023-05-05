@@ -33,6 +33,7 @@ import { LoginAction } from "redux/slices/auth";
 import { LogoutAction } from "redux/slices/auth";
 import { in4 } from "redux/slices/auth";
 import { Infor } from "redux/slices/auth";
+import User from "layouts/User/User";
 
 
 export default function App() {
@@ -67,6 +68,8 @@ export default function App() {
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/return" element={<Return />}></Route>
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/user" element={<User/>} />
+
       </Routes>
     </ThemeProvider>
   );
