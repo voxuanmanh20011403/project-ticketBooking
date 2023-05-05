@@ -65,7 +65,7 @@ function Return() {
       async function addDB() {
         try {
           const docRef = await addDoc(collection(db, 'Checkout'), {
-            IdTrip: getLocalUserDB.dataBooking[0].IdTrip,
+            // IdTrip: getLocalUserDB.dataBooking[0].IdTrip,
             FullName: getLocalUserDB.data.firstName + ' ' + getLocalUserDB.data.lastName,
             NumberPhone: getLocalUserDB.data.phoneNumber,
             Email: getLocalUserDB.data.phoneNumber,
@@ -77,7 +77,7 @@ function Return() {
             TotalSeated: getLocalUserDB.dataBooking[0].totalSeat,
             ListSeated: getLocalUserDB.dataBooking[0].listSeated,
             TotalPrice: getLocalUserDB.dataBooking[0].totalPrice,
-            Date: `${date}/${month}/${year}`,
+            DateCheckout: `${date}/${month}/${year}`,
           });
           console.log('Document written with ID: ', docRef.id);
         } catch (e) {
