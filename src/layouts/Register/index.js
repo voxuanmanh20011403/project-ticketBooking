@@ -13,7 +13,7 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 import { auth } from "data/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { db } from "data/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, increment, setDoc, updateDoc } from "firebase/firestore";
 function Register() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -76,6 +76,44 @@ function Register() {
           CreateTime: formattedDate,
           NumberPhone: numberPhone
         });
+        //start
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+
+        // Tạo reference đến document thống kê của tháng hiện tại
+        const statisticsRef = doc(
+          collection(db, "statistics"),
+          `${year}-${month}`
+        );
+
+        // Tăng trường "viewer" lên 1 đơn vị
+        updateDoc(statisticsRef, { UserNew: increment(1) })
+          .then(() => {
+            console.log(`Updated viewer count for ${year}-${month}`);
+          })
+          .catch((error) => {
+            console.error(`Error updating viewer count: ${error}`);
+          });
+
+        // Kiểm tra xem bản ghi thống kê đã tồn tại chưa
+        getDoc(statisticsRef).then((doc) => {
+          if (!doc.exists()) {
+            // Nếu chưa tồn tại, tạo bản ghi mới với trường "viewer" có giá trị là 1
+            setDoc(statisticsRef, { UserNew: 1 })
+              .then(() => {
+                console.log(
+                  `Created new statistics record for ${year}-${month}`
+                );
+              })
+              .catch((error) => {
+                console.error(
+                  `Error creating new statistics record: ${error}`
+                );
+              });
+          }
+        });
+        //end
         console.log('Document written with ID: ', docRef.id);
       } catch (e) {
         console.error('Error adding document: ', e);

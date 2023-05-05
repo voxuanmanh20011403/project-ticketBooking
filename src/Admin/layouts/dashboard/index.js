@@ -1,30 +1,58 @@
 import Grid from "@mui/material/Grid";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import MDBox from "Admin/components/MDBox";
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
-import Footer from "Admin/examples/Footer";
-import ReportsBarChart from "Admin/examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "Admin/examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "Admin/examples/Cards/StatisticsCards/ComplexStatisticsCard";
-import reportsBarChartData from "./data/reportsBarChartData";
-import reportsLineChartData from "./data/reportsLineChartData";
-import OrdersOverview from "./components/OrdersOverview";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "data/firebase";
+import { ChartNe } from "./Chart/LineChartViewer";
+import { useMemo } from "react";
 import Projects from "./components/Projects";
-
+import OrdersOverview from "./components/OrdersOverview";
+import { BarChart } from "./Chart/BarChart";
 function Dashboard() {
+  const [viewerLastest, setViewerLastest] = useState(0);
+  const [viewerLastMonth, setViewerLastMonth] = useState(0);
+  const [userLastest, setUserLastest] = useState(0);
+  const [userLastMonth, setUserLastMonth] = useState(0);
 
-  const { sales, tasks } = reportsLineChartData;
-  const [count,setCount]=useState(0);
-  const [percent, setPercent]=useState();
+  const handleSnapshot = useCallback((snapshot) => {
+    // let ViewerLastest = 0;
+    // let  ViewerLastMonth =0;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+    snapshot.forEach((doc) => {
+      const { viewer, UserNew } = doc.data();
+      const id = doc.id;
+      const [year2, month2] = id.split("-");
+
+      if (
+        currentYear === parseInt(year2) &&
+        currentMonth === parseInt(month2)
+      ) {
+        setViewerLastest(viewer);
+        setUserLastest(UserNew);
+      }
+      if (
+        currentYear === parseInt(year2) &&
+        currentMonth === parseInt(month2) + 1
+      ) {
+        setViewerLastMonth(viewer);
+        setUserLastMonth(UserNew);
+      }
+    });
+  }, []);
+  // growth = (viewerLastest - viewerLastMonth) / viewerLastMonth * 100
   useEffect(() => {
-    const value=190/100*100;
-    value>=100 ? setPercent("+ "+(value-100)+" % "): setPercent(" - "+(100-value)+" % " )
-    setCount(1209);
-  },[]);
+    const garagesCol = collection(db, "statistics");
+    const unsubscribe = onSnapshot(garagesCol, handleSnapshot);
+    return unsubscribe;
+  }, [handleSnapshot]);
+ 
   return (
     <DashboardLayout>
-      {/* Header */}
       <DashboardNavbar />
       <MDBox py={3}>
         {/* so user ở dashboard */}
@@ -34,12 +62,19 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="dark"
                 icon="weekend"
-                title="Bookings"
-                count={count}
+                title="Số đặt vé thành công"
+                count={viewerLastest}
                 percentage={{
-                  color:120>100?"success":"primary",
-                  amount: percent,
-                  label: "than lask month",
+                  color:
+                    viewerLastest > viewerLastMonth ? "success" : "primary",
+                  amount: (
+                    ((viewerLastest - viewerLastMonth) / viewerLastMonth) *
+                    100
+                  ).toFixed(0),
+                  label:
+                    viewerLastest >= viewerLastMonth
+                      ? "% Tăng so với tháng trước"
+                      : "% giảm so với tháng trước",
                 }}
               />
             </MDBox>
@@ -48,12 +83,19 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="Month's Users"
-                count="2,300"
+                title="Tổng tiền thu về hệ thống"
+                count={viewerLastest}
                 percentage={{
-                  color: "secondary",
-                  amount: "+3%",
-                  label: "than last month",
+                  color:
+                    viewerLastest > viewerLastMonth ? "success" : "primary",
+                  amount: (
+                    ((viewerLastest - viewerLastMonth) / viewerLastMonth) *
+                    100
+                  ).toFixed(0),
+                  label:
+                    viewerLastest >= viewerLastMonth
+                      ? "% Tăng so với tháng trước"
+                      : "% giảm so với tháng trước",
                 }}
               />
             </MDBox>
@@ -63,12 +105,19 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="success"
                 icon="store"
-                title="Viewer"
-                count="34k"
+                title="Lượt truy cập hệ thống"
+                count={viewerLastest}
                 percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
+                  color:
+                    viewerLastest > viewerLastMonth ? "success" : "primary",
+                  amount: (
+                    ((viewerLastest - viewerLastMonth) / viewerLastMonth) *
+                    100
+                  ).toFixed(0),
+                  label:
+                    viewerLastest >= viewerLastMonth
+                      ? "% Tăng so với tháng trước"
+                      : "% giảm so với tháng trước",
                 }}
               />
             </MDBox>
@@ -78,12 +127,18 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Revenue month"
-                count="+91"
+                title="Tài khoản mới trong tháng"
+                count={userLastest}
                 percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
+                  color: userLastest > userLastMonth ? "success" : "primary",
+                  amount: (
+                    ((userLastest - userLastMonth) / userLastMonth) *
+                    100
+                  ).toFixed(0),
+                  label:
+                    userLastest >= userLastMonth
+                      ? "% Tăng so với tháng trước"
+                      : "% giảm so với tháng trước",
                 }}
               />
             </MDBox>
@@ -94,57 +149,23 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
+                <BarChart/>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
+                <ChartNe />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
-                />
+                <ChartNe />
               </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox>
-          <Grid container spacing={3}>
-            {/* bên phai */}
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-            </Grid>
-            {/* bên trái */}
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
             </Grid>
           </Grid>
         </MDBox>
       </MDBox>
-      <Footer />
+      
     </DashboardLayout>
   );
 }
