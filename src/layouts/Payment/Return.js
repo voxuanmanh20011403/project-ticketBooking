@@ -9,7 +9,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 
 import { db } from "data/firebase";
-import { addDoc, collection, where, getDocs, query, getDoc, updateDoc,doc } from "firebase/firestore";
+import { addDoc, collection, where, getDocs, query, getDoc, updateDoc, doc } from "firebase/firestore";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -23,7 +23,7 @@ function Return() {
   const [returnUrl, setReturnUrl] = useState([
   ]);
   const [removeLocal, setRemoveLocal] = useState(false);
-// lấy thông tin thanh toán từ returnUrl do vnpay trả về
+  // lấy thông tin thanh toán từ returnUrl do vnpay trả về
   const search = window.location.search;
   const params = new URLSearchParams(search);
   const vnpResponseCode = params.get('vnp_ResponseCode');
@@ -42,7 +42,7 @@ function Return() {
   const second = payDate.substr(12, 2);
   const date = new Date(year, month, day, hour, minute, second);
   const formattedDateString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-// get db từ localStorage
+  // get db từ localStorage
   const getLocalUserDB = JSON.parse(localStorage.getItem('getLocalUserDB'));
   // console.log("getLocalUserDB: " + (getLocalUserDB));
 
@@ -57,6 +57,10 @@ function Return() {
   useEffect(() => {
     setReturnUrl([amount, bankCode, bankTranNo, cardType, formattedDateString, vnpResponseCode]);
     // create collection checkout 
+    const today = new Date();
+    const date = today.getDate();
+    const month = today.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1 để lấy tháng hiện tại
+    const year = today.getFullYear();
     if (vnpResponseCode === '00') { //checkout success
       async function addDB() {
         try {
@@ -73,6 +77,7 @@ function Return() {
             TotalSeated: getLocalUserDB.dataBooking[0].totalSeat,
             ListSeated: getLocalUserDB.dataBooking[0].listSeated,
             TotalPrice: getLocalUserDB.dataBooking[0].totalPrice,
+            Date: `${date}/${month}/${year}`,
           });
           console.log('Document written with ID: ', docRef.id);
         } catch (e) {
@@ -114,13 +119,13 @@ function Return() {
   }
 
 
- // clear local sau 1p
+  // clear local sau 1p
   if (removeLocal === true) {
     setTimeout(() => {
       localStorage.removeItem('getLocalUserDB');
     }, 60000);
   }
- // bắt sự kiện beforeunload thì clear storage
+  // bắt sự kiện beforeunload thì clear storage
   window.addEventListener('beforeunload', function (e) {
     localStorage.clear();
   });
