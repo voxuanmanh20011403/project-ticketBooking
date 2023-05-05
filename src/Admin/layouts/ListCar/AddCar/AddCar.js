@@ -158,22 +158,17 @@ function AddCar(props) {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    console.log("formData", formData);
     try {
       const docRef = await addDoc(collection(db, "ListCar"), {
         ...formData,
         Price: price,
         StartTime: timestamp,
+        StartTimeNext: timestamp2,
         ID_Garage: disabledTextFieldValue,
         Hotline: hotline,
-        seat: state.map((seat) => {
-          return {
-            id: seat.id,
-            name: seat.name,
-            status: "empty",
-            ui: "",
-          };
-        }),
+        Namegarage: namegarage,
+        seat: seat,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {}
@@ -232,6 +227,7 @@ function AddCar(props) {
   };
   //format time
   const [selectDate, setSelectDate] = useState(dayjs());
+  const [selectDate2, setSelectDate2] = useState(dayjs());
 
   const today = dayjs().startOf("day");
   const isDateDisabled = (date) => {
@@ -239,20 +235,29 @@ function AddCar(props) {
   };
   const handleChangeDate = (date) => {
     setSelectDate(date);
+  };const handleChangeDate2 = (date) => {
+    setSelectDate2(date);
   };
 
   const date = new Date(selectDate);
   const timestamp = Timestamp.fromDate(date);
+  const date2 = new Date(selectDate2);
+  const timestamp2 = Timestamp.fromDate(date2);
   //
   const [disabledTextFieldValue, setDisabledTextFieldValue] = useState("");
   const [hotline, setHotline] = useState("");
-  Hotline;
+  const [namegarage, setNamegarage] = useState("");
+
+
   useEffect(() => {
     if (garageInfo.ID_Garage) {
       setDisabledTextFieldValue(garageInfo.ID_Garage);
     }
     if (garageInfo.hotline) {
       setHotline(garageInfo.hotline);
+    }
+    if (garageInfo.label) {
+      setNamegarage(garageInfo.label);
     }
   }, [garageInfo]);
 
@@ -277,7 +282,7 @@ function AddCar(props) {
                 <div>
                   <form className="form-horizontal" onSubmit={handleSubmit}>
                     <fieldset>
-                      <FormControl className="Garage">
+                      <FormControl className="Garage RenderFromGarage">
                         <NativeSelect
                           defaultValue={30}
                           inputProps={{
@@ -322,7 +327,30 @@ function AddCar(props) {
                         placeholder="Hotline"
                         className="RenderFromGarage Garage"
                       />
-
+                      <CustomTextField
+                        label="ID Xe"
+                        name="ID_Car"
+                        value={formData.ID_Car}
+                        onChange={handleChangeValue}
+                        placeholder="Điểm ID Xe"
+                        className="Garage RenderFromGarage"
+                      />
+                      <CustomTextField
+                        label="Xuất phát "
+                        name="StartPoint"
+                        value={formData.StartPoint}
+                        onChange={handleChangeValue}
+                        placeholder="Xuất phát"
+                        className="Garage RenderFromGarage"
+                      />
+                      <CustomTextField
+                        label="Kết thúc "
+                        name="EndPoint"
+                        value={formData.EndPoint}
+                        onChange={handleChangeValue}
+                        placeholder="Kết thúc"
+                        className="Garage RenderFromGarage"
+                      />
                       <CustomTextField
                         label="Điểm đi"
                         name="PakingStart"
@@ -407,11 +435,18 @@ function AddCar(props) {
                         placeholder="Thời gian hành trình"
                       />
 
-                    
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDateTimePicker
                           value={selectDate}
                           onChange={handleChangeDate}
+                          shouldDisableDate={isDateDisabled}
+                          className="Garage datapicker "
+                        />
+                      </LocalizationProvider>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDateTimePicker
+                          value={selectDate2}
+                          onChange={handleChangeDate2}
                           shouldDisableDate={isDateDisabled}
                           className="Garage datapicker "
                         />

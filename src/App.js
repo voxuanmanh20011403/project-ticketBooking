@@ -87,7 +87,7 @@ export default function App() {
         <Route path="TestAddCar" element={<TestAddCar />} />
         <Route path="addusser" element={<AddUser />} />
       </Routes>
-      <TripsAuto/>
+      <TripsAuto />
     </ThemeProvider>
   );
 }
