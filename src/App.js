@@ -64,10 +64,13 @@ export default function App() {
 
   let role = 0;
   const data = JSON.parse(localStorage.getItem("account"));
-  role = data.Role;
- 
-
-
+  console.log("data: " + data);
+  try{
+    role = data.Role;
+  }catch(e) {
+    console.log(e);
+  }
+  
 
   useEffect(() => {
 
