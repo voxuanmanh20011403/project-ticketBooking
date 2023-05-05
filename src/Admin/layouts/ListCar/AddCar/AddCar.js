@@ -164,6 +164,8 @@ function AddCar(props) {
         ...formData,
         Price: price,
         StartTime: timestamp,
+        ID_Garage: disabledTextFieldValue,
+        Hotline: hotline,
         seat: state.map((seat) => {
           return {
             id: seat.id,
@@ -230,7 +232,7 @@ function AddCar(props) {
   };
   //format time
   const [selectDate, setSelectDate] = useState(dayjs());
-  
+
   const today = dayjs().startOf("day");
   const isDateDisabled = (date) => {
     return date.isBefore(today, "day");
@@ -241,7 +243,18 @@ function AddCar(props) {
 
   const date = new Date(selectDate);
   const timestamp = Timestamp.fromDate(date);
-
+  //
+  const [disabledTextFieldValue, setDisabledTextFieldValue] = useState("");
+  const [hotline, setHotline] = useState("");
+  Hotline;
+  useEffect(() => {
+    if (garageInfo.ID_Garage) {
+      setDisabledTextFieldValue(garageInfo.ID_Garage);
+    }
+    if (garageInfo.hotline) {
+      setHotline(garageInfo.hotline);
+    }
+  }, [garageInfo]);
 
   return (
     <DashboardLayout>
