@@ -21,6 +21,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from 'yup';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import './style.css'
 
@@ -29,13 +31,10 @@ import { tripActions, asyncAddBooking } from "redux/slices/tripsSilce";
 import { useDispatch, useSelector } from "react-redux";
 
 const Payment = () => {
-
-  const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [numberPhone, setNumberPhone] = useState('');
   const [email, setEmal] = useState('');
   const [loading, setLoading] = useState(true);
-
   // get stateBooking from reudx
   const dataBooking = useSelector(state => state.trip.stateBooking);
 
@@ -58,30 +57,16 @@ const Payment = () => {
   const vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
 
   const dispatch = useDispatch();
-  // YUP: VALIDATION
-  const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+  useEffect(()=>{
+    const getLocalAccount = JSON.parse(localStorage.getItem('account'));
+    setLastName(getLocalAccount.Name);
+    setNumberPhone(getLocalAccount.NumberPhone);
+    setEmal(getLocalAccount.Email);
+  }, [])
+  
 
-  const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .required('Bạn chưa nhập email hoặc số điện thoại.')
-      .required('Email is required'),
-    lastname: Yup.string()
-      .required('Bạn chưa nhập Name.')
-      .required('Lastname is required'),
-    firstname: Yup.string()
-      .required('Bạn chưa nhập Name.')
-      .required('Firstname is required'),
-    numberphone: Yup.string()
-      .required('Bạn chưa nhập Số điện thoại.')
-      .matches(phoneRegExp, 'Phone number is not valid')
-      .required('NumberPhone is required'),
-  });
   const { register, handleSubmit }
-    = useForm(
-      // {
-      //   resolver: yupResolver(validationSchema),
-      // }
-    );
+    = useForm();
 
 
   const onSubmit = async (data) => {
@@ -90,17 +75,15 @@ const Payment = () => {
       await dispatch(asyncAddBooking([...dataBooking, data]));
 
       localStorage.setItem("getLocalUserDB", JSON.stringify({ data, dataBooking }));
-      const getLocalUserDB = localStorage.getItem('getLocalUserDB');
-      // console.log("getLocalUserDB: " + (getLocalUserDB));
-
     } catch (error) {
-      console.error(error);
+      toast.error("Đã có lỗi xảy ra!" +error);
     }
 
   };
   setTimeout(() => {
     setLoading(false);
   }, 2000);
+
   // foramt price
   const price = dataBooking[0].price;
   const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
@@ -125,45 +108,21 @@ const Payment = () => {
                         *Lưu ý: Quý khách vui lòng kiểm tra và cập nhật đầy đủ thông tin(nếu còn trống)
                       </Typography>
                       <TextField
-                        id="firstname"
-                        name="firstname"
-                        label="Họ đệm"
-                        fullWidth
-                        required
-                        margin="normal"
-                        {...register('firstName')}
-                        // error={errors.firstName ? true : false}
-                        InputProps={{ startAdornment: <TextFieldsIcon fontSize="medium" /> }}
-                        onChange={(e) => {
-                          setFirstName(e.target.value);
-                        }}
-                      />
-                      {/* 
-                         <Typography variant="inherit" color="red">
-                        {errors.firstname?.message}
-                      </Typography> 
-                      */}
-                    
-                      
-                      <TextField
-                        label="Tên"
+                        label="Họ tên"
                         required
                         id="lastname"
                         name="lastname"
                         fullWidth
                         margin="normal"
+                        value={lastName}
                         {...register('lastName')}
-                        // error={errors.lastname ? true : false}
+               
                         InputProps={{ startAdornment: <BorderColorIcon fontSize="medium" /> }}
                         onChange={(e) => {
                           setLastName(e.target.value);
                         }}
                       />
-                      {/* 
-                         <Typography variant="inherit" color="red">
-                        {errors.lastname?.message}
-                      </Typography>
-                      */}
+                    
                    
                       <TextField
                       required
@@ -171,36 +130,34 @@ const Payment = () => {
                         name="phone"
                         type="tel"
                         label="Số điện thoại"
+                        value={numberPhone}
                         fullWidth
                         margin="normal"
                         inputProps={{ pattern: "[0-9]{3}-[0-9]{3}-[0-9]{4}" }}
                         {...register('phoneNumber')}
                         InputProps={{ startAdornment: <ContactPhoneIcon fontSize="medium" /> }}
-                        // error={errors.numberphone ? true : false}
+                      
                         onChange={(e) => {
                           setNumberPhone(e.target.value);
                         }}
                       />
-                      {/* <Typography variant="inherit" color="red">
-                        {errors.numberphone?.message}
-                      </Typography> */}
+                     
                       <TextField
                       required
                         id="email"
+                        value={email}
                         name="email"
                         label="Email"
                         fullWidth
                         margin="normal"
                         InputProps={{ startAdornment: <LocalPostOfficeIcon fontSize="medium" /> }}
                         {...register('email')}
-                        // error={errors.email ? true : false}
+                   
                         onChange={(e) => {
                           setEmal(e.target.value);
                         }}
                       />
-                      {/* <Typography variant="inherit" color="red">
-                        {errors.email?.message}
-                      </Typography> */}
+                   
                       <Button variant="contained" color="success" onClick={handleSubmit(onSubmit)}>
                         Lưu
                       </Button>
@@ -229,6 +186,9 @@ const Payment = () => {
                         vnp_TmnCode={vnp_TmnCode}
                         vnp_HashSecret={vnp_HashSecret}
                         vnp_Url={vnp_Url}
+                        lastName={lastName}
+                        numberPhone={numberPhone}
+                        email={email}
                       />
                     </div>
                   </Grid>

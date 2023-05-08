@@ -118,7 +118,7 @@ function SignIn() {
           //end
           localStorage.setItem("account", accountJSON);
           {
-            accounts[i].Role === "1" ? history("/admin") : history("/");
+            accounts[i].Role === "1" ? history("/") : history("/admin");
           }
           break;
         }

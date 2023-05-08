@@ -1,8 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import dayjs from "dayjs";
 import Trip from './Trip'
-import Header from 'layouts/Header/Header';
 import Footer from 'layouts/Footer/Footer';
+import Header from 'layouts/Header/Header';
+// redux
+import { tripActions } from "redux/slices/tripsSilce";
+import { useDispatch, useSelector } from 'react-redux';
+//firebase
 import {
   collection,
   query,
@@ -11,7 +15,6 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "./../../data/firebase";
-import dayjs from "dayjs";
 // Router
 import { useNavigate } from "react-router-dom";
 
@@ -22,6 +25,7 @@ const Booking = () => {
 
   const stateSearch = useSelector(state => state.trip.stateSearch);
   const navigate = useNavigate();
+
   useEffect(() => {
     try {
       const startPoint = stateSearch[0].origin;
@@ -52,8 +56,8 @@ const Booking = () => {
       navigate("/");
     }
   }, [stateSearch, navigate]);
-
-
+    
+  
 
   return (
     <>

@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import {
-  Container,
-  Typography,
-  Grid,
-  Paper,
-  TextField,
   Button,
-  FormControl,
 } from '@mui/material';
 
 import './style.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { tripActions, asyncAddBooking } from "redux/slices/tripsSilce";
+import { useDispatch, useSelector } from "react-redux";
 
 var unidecode = require('unidecode');
 
-const VNPayButton = ({ amount, description, returnUrl, vnp_TmnCode, vnp_HashSecret, vnp_Url }) => {
+const VNPayButton = ({ amount, description, returnUrl, vnp_TmnCode, vnp_HashSecret, vnp_Url ,lastName,numberPhone,email}) => {
+  const data= {lastName,numberPhone,email};
 
   const now = new Date();
   const year = now.getFullYear();
@@ -68,69 +67,23 @@ const VNPayButton = ({ amount, description, returnUrl, vnp_TmnCode, vnp_HashSecr
     // return `${vnp_Url}?${vnp_Params.toString()}&vnp_SecureHashType=SHA256&vnp_SecureHash=${secureHash}`;
     return `${vnp_Url}?${vnp_Params.toString()}&vnp_SecureHash=${secureHash}`;
   };
+  const dispatch = useDispatch();
+  const dataBooking = useSelector(state => state.trip.stateBooking);
 
-  const handleVNPayButtonClick = () => {
-    const vnpPayUrl = generateVNPayUrl();
-    window.location.href = vnpPayUrl;
+  const handleVNPayButtonClick = async () => {
+    console.log("dataUser: " + data);
+    try {
+      await dispatch(asyncAddBooking([...dataBooking, data]));
+
+      localStorage.setItem("getLocalUserDB", JSON.stringify({ data, dataBooking }));
+      const vnpPayUrl = generateVNPayUrl();
+      window.location.href = vnpPayUrl;
+    } catch (error) {
+      toast.error("Đã có lỗi xảy ra!" +error);
+    }
   };
 
   return (
-    // <Container maxWidth="xl">
-    //   <Typography variant="h3" component="h2" align="center" className="title">
-    //     Thanh toán
-    //   </Typography>
-    //   <Grid container spacing={4}>
-    //     <Grid item xs="8" >
-    //       <FormControl onSubmit={handleSubmit(onSubmit)}>
-    //         <Typography variant="body2" component="h2" align="left">
-    //           *Lưu ý: Quý khách vui lòng kiểm tra và cập nhật đầy đủ thông tin(nếu còn trống)
-    //         </Typography>
-    //         <TextField
-    //           label="Họ đệm"
-    //           fullWidth
-    //           margin="normal"
-    //           {...register('firstName', { required: true })}
-    //         />
-    //         <TextField
-    //           label="Tên"
-    //           fullWidth
-    //           margin="normal"
-    //           {...register('lastName', { required: true })}
-    //         />
-    //         <TextField
-    //           label="Số điện thoại"
-    //           fullWidth
-    //           margin="normal"
-    //           {...register('phoneNumber', { required: true })}
-    //         />
-    //         <TextField
-    //           label="Thông tin thanh toán"
-    //           fullWidth
-    //           margin="normal"
-    //           InputProps={{ startAdornment: <LocationOnIcon /> }}
-    //           {...register('tripInfo', { required: true })}
-    //         />
-    //       </FormControl>
-    //     </Grid>
-    //     <Grid item xs="4" >
-    //       <div className='checkout__card'>
-    //         <h4 >Nhà xe <span>Phương Trang</span></h4>
-    //         <h4>Chuyến xe <span> Hà Nội - Đà Nẵng</span></h4>
-    //         <h4>
-    //           Thời gian khởi hành<span>12:30</span>
-    //         </h4>
-    //         <h4>Nơi xuất phát<span> Bến xe Hà Nội</span></h4>
-    //         <h4>Nơi đến<span>Bến xe Đà Nẵng</span></h4>
-    //         <h4>Số ghế đã đặt<span>A1, A2</span></h4>
-    //         <h4>Giá vé<span>1.000.000 đ</span></h4>
-    //         <h4>Tổng số lượng ghế<span>6</span></h4>
-    //         <hr />
-    //         <h3>TỔNG CỘNG <span>{ }31 000 VNĐ</span></h3>
-    //       </div>
-
-    //     </Grid>
-    //   </Grid>
-    // </Container>
       <Button variant="contained" color="success" className='btn_checkout' onClick={handleVNPayButtonClick}>
         Thanh toán
       </Button>

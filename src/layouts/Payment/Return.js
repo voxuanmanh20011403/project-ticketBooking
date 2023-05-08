@@ -11,6 +11,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { db } from "data/firebase";
 import { addDoc, collection, where, getDocs, query, getDoc, updateDoc, doc } from "firebase/firestore";
 
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -20,9 +21,9 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function Return() {
-  const [returnUrl, setReturnUrl] = useState([
-  ]);
+  const [returnUrl, setReturnUrl] = useState([]);
   const [removeLocal, setRemoveLocal] = useState(false);
+
   // lấy thông tin thanh toán từ returnUrl do vnpay trả về
   const search = window.location.search;
   const params = new URLSearchParams(search);
@@ -44,6 +45,8 @@ function Return() {
   const formattedDateString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
   // get db từ localStorage
   const getLocalUserDB = JSON.parse(localStorage.getItem('getLocalUserDB'));
+  const getLocalAccount = JSON.parse(localStorage.getItem('account'));
+  console.log('getLocalAccount: ' + getLocalAccount )
   // console.log("getLocalUserDB: " + (getLocalUserDB));
 
   const timeStart = getLocalUserDB.dataBooking[0].StartTime;
@@ -56,17 +59,18 @@ function Return() {
 
   useEffect(() => {
     setReturnUrl([amount, bankCode, bankTranNo, cardType, formattedDateString, vnpResponseCode]);
-    // create collection checkout 
+    // create datetime hiện tại
     const today = new Date();
     const date = today.getDate();
-    const month = today.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1 để lấy tháng hiện tại
+    const month = today.getMonth() + 1; 
     const year = today.getFullYear();
     if (vnpResponseCode === '00') { //checkout success
       async function addDB() {
         try {
+        // create collection checkout 
           const docRef = await addDoc(collection(db, 'Checkout'), {
             // IdTrip: getLocalUserDB.dataBooking[0].IdTrip,
-            FullName: getLocalUserDB.data.firstName + ' ' + getLocalUserDB.data.lastName,
+            FullName: getLocalUserDB.data.lastName,
             NumberPhone: getLocalUserDB.data.phoneNumber,
             Email: getLocalUserDB.data.phoneNumber,
             NameGarage: getLocalUserDB.dataBooking[0].NameGarage,
@@ -117,14 +121,14 @@ function Return() {
     };
     updateTrip();
   }
-
-
+  // Tạo mail và gửi đi
+  
   // clear local sau 1p
-  if (removeLocal === true) {
-    setTimeout(() => {
-      localStorage.removeItem('getLocalUserDB');
-    }, 60000);
-  }
+  // if (removeLocal === true) {
+  //   setTimeout(() => {
+  //     localStorage.removeItem('getLocalUserDB');
+  //   }, 60000);
+  // }
   // bắt sự kiện beforeunload thì clear storage
   window.addEventListener('beforeunload', function (e) {
     localStorage.clear();
@@ -133,6 +137,10 @@ function Return() {
   // console.log("returnUrl: " + returnUrl);
 
   // 9704198526191432198 - NGUYEN VAN A  - 07/15 - 123456 
+  // let price= returnUrl[0];
+let price = returnUrl[0].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  console.log(price)
+// const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
   return (
     <React.Fragment>
@@ -146,15 +154,27 @@ function Return() {
               <div className='return__card'>
                 <h2>THANH TOÁN THÀNH CÔNG <CheckCircleOutlineIcon color="success" /></h2>
                 <br></br>
-                <h4 >Mã giao dịch <span>{returnUrl[2]}</span></h4>
-                <h4>Ngân hàng thanh toán<span>{returnUrl[1]}</span></h4>
+                <h4 >Mã giao dịch: <span>{returnUrl[2]}</span></h4>
+                <h4>Ngân hàng thanh toán:<span>{returnUrl[1]}</span></h4>
                 <h4>
-                  Thanh toán với<span>{returnUrl[3]}</span>
+                  Thanh toán với:<span>{returnUrl[3]}</span>
                 </h4>
-                <h4>Thời gian thanh toán<span> {returnUrl[4]}</span></h4>
-                <h4>Tổng tiền thanh toán<span>{returnUrl[0]} VNĐ</span></h4>
+                <h4>Thời gian thanh toán:<span> {returnUrl[4]}</span></h4>
+                <h4>Tổng tiền thanh toán:<span>{price}</span></h4>
+                <h4>Họ tên khách hàng:<span>{getLocalAccount.Name}</span></h4>
+                <h4>Email:<span>{getLocalAccount.Email}</span></h4>
+                <h4>Số điện thoại:<span>{getLocalAccount.NumberPhone}</span></h4>
+                <h4>Tên nhà xe:<span>{getLocalUserDB.dataBooking[0].NameGarage}</span></h4>
+                <h4>Chuyến đi:<span>{getLocalUserDB.dataBooking[0].NameTrip}</span></h4>
+                <h4>Nơi khởi hành:<span>{getLocalUserDB.dataBooking[0].PakingStart}</span></h4>
+                <h4>Nơi đến:<span>{getLocalUserDB.dataBooking[0].PakingEnd}</span></h4>
+                <h4>Vị trí:<span>{getLocalUserDB.dataBooking[0].listSeated.map((name, index) => (
+               <span key={index}>
+              {name}
+              {index !== getLocalUserDB.dataBooking[0].listSeated.length - 1 && ", "}
+            </span>
+                  ))}</span></h4>
               </div>
-
             </Item>
           </Grid>
           <Grid item xs={4}>

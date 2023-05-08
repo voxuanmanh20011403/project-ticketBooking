@@ -1,17 +1,6 @@
 
-import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import AdjustIcon from '@mui/icons-material/Adjust';
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
-
 import React, { useEffect, useState } from "react";
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import { Box, Stack, Typography } from "@mui/material";
@@ -20,15 +9,6 @@ import { collection, query, getDocs, getFirestore } from "firebase/firestore";
 import { db } from "data/firebase";
 
 export default function BannerSearch() {
-  // const dataFake = ["1", "3", "5", "7", "9"]
-  // const [location, setLocations] = useState([]);
-  // const [value, setValue] = React.useState();
-  // const [value1, setValue1] = React.useState();
-
-  // const [fromLocation, setfromLocation] = useState(dataFake);
-  // const [toLocation, settoLocation] = useState(dataFake);
-  // const [inputValue, setInputValue] = React.useState();
-  // const [inputValue1, setInputValue1] = React.useState();
   const [dataFake, setDataFake] = useState([]);
 
   useEffect(() => {
