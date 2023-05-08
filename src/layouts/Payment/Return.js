@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
+import {
+  Container,
+  Typography,
+  Grid,
+  Paper,
+  TextField,
+  Button,
+  FormControl,
+} from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-
-
+import emailjs from '@emailjs/browser';
 import { db } from "data/firebase";
 import { addDoc, collection, where, getDocs, query, getDoc, updateDoc, doc } from "firebase/firestore";
 
@@ -46,7 +51,7 @@ function Return() {
   // get db từ localStorage
   const getLocalUserDB = JSON.parse(localStorage.getItem('getLocalUserDB'));
   const getLocalAccount = JSON.parse(localStorage.getItem('account'));
-  console.log('getLocalAccount: ' + getLocalAccount )
+  console.log('getLocalAccount: ' + getLocalAccount)
   // console.log("getLocalUserDB: " + (getLocalUserDB));
 
   const timeStart = getLocalUserDB.dataBooking[0].StartTime;
@@ -62,17 +67,17 @@ function Return() {
     // create datetime hiện tại
     const today = new Date();
     const date = today.getDate();
-    const month = today.getMonth() + 1; 
+    const month = today.getMonth() + 1;
     const year = today.getFullYear();
     if (vnpResponseCode === '00') { //checkout success
       async function addDB() {
         try {
-        // create collection checkout 
+          // create collection checkout 
           const docRef = await addDoc(collection(db, 'Checkout'), {
             // IdTrip: getLocalUserDB.dataBooking[0].IdTrip,
             FullName: getLocalUserDB.data.lastName,
             NumberPhone: getLocalUserDB.data.phoneNumber,
-            Email: getLocalUserDB.data.phoneNumber,
+            Email: getLocalUserDB.data.email,
             NameGarage: getLocalUserDB.dataBooking[0].NameGarage,
             NameTrip: getLocalUserDB.dataBooking[0].NameTrip,
             StartTime: `${hoursS}:${minutesS}" "${dayS}/${monthS}/${yearS}`,
@@ -122,7 +127,28 @@ function Return() {
     updateTrip();
   }
   // Tạo mail và gửi đi
-  
+  const handleTest = () => {
+    const templateParams = {
+      toEmail: getLocalUserDB.data.email,
+      name: getLocalUserDB.data.lastName,
+      nameTrip: getLocalUserDB.dataBooking[0].NameTrip,
+      date: `Ngày ${dayS} tháng ${monthS} năm ${yearS}`,
+      nameGarage: getLocalUserDB.dataBooking[0].NameGarage,
+      from: getLocalUserDB.dataBooking[0].PakingStart,
+      to: getLocalUserDB.dataBooking[0].PakingEnd,
+      seats: getLocalUserDB.dataBooking[0].listSeated,
+    };
+    emailjs.send('gmail', 'template_nzsnsp7', templateParams, 'nw10q72SaDSc17UUF')
+      .then((response) => {
+        console.log('SUCCESS!', response.status, response.text);
+      }, (error) => {
+        console.log('FAILED...', error);
+      });
+  }
+  if (removeLocal === true) {
+
+  }
+
   // clear local sau 1p
   // if (removeLocal === true) {
   //   setTimeout(() => {
@@ -137,23 +163,28 @@ function Return() {
   // console.log("returnUrl: " + returnUrl);
 
   // 9704198526191432198 - NGUYEN VAN A  - 07/15 - 123456 
-  // let price= returnUrl[0];
-let price = returnUrl[0].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  let price = returnUrl[0];
+  // let price = returnUrl[0].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   console.log(price)
-// const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  // const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
   return (
     <React.Fragment>
       <CssBaseline />
       <Container >
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={12}>
+            <h2 className="title_checkout">
+              THANH TOÁN THÀNH CÔNG
+              <CheckCircleOutlineIcon color="success" />
+            </h2>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={5}>
             <Item>
+              <Typography variant="h4" align="center" className="title_checkout">
+                Thông tin giao dịch
+              </Typography>
               <div className='return__card'>
-                <h2>THANH TOÁN THÀNH CÔNG <CheckCircleOutlineIcon color="success" /></h2>
-                <br></br>
                 <h4 >Mã giao dịch: <span>{returnUrl[2]}</span></h4>
                 <h4>Ngân hàng thanh toán:<span>{returnUrl[1]}</span></h4>
                 <h4>
@@ -161,6 +192,15 @@ let price = returnUrl[0].toLocaleString('vi-VN', { style: 'currency', currency: 
                 </h4>
                 <h4>Thời gian thanh toán:<span> {returnUrl[4]}</span></h4>
                 <h4>Tổng tiền thanh toán:<span>{price}</span></h4>
+              </div>
+            </Item>
+          </Grid>
+          <Grid item xs={7}>
+            <Item>
+              <Typography variant="h4" align="center" className="title_checkout">
+                Thông tin khách hàng
+              </Typography>
+              <div className='return__card'>
                 <h4>Họ tên khách hàng:<span>{getLocalAccount.Name}</span></h4>
                 <h4>Email:<span>{getLocalAccount.Email}</span></h4>
                 <h4>Số điện thoại:<span>{getLocalAccount.NumberPhone}</span></h4>
@@ -169,15 +209,16 @@ let price = returnUrl[0].toLocaleString('vi-VN', { style: 'currency', currency: 
                 <h4>Nơi khởi hành:<span>{getLocalUserDB.dataBooking[0].PakingStart}</span></h4>
                 <h4>Nơi đến:<span>{getLocalUserDB.dataBooking[0].PakingEnd}</span></h4>
                 <h4>Vị trí:<span>{getLocalUserDB.dataBooking[0].listSeated.map((name, index) => (
-               <span key={index}>
-              {name}
-              {index !== getLocalUserDB.dataBooking[0].listSeated.length - 1 && ", "}
-            </span>
-                  ))}</span></h4>
+                  <span key={index}>
+                    {name}
+                    {index !== getLocalUserDB.dataBooking[0].listSeated.length - 1 && ", "}
+                  </span>
+                ))}</span></h4>
+                <button onClick={handleTest}>
+                  onclick
+                </button>
               </div>
             </Item>
-          </Grid>
-          <Grid item xs={4}>
           </Grid>
         </Grid>
       </Container>

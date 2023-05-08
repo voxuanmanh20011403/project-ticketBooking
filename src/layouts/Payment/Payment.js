@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import VNPayButton from './VNPayButton';
 import Header from 'layouts/Header/Header';
 import Footer from 'layouts/Footer/Footer';
+import Stack from "@mui/material/Stack";
 import {
   Container,
   Typography,
@@ -57,13 +58,13 @@ const Payment = () => {
   const vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
 
   const dispatch = useDispatch();
-  useEffect(()=>{
+  useEffect(() => {
     const getLocalAccount = JSON.parse(localStorage.getItem('account'));
     setLastName(getLocalAccount.Name);
     setNumberPhone(getLocalAccount.NumberPhone);
     setEmal(getLocalAccount.Email);
   }, [])
-  
+
 
   const { register, handleSubmit }
     = useForm();
@@ -76,7 +77,7 @@ const Payment = () => {
 
       localStorage.setItem("getLocalUserDB", JSON.stringify({ data, dataBooking }));
     } catch (error) {
-      toast.error("Đã có lỗi xảy ra!" +error);
+      toast.error("Đã có lỗi xảy ra!" + error);
     }
 
   };
@@ -90,112 +91,112 @@ const Payment = () => {
   return (
     <>
       <Header />
-      <>
-          {
-            loading ? (
-              <Container maxWidth="xl" className="container__payment" >
+      <Container maxWidth="xl"  >
+        {
+          loading ? (
+            <Container maxWidth="xl" className="container__payment" >
+              <Stack
+               direction="column"
+               justifyContent="flex-end"
+               alignItems="center"
+               spacing={1}
+              >
                 <CircularProgress className="progress" />
-              </Container>
-            ) :
-              <>
-                <Typography variant="h3" component="h2" align="center" className="title">
-                  Thanh toán
-                </Typography>
-                <Grid container spacing={4}>
-                  <Grid item xs="8" >
-                    <FormControl onSubmit={handleSubmit(onSubmit)}>
-                      <Typography variant="body2" component="h2" align="left">
-                        *Lưu ý: Quý khách vui lòng kiểm tra và cập nhật đầy đủ thông tin(nếu còn trống)
-                      </Typography>
-                      <TextField
-                        label="Họ tên"
-                        required
-                        id="lastname"
-                        name="lastname"
-                        fullWidth
-                        margin="normal"
-                        value={lastName}
-                        {...register('lastName')}
-               
-                        InputProps={{ startAdornment: <BorderColorIcon fontSize="medium" /> }}
-                        onChange={(e) => {
-                          setLastName(e.target.value);
-                        }}
-                      />
-                    
-                   
-                      <TextField
+              </Stack>
+            </Container>
+          ) :
+            <>
+              <Typography variant="h3" component="h2" align="center" className="title">
+                Thanh toán thông tin
+              </Typography>
+              <Grid container spacing={4}>
+                <Grid item xs="8" >
+                  <FormControl onSubmit={handleSubmit(onSubmit)}>
+                    <Typography variant="body2" component="h2" align="left">
+                      *Lưu ý: Quý khách vui lòng kiểm tra và cập nhật đầy đủ thông tin(nếu còn trống)
+                    </Typography>
+                    <TextField
+                      label="Họ tên"
                       required
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        label="Số điện thoại"
-                        value={numberPhone}
-                        fullWidth
-                        margin="normal"
-                        inputProps={{ pattern: "[0-9]{3}-[0-9]{3}-[0-9]{4}" }}
-                        {...register('phoneNumber')}
-                        InputProps={{ startAdornment: <ContactPhoneIcon fontSize="medium" /> }}
-                      
-                        onChange={(e) => {
-                          setNumberPhone(e.target.value);
-                        }}
-                      />
-                     
-                      <TextField
+                      id="lastname"
+                      name="lastname"
+                      fullWidth
+                      margin="normal"
+                      value={lastName}
+                      {...register('lastName')}
+                      InputProps={{ startAdornment: <BorderColorIcon fontSize="medium" /> }}
+                      onChange={(e) => {
+                        setLastName(e.target.value);
+                      }}
+                    />
+                    <TextField
                       required
-                        id="email"
-                        value={email}
-                        name="email"
-                        label="Email"
-                        fullWidth
-                        margin="normal"
-                        InputProps={{ startAdornment: <LocalPostOfficeIcon fontSize="medium" /> }}
-                        {...register('email')}
-                   
-                        onChange={(e) => {
-                          setEmal(e.target.value);
-                        }}
-                      />
-                   
-                      <Button variant="contained" color="success" onClick={handleSubmit(onSubmit)}>
-                        Lưu
-                      </Button>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs="4" >
-                    <div className='checkout__card'>
-                      <h4 >Nhà xe <span>{dataBooking[0].NameGarage}</span></h4>
-                      <h4>Chuyến xe <span> {dataBooking[0].NameTrip}</span></h4>
-                      <h4>
-                        Thời gian khởi hành<span>{dayS + "/" + monthS + "/ " + yearS + " - " + hoursS + ":" + minutesS}</span>
-                      </h4>
-                      <h4>Nơi xuất phát<span> {dataBooking[0].PakingStart}</span></h4>
-                      <h4>Nơi đến<span>{dataBooking[0].PakingEnd}</span></h4>
-                      <h4>Số ghế đã đặt<span>{dataBooking[0].listSeated.join(", ")}</span></h4>
-                      <h4>Giá vé<span>{formattedPrice}</span></h4>
-                      <h4>Tổng số lượng ghế<span>{dataBooking[0].totalSeat}</span></h4>
-                      <hr />
-                      <h3>TỔNG CỘNG <span>{total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span></h3>
-                    </div>
-                    <div>
-                      <VNPayButton
-                        amount={amount}
-                        description={description}
-                        returnUrl={returnUrl}
-                        vnp_TmnCode={vnp_TmnCode}
-                        vnp_HashSecret={vnp_HashSecret}
-                        vnp_Url={vnp_Url}
-                        lastName={lastName}
-                        numberPhone={numberPhone}
-                        email={email}
-                      />
-                    </div>
-                  </Grid>
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      label="Số điện thoại"
+                      value={numberPhone}
+                      fullWidth
+                      margin="normal"
+                      inputProps={{ pattern: "[0-9]{3}-[0-9]{3}-[0-9]{4}" }}
+                      {...register('phoneNumber')}
+                      InputProps={{ startAdornment: <ContactPhoneIcon fontSize="medium" /> }}
+                      onChange={(e) => {
+                        setNumberPhone(e.target.value);
+                      }}
+                    />
+                    <TextField
+                      required
+                      id="email"
+                      value={email}
+                      name="email"
+                      label="Email"
+                      fullWidth
+                      margin="normal"
+                      InputProps={{ startAdornment: <LocalPostOfficeIcon fontSize="medium" /> }}
+                      {...register('email')}
+                      onChange={(e) => {
+                        setEmal(e.target.value);
+                      }}
+                    />
+                    <Button variant="contained" color="success" onClick={handleSubmit(onSubmit)}>
+                      Lưu
+                    </Button>
+                  </FormControl>
                 </Grid>
-              </>
-          }
-      </>
+                <Grid item xs="4" >
+                  <div className='checkout__card'>
+                    <h4 >Nhà xe <span>{dataBooking[0].NameGarage}</span></h4>
+                    <h4>Chuyến xe <span> {dataBooking[0].NameTrip}</span></h4>
+                    <h4>
+                      Thời gian khởi hành<span>{dayS + "/" + monthS + "/ " + yearS + " - " + hoursS + ":" + minutesS}</span>
+                    </h4>
+                    <h4>Nơi xuất phát<span> {dataBooking[0].PakingStart}</span></h4>
+                    <h4>Nơi đến<span>{dataBooking[0].PakingEnd}</span></h4>
+                    <h4>Số ghế đã đặt<span>{dataBooking[0].listSeated.join(", ")}</span></h4>
+                    <h4>Giá vé<span>{formattedPrice}</span></h4>
+                    <h4>Tổng số lượng ghế<span>{dataBooking[0].totalSeat}</span></h4>
+                    <hr />
+                    <h3>TỔNG CỘNG <span>{total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span></h3>
+                  </div>
+                  <div>
+                    <VNPayButton
+                      amount={amount}
+                      description={description}
+                      returnUrl={returnUrl}
+                      vnp_TmnCode={vnp_TmnCode}
+                      vnp_HashSecret={vnp_HashSecret}
+                      vnp_Url={vnp_Url}
+                      lastName={lastName}
+                      numberPhone={numberPhone}
+                      email={email}
+                    />
+                  </div>
+                </Grid>
+              </Grid>
+            </>
+        }
+      </Container>
       <Footer />
     </>
   )
