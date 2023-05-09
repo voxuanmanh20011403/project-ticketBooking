@@ -538,11 +538,7 @@ export default function EnhancedTable() {
                                 </TableRow>
                               );
                             })}
-                        {visibleRows && visibleRows.length === 0 && (
-                          <TableRow>
-                            <TableCell colSpan={6}>No results found</TableCell>
-                          </TableRow>
-                        )}
+                        
                       </TableBody>
                     </Table>
                   </TableContainer>
