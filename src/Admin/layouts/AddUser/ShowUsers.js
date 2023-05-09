@@ -411,7 +411,16 @@ export default function EnhancedTable() {
     setName(name);
   };
   //BUTTON RENDER COMPONENT
-  const [refreshCount, setRefreshCount] = useState(0);
+  // const  handleSearch=(searchValue) =>{
+  //   console.log("Search value:", searchValue);
+  //   // Thực hiện các xử lý tìm kiếm tại đây
+  // }
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = (searchValue) => {
+    // Xử lý tìm kiếm ở đây
+    console.log("Searchvalue:", searchValue);
+    setSearchTerm(searchValue);
+  };
 
   return (
     // <DashboardLayout>
@@ -419,7 +428,8 @@ export default function EnhancedTable() {
 
     // </DashboardLayout>
     <DashboardLayout>
-      <DashboardNavbar />
+      {/* <DashboardNavbar /> */}
+      <DashboardNavbar onSearch={handleSearch} />
 
       <Grid item md={6}>
         <MDBox pt={6} pb={3}>
@@ -469,40 +479,49 @@ export default function EnhancedTable() {
                         rowCount={rows.length}
                       />
                       <TableBody>
-                        {visibleRows
-                          ? visibleRows.map((row, index) => {
+                        {visibleRows &&
+                          visibleRows
+                            .filter((row) =>
+                              searchTerm
+                                ? Object.values(row).some((val) =>
+                                    val
+                                      .toString()
+                                      .toLowerCase()
+                                      .includes(searchTerm.toLowerCase())
+                                  )
+                                : true
+                            )
+                            .map((row, index) => {
                               const isItemSelected = isSelected(row.id);
                               const labelId = `enhanced-table-checkbox-${index}`;
 
                               return (
                                 <TableRow
                                   hover
+                                  onClick={(event) =>
+                                    handleClick(event, row.id)
+                                  }
                                   role="checkbox"
                                   aria-checked={isItemSelected}
                                   tabIndex={-1}
-                                  key={row.name}
+                                  key={row.id}
                                   selected={isItemSelected}
-                                  sx={{ cursor: "pointer" }}
-                                  className="abc"
                                 >
                                   <TableCell padding="checkbox">
                                     <Checkbox
-                                      onClick={(event) =>
-                                        handleClick(event, row.id)
-                                      }
-                                      color="primary"
                                       checked={isItemSelected}
                                       inputProps={{
                                         "aria-labelledby": labelId,
                                       }}
+                                      onChange={(event) =>
+                                        handleClick(event, row.id)
+                                      }
                                     />
                                   </TableCell>
-                                  <TableCell align="right">{row.id}</TableCell>
                                   <TableCell
                                     component="th"
                                     id={labelId}
                                     scope="row"
-                                    padding="none"
                                   >
                                     {row.name}
                                   </TableCell>
@@ -514,37 +533,14 @@ export default function EnhancedTable() {
                                     {row.carbs}
                                   </TableCell>
                                   <TableCell align="right">
-                                    {row.protein == 1 ? "nhanvien" : "admin"}
-                                  </TableCell>
-
-                                  <TableCell align="right">
-                                    <Button
-                                      onClick={(id) => {
-                                        handleDelete(row.id);
-                                      }}
-                                    >
-                                      <DeleteOutlineIcon />
-                                    </Button>
-                                    <Button
-                                      onClick={(id) => {
-                                        setActiveButtonUpdate(true);
-                                        handleUpdate(row.id, row.name);
-                                      }}
-                                    >
-                                      <UpgradeIcon />
-                                    </Button>
+                                    {row.protein}
                                   </TableCell>
                                 </TableRow>
                               );
-                            })
-                          : null}
-                        {paddingHeight > 0 && (
-                          <TableRow
-                            style={{
-                              height: paddingHeight,
-                            }}
-                          >
-                            <TableCell colSpan={6} />
+                            })}
+                        {visibleRows && visibleRows.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={6}>No results found</TableCell>
                           </TableRow>
                         )}
                       </TableBody>
