@@ -494,34 +494,35 @@ export default function EnhancedTable() {
                             .map((row, index) => {
                               const isItemSelected = isSelected(row.id);
                               const labelId = `enhanced-table-checkbox-${index}`;
-
                               return (
                                 <TableRow
                                   hover
-                                  onClick={(event) =>
-                                    handleClick(event, row.id)
-                                  }
                                   role="checkbox"
                                   aria-checked={isItemSelected}
                                   tabIndex={-1}
-                                  key={row.id}
+                                  key={row.name}
                                   selected={isItemSelected}
+                                  sx={{ cursor: "pointer" }}
+                                  className="abc"
                                 >
                                   <TableCell padding="checkbox">
                                     <Checkbox
+                                      onClick={(event) =>
+                                        handleClick(event, row.id)
+                                      }
+                                      color="primary"
                                       checked={isItemSelected}
                                       inputProps={{
                                         "aria-labelledby": labelId,
                                       }}
-                                      onChange={(event) =>
-                                        handleClick(event, row.id)
-                                      }
                                     />
                                   </TableCell>
+                                  <TableCell align="right">{row.id}</TableCell>
                                   <TableCell
                                     component="th"
                                     id={labelId}
                                     scope="row"
+                                    padding="none"
                                   >
                                     {row.name}
                                   </TableCell>
@@ -533,12 +534,29 @@ export default function EnhancedTable() {
                                     {row.carbs}
                                   </TableCell>
                                   <TableCell align="right">
-                                    {row.protein}
+                                    {row.protein == 1 ? "nhanvien" : "admin"}
+                                  </TableCell>
+
+                                  <TableCell align="right">
+                                    <Button
+                                      onClick={(id) => {
+                                        handleDelete(row.id);
+                                      }}
+                                    >
+                                      <DeleteOutlineIcon />
+                                    </Button>
+                                    <Button
+                                      onClick={(id) => {
+                                        setActiveButtonUpdate(true);
+                                        handleUpdate(row.id, row.name);
+                                      }}
+                                    >
+                                      <UpgradeIcon />
+                                    </Button>
                                   </TableCell>
                                 </TableRow>
                               );
                             })}
-                        
                       </TableBody>
                     </Table>
                   </TableContainer>
