@@ -72,7 +72,7 @@ export function stableSort(array, comparator) {
 }
 
 //HÀM CREATE 
-export function createData(id,Namegarage, TypeVehicle, seat, LicensePlate, fromto,hotline) {
+export function createData(id,Namegarage, TypeVehicle, seat, LicensePlate, fromto,hotline,Price) {
     return {
         id,
         Namegarage,
@@ -80,7 +80,7 @@ export function createData(id,Namegarage, TypeVehicle, seat, LicensePlate, fromt
         seat,
         LicensePlate,
         fromto,
-        hotline
-        
+        hotline,
+        Price,
     };
 }

@@ -148,9 +148,6 @@ function AddGarage(props) {
         } catch (e) {
 
         }
-
-
-
     }
  
 
