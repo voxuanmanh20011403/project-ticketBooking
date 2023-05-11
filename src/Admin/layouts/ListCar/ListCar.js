@@ -13,15 +13,22 @@ import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import { Button, Card, Grid } from "@mui/material";
-import UpgradeIcon from "@mui/icons-material/Upgrade";
 import { db } from "data/firebase";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
 import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
+import UpgradeIcon from "@mui/icons-material/Upgrade";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-import { createData, getComparator, headCells, stableSort } from "./ListCar.constants";
+import {
+  createData,
+  getComparator,
+  headCells,
+  stableSort,
+} from "./ListCar.constants";
 import AddCar from "./AddCar/AddCar";
+import UpdateListCar from "./UpdateListCar/UpdateListCar";
 
 const DEFAULT_ORDER = "asc";
 const DEFAULT_ORDER_BY = "calories";
@@ -100,28 +107,35 @@ export default function ListCar() {
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
 
-
-
   useEffect(() => {
     async function fetchData() {
-      const accountsCol = collection(db, 'ListCar');
+      const accountsCol = collection(db, "ListCar");
       const accountsSnapshot = await getDocs(accountsCol);
       const accountsList = accountsSnapshot.docs.map((doc) => {
         return {
           id: doc.id,
-          ...doc.data()
-        }
+          ...doc.data(),
+        };
       });
       setData(accountsList);
-
     }
     fetchData();
-
   }, []);
-  console.log('data.data',data.length);
+  console.log("data.data", data.length);
 
-  const rows = data.map((item) => createData(item.id,item.Namegarage  , item.TypeVehicle, item.Seat, item.PakingStart + "-" + item.EndPoint, item.LicensePlate,  item.Hotline));
-  console.log('rows',rows);
+  const rows = data.map((item) =>
+    createData(
+      item.id,
+      item.Namegarage,
+      item.TypeVehicle,
+      item.Seat,
+      item.PakingStart + "-" + item.EndPoint,
+      item.LicensePlate,
+      item.Hotline,
+      item.Price
+    )
+  );
+  console.log("rows", rows);
   useEffect(() => {
     let rowsOnMount = stableSort(
       rows,
@@ -132,7 +146,7 @@ export default function ListCar() {
       0 * DEFAULT_ROWS_PER_PAGE,
       0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
     );
-    console.log('rows',rows);
+    console.log("rows", rows);
 
     setVisibleRows(rowsOnMount);
   }, [data]);
@@ -230,24 +244,38 @@ export default function ListCar() {
     [order, orderBy]
   );
 
-
   const isSelected = (Namegarage) => selected.indexOf(Namegarage) !== -1;
   const [show, setShow] = useState(false);
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
+    if (window.confirm("Are you sure you want to delete this post?")) {
       try {
         console.log(id);
-        await deleteDoc(doc(db, 'Account', id));
+        await deleteDoc(doc(db, "Account", id));
       } catch (error) {
         console.log(error);
       }
     }
   };
   const [activeButton, setActiveButton] = useState(false);
-  return (
+  const [ActiveButtonUpdate, setActiveButtonUpdate] = useState(false);
+  const [price, setPrice] = useState("");
+  const [id, setId] = useState("");
 
+  //update
+  const handleUpdate = (id, price) => {
+    setPrice(price);
+    setId(id);
+  };
+  //searerch
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = (searchValue) => {
+    // Xử lý tìm kiếm ở đây
+    console.log("Searchvalue:", searchValue);
+    setSearchTerm(searchValue);
+  };
+  return (
     <DashboardLayout>
-      <DashboardNavbar />
+      <DashboardNavbar onSearch={handleSearch} />
 
       <Grid item md={6}>
         <MDBox pt={6} pb={3}>
@@ -264,28 +292,23 @@ export default function ListCar() {
                   borderRadius="lg"
                   coloredShadow="info"
                 >
-
                   <MDTypography variant="h6" color="white">
-
-
-
-
-
-                    <div style={{ width: '100%', display: 'flex' }}>
-                      <h3 className="h3Title" > Quản lý danh sách nhà xe</h3>
-                      <div className="btnAdd" >
-                        <Button className="btnAddd" onClick={() => setActiveButton(true)} style={{ backgroundColor: 'black' }}>Thêm</Button>
+                    <div style={{ width: "100%", display: "flex" }}>
+                      <h3 className="h3Title"> Quản lý danh sách xe</h3>
+                      <div className="btnAdd">
+                        <Button
+                          className="btnAddd"
+                          onClick={() => setActiveButton(true)}
+                          style={{ backgroundColor: "black" }}
+                        >
+                          Thêm
+                        </Button>
                       </div>
-
                     </div>
                   </MDTypography>
-
                 </MDBox>
 
                 <Box sx={{ width: "100%" }}>
-
-
-
                   <TableContainer>
                     <Table
                       sx={{ minWidth: 250 }}
@@ -301,13 +324,28 @@ export default function ListCar() {
                         rowCount={rows.length}
                       />
                       <TableBody>
-                        {visibleRows
-                          ? visibleRows.map((row, index) => {
-                            const isItemSelected = isSelected(row.name);
-                            const labelId = `enhanced-table-checkbox-${index}`;
+                        {visibleRows &&
+                          visibleRows
+                            .filter((row) =>
+                              searchTerm
+                                ? Object.values(row).some((val) => {
+                                    try {
+                                      return val
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(searchTerm.toLowerCase());
+                                    } catch (err) {
+                                      return false;
+                                    }
+                                  })
+                                : true
+                            )
+                            .map((row, index) => {
+                              const isItemSelected = isSelected(row.NameGarage);
 
-                            return (
-                              <TableRow
+                              const labelId = `enhanced-table-checkbox-${index}`;
+                              return (
+                                <TableRow
                                 hover
                                 role="checkbox"
                                 aria-checked={isItemSelected}
@@ -316,10 +354,12 @@ export default function ListCar() {
                                 selected={isItemSelected}
                                 sx={{ cursor: "pointer" }}
                                 className="abc"
-                              >
+                                >
                                 <TableCell padding="checkbox">
                                   <Checkbox
-                                    onClick={(event) => handleClick(event, row.Namegarage)}
+                                    onClick={(event) =>
+                                      handleClick(event, row.Namegarage)
+                                    }
                                     color="primary"
                                     checked={isItemSelected}
                                     inputProps={{
@@ -327,7 +367,9 @@ export default function ListCar() {
                                     }}
                                   />
                                 </TableCell>
-                                <TableCell align="right">{row.id}</TableCell>
+                                <TableCell align="right">
+                                  <div>{row.id}</div>
+                                </TableCell>
                                 <TableCell
                                   component="th"
                                   id={labelId}
@@ -336,29 +378,42 @@ export default function ListCar() {
                                 >
                                   {row.Namegarage}
                                 </TableCell>
-                                <TableCell align="right">{row.TypeVehicle}</TableCell>
-                                <TableCell align="right">{row.seat}</TableCell>
-                                <TableCell align="right">{(row.fromto)}</TableCell>
-                                <TableCell align="right">{row.LicensePlate}</TableCell>
-                                <TableCell align="right">{(row.hotline)}</TableCell>
                                 <TableCell align="right">
-                                  <Button onClick={(id) => { handleDelete(row.id) }}>
+                                  {row.TypeVehicle}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {row.seat}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {row.fromto}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {row.LicensePlate}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {row.hotline}
+                                </TableCell>
+                                
+                                <TableCell style={{ display: "flex" }}>
+                                  <Button
+                                    onClick={(id) => {
+                                      handleDelete(row.id);
+                                    }}
+                                  >
+                                    <DeleteOutlineIcon />
+                                  </Button>
+                                  <Button
+                                    onClick={(id) => {
+                                      setActiveButtonUpdate(true);
+                                      handleUpdate(row.id, row.Price);
+                                    }}
+                                  >
                                     <UpgradeIcon />
                                   </Button>
                                 </TableCell>
-                              </TableRow>
-                            );
-                          })
-                          : null}
-                        {paddingHeight > 0 && (
-                          <TableRow
-                            style={{
-                              height: paddingHeight,
-                            }}
-                          >
-                            <TableCell colSpan={6} />
-                          </TableRow>
-                        )}
+                                </TableRow>
+                              );
+                            })}
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -371,16 +426,31 @@ export default function ListCar() {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                   />
-
                 </Box>
               </Card>
             </Grid>
           </Grid>
         </MDBox>
       </Grid>
-      {activeButton ? <AddCar activeButton={activeButton} setActiveButton={setActiveButton} /> : <></>}
-
+      {ActiveButtonUpdate ? (
+        <UpdateListCar
+          ActiveButtonUpdate={ActiveButtonUpdate}
+          setActiveButtonUpdate={setActiveButtonUpdate}
+          price={price}
+          // name={name}
+          id={id}
+          // owner={owner}
+          // address={address}
+          // hotline={hotline}
+        />
+      ) : (
+        <></>
+      )}
+      {activeButton ? (
+        <AddCar activeButton={activeButton} setActiveButton={setActiveButton} />
+      ) : (
+        <></>
+      )}
     </DashboardLayout>
   );
 }
-

@@ -2,8 +2,8 @@
 export const headCells = [
     {
         id: "id",
-        numeric: true,
-        disablePadding: false,
+        numeric: false,
+        disablePadding: true,
         label: "UID",
     },
     {
@@ -36,7 +36,7 @@ export const headCells = [
         disablePadding: false,
         label: "Số xe ",
     },
-
+   
 ];
 //Filter
 function descendingComparator(a, b, orderBy) {

@@ -158,7 +158,6 @@ function AddCar(props) {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("formData", formData);
     try {
       const docRef = await addDoc(collection(db, "ListCar"), {
         ...formData,
@@ -169,6 +168,7 @@ function AddCar(props) {
         Hotline: hotline,
         Namegarage: namegarage,
         seat: seat,
+        NameTrip:formData.StartPoint+'-'+formData.EndPoint,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {}
@@ -335,24 +335,8 @@ function AddCar(props) {
                         placeholder="Điểm ID Xe"
                         className="Garage RenderFromGarage"
                       />
-                      <CustomTextField
-                        label="Xuất phát "
-                        name="StartPoint"
-                        value={formData.StartPoint}
-                        onChange={handleChangeValue}
-                        placeholder="Xuất phát"
-                        className="Garage RenderFromGarage"
-                      />
-                      <CustomTextField
-                        label="Kết thúc "
-                        name="EndPoint"
-                        value={formData.EndPoint}
-                        onChange={handleChangeValue}
-                        placeholder="Kết thúc"
-                        className="Garage RenderFromGarage"
-                      />
-                      <CustomTextField
-                        label="Điểm đi"
+                       <CustomTextField
+                        label="Nơi bắt đầu "
                         name="PakingStart"
                         value={formData.PakingStart}
                         onChange={handleChangeValue}
@@ -360,13 +344,30 @@ function AddCar(props) {
                         className="Garage RenderFromGarage"
                       />
                       <CustomTextField
-                        label="Điểm đến"
+                        label="Nơi bắt đầu"
                         name="PakingEnd"
                         value={formData.PakingEnd}
+                        onChange={handleChangeValue}
+                        placeholder="Nơi kết thúc"
+                        className="Garage RenderFromGarage"
+                      />
+                      <CustomTextField
+                        label="Điểm đi "
+                        name="StartPoint"
+                        value={formData.StartPoint}
+                        onChange={handleChangeValue}
+                        placeholder="Điểm đi"
+                        className="Garage RenderFromGarage"
+                      />
+                      <CustomTextField
+                        label="Điểm đến "
+                        name="EndPoint"
+                        value={formData.EndPoint}
                         onChange={handleChangeValue}
                         placeholder="Điểm đến"
                         className="Garage RenderFromGarage"
                       />
+                     
                       <FormControl className="Garage RenderFromGarage">
                         <InputLabel
                           style={{ backgroundColor: "white" }}

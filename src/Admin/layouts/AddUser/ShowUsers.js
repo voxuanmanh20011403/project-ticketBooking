@@ -67,13 +67,13 @@ function stableSort(array, comparator) {
 const headCells = [
   {
     id: "id",
-    numeric: true,
-    disablePadding: false,
+    numeric: false,
+    disablePadding: true,
     label: "UID",
   },
   {
     id: "name",
-    numeric: false,
+    numeric: true,
     disablePadding: true,
     label: "Email",
   },
@@ -457,7 +457,7 @@ export default function EnhancedTable() {
                           className="btnAddd"
                           style={{ backgroundColor: "black" }}
                         >
-                          Thêm
+                          Thêm admin
                         </Button>
                       </div>
                     </div>
@@ -505,7 +505,7 @@ export default function EnhancedTable() {
                                   sx={{ cursor: "pointer" }}
                                   className="abc"
                                 >
-                                  <TableCell padding="checkbox">
+                                  <TableCell padding="">
                                     <Checkbox
                                       onClick={(event) =>
                                         handleClick(event, row.id)
@@ -517,13 +517,12 @@ export default function EnhancedTable() {
                                       }}
                                     />
                                   </TableCell>
-                                  <TableCell align="right">{row.id}</TableCell>
-                                  <TableCell
-                                    component="th"
-                                    id={labelId}
-                                    scope="row"
-                                    padding="none"
-                                  >
+                                  <TableCell align="right" className="id">
+                                    <div>
+                                    {row.id}
+                                    </div>
+                                  </TableCell>
+                                  <TableCell align="right">
                                     {row.name}
                                   </TableCell>
                                   <TableCell align="right">
@@ -544,14 +543,6 @@ export default function EnhancedTable() {
                                       }}
                                     >
                                       <DeleteOutlineIcon />
-                                    </Button>
-                                    <Button
-                                      onClick={(id) => {
-                                        setActiveButtonUpdate(true);
-                                        handleUpdate(row.id, row.name);
-                                      }}
-                                    >
-                                      <UpgradeIcon />
                                     </Button>
                                   </TableCell>
                                 </TableRow>

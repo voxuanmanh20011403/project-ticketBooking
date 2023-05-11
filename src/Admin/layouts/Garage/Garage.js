@@ -15,6 +15,7 @@ import { visuallyHidden } from "@mui/utils";
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import { Button, Card, Grid } from "@mui/material";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { db } from "data/firebase";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
@@ -27,6 +28,8 @@ import {
   headCells,
   stableSort,
 } from "./Garage.constants";
+import UpdateGarage from "./UpdateGarage/UpdateGarage";
+import "./Garage.css";
 
 const DEFAULT_ORDER = "asc";
 const DEFAULT_ORDER_BY = "calories";
@@ -104,8 +107,6 @@ export default function Garage() {
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
-
-  
 
   useEffect(() => {
     async function fetchData() {
@@ -244,16 +245,41 @@ export default function Garage() {
     if (window.confirm("Are you sure you want to delete this post?")) {
       try {
         console.log(id);
-        await deleteDoc(doc(db, "Account", id));
+        await deleteDoc(doc(db, "Garage", id));
       } catch (error) {
         console.log(error);
       }
     }
   };
   const [activeButton, setActiveButton] = useState(false);
+  const [ActiveButtonUpdate, setActiveButtonUpdate] = useState(false);
+  //form update
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [owner, setOwner] = useState("");
+  const [address, setAddress] = useState("");
+
+  const [hotline, setHotline] = useState("");
+
+  const handleUpdate = (id, name, owner, address, hotline) => {
+    setId(id);
+    setName(name);
+    setOwner(owner);
+    setAddress(address);
+    setHotline(hotline);
+  };
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = (searchValue) => {
+    // Xử lý tìm kiếm ở đây
+    console.log("Searchvalue:", searchValue);
+    setSearchTerm(searchValue);
+  };
+
   return (
     <DashboardLayout>
-      <DashboardNavbar />
+      {/* <DashboardNavbar />
+       */}
+      <DashboardNavbar onSearch={handleSearch} />
 
       <Grid item md={6}>
         <MDBox pt={6} pb={3}>
@@ -302,11 +328,26 @@ export default function Garage() {
                         rowCount={rows.length}
                       />
                       <TableBody>
-                        {visibleRows
-                          ? visibleRows.map((row, index) => {
+                        {visibleRows &&
+                          visibleRows
+                            .filter((row) =>
+                              searchTerm
+                                ? Object.values(row).some((val) => {
+                                    try {
+                                      return val
+                                        .toString()
+                                        .toLowerCase()
+                                        .includes(searchTerm.toLowerCase());
+                                    } catch (err) {
+                                      return false;
+                                    }
+                                  })
+                                : true
+                            )
+                            .map((row, index) => {
                               const isItemSelected = isSelected(row.NameGarage);
-                              const labelId = `enhanced-table-checkbox-${index}`;
 
+                              const labelId = `enhanced-table-checkbox-${index}`;
                               return (
                                 <TableRow
                                   hover
@@ -330,15 +371,10 @@ export default function Garage() {
                                       }}
                                     />
                                   </TableCell>
-                                  <TableCell align="right">{row.id}</TableCell>
-                                  <TableCell
-                                    component="th"
-                                    id={labelId}
-                                    scope="row"
-                                    padding="none"
-                                  >
-                                    {row.name}
+                                  <TableCell align="right">
+                                    <div>{row.id}</div>
                                   </TableCell>
+                                  <TableCell style={{ display:'flex', marginLeft: '5px' }}>{row.name}</TableCell>
                                   <TableCell align="right">
                                     {row.calories}
                                   </TableCell>
@@ -350,10 +386,24 @@ export default function Garage() {
                                     {row.protein}
                                   </TableCell>
 
-                                  <TableCell align="right">
+                                  <TableCell style={{ display: "flex" }}>
                                     <Button
                                       onClick={(id) => {
                                         handleDelete(row.id);
+                                      }}
+                                    >
+                                      <DeleteOutlineIcon />
+                                    </Button>
+                                    <Button
+                                      onClick={(id) => {
+                                        setActiveButtonUpdate(true);
+                                        handleUpdate(
+                                          row.id,
+                                          row.name,
+                                          row.calories,
+                                          row.fat,
+                                          row.carbs
+                                        );
                                       }}
                                     >
                                       <UpgradeIcon />
@@ -361,17 +411,7 @@ export default function Garage() {
                                   </TableCell>
                                 </TableRow>
                               );
-                            })
-                          : null}
-                        {paddingHeight > 0 && (
-                          <TableRow
-                            style={{
-                              height: paddingHeight,
-                            }}
-                          >
-                            <TableCell colSpan={6} />
-                          </TableRow>
-                        )}
+                            })}
                       </TableBody>
                     </Table>
                   </TableContainer>
@@ -390,6 +430,19 @@ export default function Garage() {
           </Grid>
         </MDBox>
       </Grid>
+      {ActiveButtonUpdate ? (
+        <UpdateGarage
+          ActiveButtonUpdate={ActiveButtonUpdate}
+          setActiveButtonUpdate={setActiveButtonUpdate}
+          name={name}
+          id={id}
+          owner={owner}
+          address={address}
+          hotline={hotline}
+        />
+      ) : (
+        <></>
+      )}
       {activeButton ? (
         <AddGarage
           activeButton={activeButton}
