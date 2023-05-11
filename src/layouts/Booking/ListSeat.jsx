@@ -158,31 +158,44 @@ const ListSeat = ({ items }) => {
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+ const tokenLocal = localStorage.getItem("token");
 
   const handleContinue = () => {
     // console.log("data: " + JSON.stringify(items));
     if (totalPrice === 0) {
       // console.log("1232121");
       toast.error("Bạn chưa chọn vé!");
+      console.log(typeof(tokenLocal));
     } else {
-      dispatch(
-        tripActions.addBooking({
-          id: items.id,
-          // IdTrip: items.ID_Trip,
-          NameGarage: items.NameGarage,
-          NameTrip: items.NameTrip,
-          StartTime: items.StartTime,
-          PakingStart: items.PakingStart,
-          PakingEnd: items.PakingEnd,
-          price: items.Price,
-          totalSeat: selectedSeatNames.length,
-          listSeated: selectedSeatNames,
-          totalPrice,
-        })
-      );
-      setTimeout(() => {
-        navigate("/payment");
-      }, 1500);
+      if(tokenLocal){
+        dispatch(
+          tripActions.addBooking({
+            id: items.id,
+            // IdTrip: items.ID_Trip,
+            NameGarage: items.NameGarage,
+            NameTrip: items.NameTrip,
+            StartTime: items.StartTime,
+            PakingStart: items.PakingStart,
+            PakingEnd: items.PakingEnd,
+            EndTime: items.EndTime,
+            duration: items.duration,
+            price: items.Price,
+            totalSeat: selectedSeatNames.length,
+            listSeated: selectedSeatNames,
+            totalPrice,
+          })
+        );
+        setTimeout(() => {
+          navigate("/payment");
+        }, 1500);
+      }else {
+        toast.error("Bạn chưa đăng nhập!",{
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          navigate("/SignIN");
+        }, 1500);
+      }
     }
   };
 

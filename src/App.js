@@ -87,7 +87,8 @@ export default function App() {
       setUid(authUser.uid);
     });
   }, [dispatch]);
-  console.log("role: " + role)
+  console.log("role: " + role);
+  
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>

@@ -10,7 +10,18 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import StarIcon from "@mui/icons-material/Star";
 import StarRateIcon from "@mui/icons-material/StarRate";
+import { db } from "./../../data/firebase";
+import {
+  collection,
+  query,
+  onSnapshot,
+  updateDoc,
+  doc,
+  addDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
+// Tab 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -49,6 +60,10 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   color: theme.palette.text.secondary,
 }));
+
+
+
+
 const TabsUI = ({items}) => {
   const [value, setValue] = React.useState(0);
 

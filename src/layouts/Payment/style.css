@@ -1,5 +1,10 @@
+.title_checkout{
+    text-align: center;
+    padding: 2.5rem;
+}
 .title{
-    padding: 40px;
+    padding-top: 7.5rem;
+    padding-bottom: 1rem;
 }
 .checkout__card{
     width: inherit;
@@ -24,6 +29,7 @@
 }
 .checkout__card span{
     font-weight: bold;
+    text-align: left;
 }
 .btn_checkout{
     background-color:#03a8f47e !important; 
@@ -62,12 +68,9 @@
 }
 /* payment progress */
 .container__payment {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
   }
   
 .container__payment .progress {
-    margin: 0 auto;
+    margin-top: 50vh;
 }
