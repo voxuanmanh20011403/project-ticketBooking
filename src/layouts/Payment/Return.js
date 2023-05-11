@@ -51,9 +51,10 @@ function Return() {
   // get db từ localStorage
   const getLocalUserDB = JSON.parse(localStorage.getItem('getLocalUserDB'));
   const getLocalAccount = JSON.parse(localStorage.getItem('account'));
-  console.log('getLocalAccount: ' + getLocalAccount)
+  // console.log('getLocalAccount: ' + getLocalAccount)
   // console.log("getLocalUserDB: " + (getLocalUserDB));
 
+  // foramt timestamp từ firestore
   const timeStart = getLocalUserDB.dataBooking[0].StartTime;
   const dateS = new Date(timeStart.seconds * 1000);
   const dayS = dateS.getDate();
@@ -62,6 +63,13 @@ function Return() {
   const hoursS = dateS.getHours();
   const minutesS = dateS.getMinutes();
 
+  const timeEnd = getLocalUserDB.dataBooking[0].EndTime;
+  const dateEnd = new Date(timeEnd.seconds * 1000);
+  const dayEnd = dateEnd.getDate();
+  const monthEnd = dateEnd.getMonth() + 1;
+  const yearEnd = dateEnd.getFullYear();
+  const hoursEnd = dateEnd.getHours();
+  const minutesEnd = dateEnd.getMinutes();
   useEffect(() => {
     setReturnUrl([amount, bankCode, bankTranNo, cardType, formattedDateString, vnpResponseCode]);
     // create datetime hiện tại
@@ -77,17 +85,20 @@ function Return() {
           const docRef = await addDoc(collection(db, 'Checkout'), {
             // IdTrip: getLocalUserDB.dataBooking[0].IdTrip,
             FullName: getLocalUserDB.data.lastName,
-            NumberPhone: getLocalUserDB.data.phoneNumber,
+            NumberPhone: getLocalUserDB.data.numberPhone,
             Email: getLocalUserDB.data.email,
             NameGarage: getLocalUserDB.dataBooking[0].NameGarage,
             NameTrip: getLocalUserDB.dataBooking[0].NameTrip,
             StartTime: `${hoursS}:${minutesS}" "${dayS}/${monthS}/${yearS}`,
+            EndTime: `${hoursEnd}:${minutesEnd}" "${dayEnd}/${monthEnd}/${yearEnd}`,
+            duration: getLocalUserDB.dataBooking[0].duration,
             PakingStart: getLocalUserDB.dataBooking[0].PakingStart,
             PakingEnd: getLocalUserDB.dataBooking[0].PakingEnd,
             TotalSeated: getLocalUserDB.dataBooking[0].totalSeat,
             ListSeated: getLocalUserDB.dataBooking[0].listSeated,
             TotalPrice: getLocalUserDB.dataBooking[0].totalPrice,
             DateCheckout: `${date}/${month}/${year}`,
+            Status: "Thành công",
           });
           console.log('Document written with ID: ', docRef.id);
         } catch (e) {
@@ -124,17 +135,20 @@ function Return() {
         name: getLocalUserDB.data.lastName,
         nameTrip: getLocalUserDB.dataBooking[0].NameTrip,
         date: `Ngày ${dayS} tháng ${monthS} năm ${yearS}`,
+        timeStart: `${hoursS}:${minutesS}`,
+        endTime: `${hoursEnd}:${minutesEnd}" "${dayEnd}/${monthEnd}/${yearEnd}`,
         nameGarage: getLocalUserDB.dataBooking[0].NameGarage,
         from: getLocalUserDB.dataBooking[0].PakingStart,
         to: getLocalUserDB.dataBooking[0].PakingEnd,
         seats: getLocalUserDB.dataBooking[0].listSeated,
+        duration: getLocalUserDB.dataBooking[0].duration,
       };
-      emailjs.send('gmail', 'template_nzsnsp7', templateParams, 'nw10q72SaDSc17UUF')
-        .then((response) => {
-          console.log('SUCCESS!', response.status, response.text);
-        }, (error) => {
-          console.log('FAILED...', error);
-        });
+      // emailjs.send('gmail', 'template_nzsnsp7', templateParams, 'nw10q72SaDSc17UUF')
+      //   .then((response) => {
+      //     console.log('SUCCESS!', response.status, response.text);
+      //   }, (error) => {
+      //     console.log('FAILED...', error);
+      //   });
       setRemoveLocal(true);
     } else {
       console.log("error")

@@ -71,7 +71,7 @@ const Payment = () => {
 
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
       await dispatch(asyncAddBooking([...dataBooking, data]));
 

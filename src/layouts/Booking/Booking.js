@@ -46,7 +46,7 @@ const Booking = () => {
         querySnapshot.forEach((doc) => {
           tempDB.push({ ...doc.data(), id: doc.id });
         });
-        console.log(tempDB);
+        // console.log(tempDB);
         setData(tempDB);
       });
 

@@ -165,8 +165,9 @@ const ListSeat = ({ items }) => {
     if (totalPrice === 0) {
       // console.log("1232121");
       toast.error("Bạn chưa chọn vé!");
+      console.log(typeof(tokenLocal));
     } else {
-      if(tokenLocal !== undefined){
+      if(tokenLocal){
         dispatch(
           tripActions.addBooking({
             id: items.id,
@@ -176,6 +177,8 @@ const ListSeat = ({ items }) => {
             StartTime: items.StartTime,
             PakingStart: items.PakingStart,
             PakingEnd: items.PakingEnd,
+            EndTime: items.EndTime,
+            duration: items.duration,
             price: items.Price,
             totalSeat: selectedSeatNames.length,
             listSeated: selectedSeatNames,
@@ -186,10 +189,12 @@ const ListSeat = ({ items }) => {
           navigate("/payment");
         }, 1500);
       }else {
-        toast.error("Bạn chưa đăng nhập!");
+        toast.error("Bạn chưa đăng nhập!",{
+          autoClose: 1000,
+        });
         setTimeout(() => {
           navigate("/SignIN");
-        }, 1000);
+        }, 1500);
       }
     }
   };
