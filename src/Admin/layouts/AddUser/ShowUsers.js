@@ -67,13 +67,13 @@ function stableSort(array, comparator) {
 const headCells = [
   {
     id: "id",
-    numeric: true,
-    disablePadding: false,
+    numeric: false,
+    disablePadding: true,
     label: "UID",
   },
   {
     id: "name",
-    numeric: false,
+    numeric: true,
     disablePadding: true,
     label: "Email",
   },
@@ -411,7 +411,16 @@ export default function EnhancedTable() {
     setName(name);
   };
   //BUTTON RENDER COMPONENT
-  const [refreshCount, setRefreshCount] = useState(0);
+  // const  handleSearch=(searchValue) =>{
+  //   console.log("Search value:", searchValue);
+  //   // Thực hiện các xử lý tìm kiếm tại đây
+  // }
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = (searchValue) => {
+    // Xử lý tìm kiếm ở đây
+    console.log("Searchvalue:", searchValue);
+    setSearchTerm(searchValue);
+  };
 
   return (
     // <DashboardLayout>
@@ -419,7 +428,8 @@ export default function EnhancedTable() {
 
     // </DashboardLayout>
     <DashboardLayout>
-      <DashboardNavbar />
+      {/* <DashboardNavbar /> */}
+      <DashboardNavbar onSearch={handleSearch} />
 
       <Grid item md={6}>
         <MDBox pt={6} pb={3}>
@@ -447,7 +457,7 @@ export default function EnhancedTable() {
                           className="btnAddd"
                           style={{ backgroundColor: "black" }}
                         >
-                          Thêm
+                          Thêm admin
                         </Button>
                       </div>
                     </div>
@@ -469,11 +479,21 @@ export default function EnhancedTable() {
                         rowCount={rows.length}
                       />
                       <TableBody>
-                        {visibleRows
-                          ? visibleRows.map((row, index) => {
+                        {visibleRows &&
+                          visibleRows
+                            .filter((row) =>
+                              searchTerm
+                                ? Object.values(row).some((val) =>
+                                    val
+                                      .toString()
+                                      .toLowerCase()
+                                      .includes(searchTerm.toLowerCase())
+                                  )
+                                : true
+                            )
+                            .map((row, index) => {
                               const isItemSelected = isSelected(row.id);
                               const labelId = `enhanced-table-checkbox-${index}`;
-
                               return (
                                 <TableRow
                                   hover
@@ -485,7 +505,7 @@ export default function EnhancedTable() {
                                   sx={{ cursor: "pointer" }}
                                   className="abc"
                                 >
-                                  <TableCell padding="checkbox">
+                                  <TableCell padding="">
                                     <Checkbox
                                       onClick={(event) =>
                                         handleClick(event, row.id)
@@ -497,13 +517,12 @@ export default function EnhancedTable() {
                                       }}
                                     />
                                   </TableCell>
-                                  <TableCell align="right">{row.id}</TableCell>
-                                  <TableCell
-                                    component="th"
-                                    id={labelId}
-                                    scope="row"
-                                    padding="none"
-                                  >
+                                  <TableCell align="right" className="id">
+                                    <div>
+                                    {row.id}
+                                    </div>
+                                  </TableCell>
+                                  <TableCell align="right">
                                     {row.name}
                                   </TableCell>
                                   <TableCell align="right">
@@ -525,28 +544,10 @@ export default function EnhancedTable() {
                                     >
                                       <DeleteOutlineIcon />
                                     </Button>
-                                    <Button
-                                      onClick={(id) => {
-                                        setActiveButtonUpdate(true);
-                                        handleUpdate(row.id, row.name);
-                                      }}
-                                    >
-                                      <UpgradeIcon />
-                                    </Button>
                                   </TableCell>
                                 </TableRow>
                               );
-                            })
-                          : null}
-                        {paddingHeight > 0 && (
-                          <TableRow
-                            style={{
-                              height: paddingHeight,
-                            }}
-                          >
-                            <TableCell colSpan={6} />
-                          </TableRow>
-                        )}
+                            })}
                       </TableBody>
                     </Table>
                   </TableContainer>
