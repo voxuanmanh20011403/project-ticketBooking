@@ -69,6 +69,7 @@ function Return() {
     const date = today.getDate();
     const month = today.getMonth() + 1;
     const year = today.getFullYear();
+    
     if (vnpResponseCode === '00') { //checkout success
       async function addDB() {
         try {
@@ -94,60 +95,51 @@ function Return() {
         }
       }
       addDB();
+      //  update data trips after checkout success
+      const listSeated = getLocalUserDB.dataBooking[0].listSeated;
+      const id = getLocalUserDB.dataBooking[0].id;
+  
+      const tripRef = doc(collection(db, "Trips"), id);
+  
+      const updateTrip = async () => {
+        try {
+          const docSnap = await getDoc(tripRef);
+          const data = docSnap.data();
+          const updatedSeat = data.seat.map(s => {
+            if (listSeated.includes(s.name)) {
+              return { ...s, status: "book" };
+            }
+            return s;
+          });
+          await updateDoc(tripRef, { seat: updatedSeat });
+          console.log("Seats updated successfully!");
+        } catch (e) {
+          console.error("Error updating seats: ", e);
+        }
+      };
+      updateTrip();
+      // Tạo mail và gửi đi
+      const templateParams = {
+        toEmail: getLocalUserDB.data.email,
+        name: getLocalUserDB.data.lastName,
+        nameTrip: getLocalUserDB.dataBooking[0].NameTrip,
+        date: `Ngày ${dayS} tháng ${monthS} năm ${yearS}`,
+        nameGarage: getLocalUserDB.dataBooking[0].NameGarage,
+        from: getLocalUserDB.dataBooking[0].PakingStart,
+        to: getLocalUserDB.dataBooking[0].PakingEnd,
+        seats: getLocalUserDB.dataBooking[0].listSeated,
+      };
+      emailjs.send('gmail', 'template_nzsnsp7', templateParams, 'nw10q72SaDSc17UUF')
+        .then((response) => {
+          console.log('SUCCESS!', response.status, response.text);
+        }, (error) => {
+          console.log('FAILED...', error);
+        });
       setRemoveLocal(true);
     } else {
       console.log("error")
     }
   }, [vnpResponseCode]);
-
-
-  // update data trips after checkout success
-  if (removeLocal === true) {
-    const listSeated = getLocalUserDB.dataBooking[0].listSeated;
-    const id = getLocalUserDB.dataBooking[0].id;
-
-    const tripRef = doc(collection(db, "Trips"), id);
-
-    const updateTrip = async () => {
-      try {
-        const docSnap = await getDoc(tripRef);
-        const data = docSnap.data();
-        const updatedSeat = data.seat.map(s => {
-          if (listSeated.includes(s.name)) {
-            return { ...s, status: "book" };
-          }
-          return s;
-        });
-        await updateDoc(tripRef, { seat: updatedSeat });
-        console.log("Seats updated successfully!");
-      } catch (e) {
-        console.error("Error updating seats: ", e);
-      }
-    };
-    updateTrip();
-  }
-  // Tạo mail và gửi đi
-  const handleTest = () => {
-    const templateParams = {
-      toEmail: getLocalUserDB.data.email,
-      name: getLocalUserDB.data.lastName,
-      nameTrip: getLocalUserDB.dataBooking[0].NameTrip,
-      date: `Ngày ${dayS} tháng ${monthS} năm ${yearS}`,
-      nameGarage: getLocalUserDB.dataBooking[0].NameGarage,
-      from: getLocalUserDB.dataBooking[0].PakingStart,
-      to: getLocalUserDB.dataBooking[0].PakingEnd,
-      seats: getLocalUserDB.dataBooking[0].listSeated,
-    };
-    emailjs.send('gmail', 'template_nzsnsp7', templateParams, 'nw10q72SaDSc17UUF')
-      .then((response) => {
-        console.log('SUCCESS!', response.status, response.text);
-      }, (error) => {
-        console.log('FAILED...', error);
-      });
-  }
-  if (removeLocal === true) {
-
-  }
 
   // clear local sau 1p
   // if (removeLocal === true) {
@@ -165,7 +157,7 @@ function Return() {
   // 9704198526191432198 - NGUYEN VAN A  - 07/15 - 123456 
   let price = returnUrl[0];
   // let price = returnUrl[0].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-  console.log(price)
+  // console.log(price)
   // const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
   return (
@@ -214,9 +206,6 @@ function Return() {
                     {index !== getLocalUserDB.dataBooking[0].listSeated.length - 1 && ", "}
                   </span>
                 ))}</span></h4>
-                <button onClick={handleTest}>
-                  onclick
-                </button>
               </div>
             </Item>
           </Grid>

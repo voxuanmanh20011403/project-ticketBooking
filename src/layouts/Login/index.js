@@ -48,7 +48,9 @@ function SignIn() {
     };
     getAccounts();
   }, []);
+  
   console.log("setAccounts", accounts);
+
   const onSubmit = async (data) => {
     try {
       for (let i = 0; i < accounts.length; i++) {
