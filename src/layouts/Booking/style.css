@@ -320,4 +320,14 @@
     font-weight: 500;
     font-size: 16px !important;
 }
-/* ArrowRightAltIcon */
+/* Comment.jsx */
+.css-pn2k96-MuiStack-root{
+    margin: 0 !important;
+}
+.css-1mijgri-MuiSvgIcon-root{
+    font-size: 3.25rem !important;
+}
+.list__comment{
+    margin-top: 1rem;
+    border-bottom: 1px solid black;
+}

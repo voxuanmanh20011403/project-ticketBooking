@@ -84,6 +84,7 @@ function Return() {
           // create collection checkout 
           const docRef = await addDoc(collection(db, 'Checkout'), {
             // IdTrip: getLocalUserDB.dataBooking[0].IdTrip,
+            ID_Garage: getLocalUserDB.dataBooking[0].ID_Garage,
             FullName: getLocalUserDB.data.lastName,
             NumberPhone: getLocalUserDB.data.numberPhone,
             Email: getLocalUserDB.data.email,
