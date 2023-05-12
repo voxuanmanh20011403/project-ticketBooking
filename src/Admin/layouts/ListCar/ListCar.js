@@ -132,7 +132,12 @@ export default function ListCar() {
       item.PakingStart + "-" + item.EndPoint,
       item.LicensePlate,
       item.Hotline,
-      item.Price
+      item.Price,
+      item.EndPoint,
+      item.StartPoint,
+      item.PakingEnd,
+      item.PakingStart,
+      item.duration
     )
   );
   console.log("rows", rows);
@@ -260,11 +265,29 @@ export default function ListCar() {
   const [ActiveButtonUpdate, setActiveButtonUpdate] = useState(false);
   const [price, setPrice] = useState("");
   const [id, setId] = useState("");
+  const [endPoint, setEndPoint] = useState("");
+  const [startPoint, setStartPoint] = useState("");
+  const [pakingEnd, setPakingEnd] = useState("");
+  const [pakingStart, setPakingStart] = useState("");
+  const [duration, setduration] = useState("");
 
   //update
-  const handleUpdate = (id, price) => {
+  const handleUpdate = (
+    id,
+    price,
+    EndPoint,
+    StartPoint,
+    PakingEnd,
+    PakingStart,
+    duration
+  ) => {
     setPrice(price);
     setId(id);
+    setEndPoint(EndPoint);
+    setStartPoint(StartPoint);
+    setPakingEnd(PakingEnd);
+    setPakingStart(PakingStart);
+    setduration(duration);
   };
   //searerch
   const [searchTerm, setSearchTerm] = useState("");
@@ -346,71 +369,79 @@ export default function ListCar() {
                               const labelId = `enhanced-table-checkbox-${index}`;
                               return (
                                 <TableRow
-                                hover
-                                role="checkbox"
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                key={row.Namegarage}
-                                selected={isItemSelected}
-                                sx={{ cursor: "pointer" }}
-                                className="abc"
+                                  hover
+                                  role="checkbox"
+                                  aria-checked={isItemSelected}
+                                  tabIndex={-1}
+                                  key={row.Namegarage}
+                                  selected={isItemSelected}
+                                  sx={{ cursor: "pointer" }}
+                                  className="abc"
                                 >
-                                <TableCell padding="checkbox">
-                                  <Checkbox
-                                    onClick={(event) =>
-                                      handleClick(event, row.Namegarage)
-                                    }
-                                    color="primary"
-                                    checked={isItemSelected}
-                                    inputProps={{
-                                      "aria-labelledby": labelId,
-                                    }}
-                                  />
-                                </TableCell>
-                                <TableCell align="right">
-                                  <div>{row.id}</div>
-                                </TableCell>
-                                <TableCell
-                                  component="th"
-                                  id={labelId}
-                                  scope="row"
-                                  padding="none"
-                                >
-                                  {row.Namegarage}
-                                </TableCell>
-                                <TableCell align="right">
-                                  {row.TypeVehicle}
-                                </TableCell>
-                                <TableCell align="right">
-                                  {row.seat}
-                                </TableCell>
-                                <TableCell align="right">
-                                  {row.fromto}
-                                </TableCell>
-                                <TableCell align="right">
-                                  {row.LicensePlate}
-                                </TableCell>
-                                <TableCell align="right">
-                                  {row.hotline}
-                                </TableCell>
-                                
-                                <TableCell style={{ display: "flex" }}>
-                                  <Button
-                                    onClick={(id) => {
-                                      handleDelete(row.id);
-                                    }}
+                                  <TableCell padding="checkbox">
+                                    <Checkbox
+                                      onClick={(event) =>
+                                        handleClick(event, row.Namegarage)
+                                      }
+                                      color="primary"
+                                      checked={isItemSelected}
+                                      inputProps={{
+                                        "aria-labelledby": labelId,
+                                      }}
+                                    />
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <div>{row.id}</div>
+                                  </TableCell>
+                                  <TableCell
+                                    component="th"
+                                    id={labelId}
+                                    scope="row"
+                                    padding="none"
                                   >
-                                    <DeleteOutlineIcon />
-                                  </Button>
-                                  <Button
-                                    onClick={(id) => {
-                                      setActiveButtonUpdate(true);
-                                      handleUpdate(row.id, row.Price);
-                                    }}
-                                  >
-                                    <UpgradeIcon />
-                                  </Button>
-                                </TableCell>
+                                    {row.Namegarage}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.TypeVehicle}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.seat}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.fromto}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.LicensePlate}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.hotline}
+                                  </TableCell>
+
+                                  <TableCell style={{ display: "flex" }}>
+                                    <Button
+                                      onClick={(id) => {
+                                        handleDelete(row.id);
+                                      }}
+                                    >
+                                      <DeleteOutlineIcon />
+                                    </Button>
+                                    <Button
+                                      onClick={(id) => {
+                                        setActiveButtonUpdate(true);
+                                        handleUpdate(
+                                          row.id,
+                                          row.Price,
+                                          row.EndPoint,
+                                          row.StartPoint,
+                                          row.PakingEnd,
+                                          row.PakingStart,
+                                          row.duration
+                                        );
+                                      }}
+                                    >
+                                      <UpgradeIcon />
+                                    </Button>
+                                  </TableCell>
                                 </TableRow>
                               );
                             })}
@@ -437,11 +468,12 @@ export default function ListCar() {
           ActiveButtonUpdate={ActiveButtonUpdate}
           setActiveButtonUpdate={setActiveButtonUpdate}
           price={price}
-          // name={name}
           id={id}
-          // owner={owner}
-          // address={address}
-          // hotline={hotline}
+          endPoint={endPoint}
+          startPoint={startPoint}
+          pakingEnd={pakingEnd}
+          pakingStart={pakingStart}
+          duration={duration}
         />
       ) : (
         <></>
