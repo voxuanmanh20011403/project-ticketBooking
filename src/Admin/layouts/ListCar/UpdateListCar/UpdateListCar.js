@@ -19,7 +19,11 @@ function UpdateListCar(props) {
     setActiveButtonUpdate,
     price,
     id,
-    
+    endPoint,
+    startPoint,
+    pakingEnd,
+    pakingStart,
+    duration,
   } = props;
   //set show/hide form
   const [open, setOpen] = React.useState(true);
@@ -34,14 +38,21 @@ function UpdateListCar(props) {
   //implement add image and video
 
   //TODO : CUSTOM FIELD THÊM NHÀ XE
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    Price:price ,
+    EndPoint:endPoint ,
+    StartPoint:  startPoint,
+    PakingEnd: pakingEnd,
+    PakingStart: pakingStart,
+    duration: duration,
+  });
   const handleChangeValue = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    const statisticsRef = doc(collection(db, "Garage"), `${id}`);
+    const statisticsRef = doc(collection(db, "ListCar"), `${id}`);
 
     // Tăng trường "viewer" lên 1 đơn vị
     updateDoc(statisticsRef, {
@@ -49,6 +60,12 @@ function UpdateListCar(props) {
       // Address: formData.Address,
       // Owner: formData.Owner,
       // Hotline: formData.Hotline
+      Price:formData.Price ,
+      EndPoint: formData.EndPoint,
+      StartPoint: formData.StartPoint ,
+      PakingEnd: formData.PakingEnd,
+      PakingStart: formData.PakingStart,
+      duration: formData.duration,
     })
       .then(() => {
         console.log(
@@ -79,7 +96,7 @@ function UpdateListCar(props) {
             <Paper className="paper" elevation={4}>
               <div>
                 <div className="modalHeading">
-                  <Typography>Cập nhật thông tin nhà xe  </Typography>
+                  <Typography>Cập nhật thông tin nhà xe </Typography>
                   <IconButton>
                     <CloseIcon onClick={handleClose} />
                   </IconButton>
@@ -89,68 +106,71 @@ function UpdateListCar(props) {
                     <fieldset>
                       <TextField
                         id="outlined-basic"
+                        label="Điểm đi"
+                        variant="outlined"
+                        name="StartPoint"
+                        value={formData.StartPoint}
+                        onChange={handleChangeValue}
+                        placeholder="Điểm đi"
+                        className="Garage"
+                        defaultValue={startPoint}
+                      />
+                      <TextField
+                        id="outlined-basic"
+                        label="Điểm đến"
+                        variant="outlined"
+                        name="EndPoint"
+                        value={formData.EndPoint}
+                        onChange={handleChangeValue}
+                        placeholder="Điểm đến"
+                        className="Garage"
+                        defaultValue={endPoint}
+                      />
+                      <TextField
+                        id="outlined-basic"
+                        label="Bến xe xuất phát"
+                        variant="outlined"
+                        name="PakingStart"
+                        value={formData.PakingStart}
+                        onChange={handleChangeValue}
+                        placeholder="Bến xe xuất phát"
+                        className="Garage"
+                        defaultValue={pakingStart}
+                      />
+                      <TextField
+                        id="outlined-basic"
+                        label="Bến xe kết thúc"
+                        variant="outlined"
+                        name="PakingEnd"
+                        value={formData.PakingEnd}
+                        onChange={handleChangeValue}
+                        placeholder="Bến xe kết thúc"
+                        className="Garage"
+                        defaultValue={pakingEnd}
+                      />
+                      <TextField
+                        id="outlined-basic"
+                        label="Thời gian di chuyển"
+                        variant="outlined"
+                        name="duration"
+                        value={formData.duration}
+                        onChange={handleChangeValue}
+                        placeholder="Thời gian di chuyển"
+                        className="Garage"
+                        defaultValue={duration}
+                      />
+                      <TextField
+                        id="outlined-basic"
                         label="Giá vé"
                         variant="outlined"
-                        name="NameGarage"
-                        value={formData.NameGarage}
+                        name="Price"
+                        value={formData.Price}
                         onChange={handleChangeValue}
                         placeholder="Giá vé"
                         className="Garage"
                         defaultValue={price}
-                       
                       />
-                       <TextField
-                        id="outlined-basic"
-                        label="Tên nhà xe"
-                        variant="outlined"
-                        name="NameGarage"
-                        value={formData.NameGarage}
-                        onChange={handleChangeValue}
-                        placeholder="ID nhà xe"
-                        className="Garage"
-                        // defaultValue={}
-                       
-                      />
-                       <TextField
-                        id="outlined-basic"
-                        label="Tên nhà xe"
-                        variant="outlined"
-                        name="NameGarage"
-                        value={formData.NameGarage}
-                        onChange={handleChangeValue}
-                        placeholder="ID nhà xe"
-                        className="Garage"
-                        // defaultValue={}
 
-                       
-                      />
-                       <TextField
-                        id="outlined-basic"
-                        label="Tên nhà xe"
-                        variant="outlined"
-                        name="NameGarage"
-                        value={formData.NameGarage}
-                        onChange={handleChangeValue}
-                        placeholder="ID nhà xe"
-                        className="Garage"
-                        // defaultValue={}
-
-                       
-                      />
-                       <TextField
-                        id="outlined-basic"
-                        label="Tên nhà xe"
-                        variant="outlined"
-                        name="NameGarage"
-                        value={formData.NameGarage}
-                        onChange={handleChangeValue}
-                        placeholder="ID nhà xe"
-                        className="Garage"
-                        // defaultValue={}
-
-                       
-                      />
-                      
                       <Button
                         variant="contained"
                         className="modal__footer11"
