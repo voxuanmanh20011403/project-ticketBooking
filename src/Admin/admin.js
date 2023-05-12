@@ -130,7 +130,7 @@ export default function Admin() {
     setSelectedValue(value);
   };
   const renderComponent = () => {
-    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <UserTable /> : (selectedValue === 3 ? <Garage /> : <ListCar/>));
+    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <UserTable /> : (selectedValue === 3 ? <Garage /> :  (selectedValue === 4 ? <ListCar /> : <Billing/>)));
   };
   return (
     <>
