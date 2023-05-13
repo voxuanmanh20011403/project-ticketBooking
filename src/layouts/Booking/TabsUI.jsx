@@ -80,7 +80,6 @@ const TabsUI = ({ items }) => {
       console.error(error);
     }
   }, []);
-  console.log("dataComment: " + JSON.stringify(dataComment));
 
   return (
     <Box sx={{ width: "100%" }}>

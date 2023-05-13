@@ -7,6 +7,15 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Rating from "@mui/material/Rating";
 
 const Comment = ({ comments }) => {
+
+  const dateTime = comments[0].User[0].DateTime;
+  const dateS = new Date(dateTime.seconds * 1000);
+  const dayS = dateS.getDate();
+  const monthS = dateS.getMonth() + 1;
+  const yearS = dateS.getFullYear();
+  const hoursS = dateS.getHours();
+  const minutesS = dateS.getMinutes();
+
   return (
     <div>
       {comments.map((comment, index) => (
@@ -47,12 +56,13 @@ const Comment = ({ comments }) => {
                         <Typography variant="h6"> {user.FullName}</Typography>
                         <Rating
                           name="half-rating-read"
-                          defaultValue={2}
+                          defaultValue={user.Start === 1 ? 1 : user.Start === 2 ? 2 : user.Start === 3 ? 3 : user.Start === 4 ? 4 : 5}
                           readOnly
                         />
                       </Typography>
                   </Stack>
                   <Typography variant="body1">{user.Comment}</Typography>
+            <Typography variant="h6">Đăng ngày {dayS}/{monthS}/{yearS}</Typography>
                 </Stack>
               ))}
             </Grid>
