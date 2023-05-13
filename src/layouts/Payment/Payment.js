@@ -96,7 +96,6 @@ const Payment = () => {
     } catch (error) {
       console.error(error);
     }
-
   };
   setTimeout(() => {
     setLoading(false);

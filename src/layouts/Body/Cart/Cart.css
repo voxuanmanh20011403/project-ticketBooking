@@ -14,10 +14,10 @@
 .title{
     max-width: 1000px;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 400;
     /* text-align: left !important; */
     width: inherit;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     color: #f15a24;
 
 }
@@ -119,4 +119,14 @@
     position: absolute;
     top: -800px;
     right: 0;
+}
+.bg3{
+    margin-top: 13%;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    vertical-align: middle;
+    max-width: 100%;
+    height: auto;
+    border: 0;
 }
