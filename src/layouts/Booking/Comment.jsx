@@ -3,19 +3,13 @@ import { Card, CardContent, Typography, Grid } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import StarIcon from "@mui/icons-material/Star";
 import StarRateIcon from "@mui/icons-material/StarRate";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Rating from "@mui/material/Rating";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Box from "@mui/material/Box";
 
 const Comment = ({ comments }) => {
-
-  const dateTime = comments[0].User[0].DateTime;
-  const dateS = new Date(dateTime.seconds * 1000);
-  const dayS = dateS.getDate();
-  const monthS = dateS.getMonth() + 1;
-  const yearS = dateS.getFullYear();
-  const hoursS = dateS.getHours();
-  const minutesS = dateS.getMinutes();
-
+console.log("comment: " + JSON.stringify(comments));
   return (
     <div>
       {comments.map((comment, index) => (
@@ -33,37 +27,57 @@ const Comment = ({ comments }) => {
             </Grid>
             <Grid item xs={12}>
               {comment.User.map((user, userIndex) => (
-                <Stack
-                className="list__comment"
-                  direction="column"
-                  justifyContent="center"
-                  alignItems="flex-start"
-                  spacing={2}
+                <div
                   key={userIndex}
+                  style={{
+                    display: "flex",
+                    marginTop: "16px",
+                    marginBottom: "16px",
+                  }}
                 >
-                  <Stack
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                    spacing={2}
-                  >
-                    <AccountCircleIcon fontSize="large"/>
-                      <Typography
-                        variant="caption"
-                        display="block"
-                        gutterBottom
-                      >
-                        <Typography variant="h6"> {user.FullName}</Typography>
-                        <Rating
-                          name="half-rating-read"
-                          defaultValue={user.Start === 1 ? 1 : user.Start === 2 ? 2 : user.Start === 3 ? 3 : user.Start === 4 ? 4 : 5}
-                          readOnly
-                        />
-                      </Typography>
-                  </Stack>
-                  <Typography variant="body1">{user.Comment}</Typography>
-            <Typography variant="h6">Đăng ngày {dayS}/{monthS}/{yearS}</Typography>
-                </Stack>
+                  <Avatar
+                    alt={user.FullName}
+                    src="https://via.placeholder.com/150"
+                    style={{ width: "48px", height: "48px" }}
+                  />
+                  <div style={{ marginLeft: "16px" }}>
+                    <Typography
+                      variant="subtitle1"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      {user.FullName}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      style={{ color: "#999", fontSize: "0.9rem" }}
+                    >
+                      {new Date(
+                       user.DateTime.seconds * 1000
+                      ).toLocaleDateString()}
+                    </Typography>
+                    <Box style={{ marginTop: "8px", marginBottom: "8px" }}>
+                      <Rating
+                        name="half-rating-read"
+                        defaultValue={
+                          user.Start === 1
+                            ? 1
+                            : user.Start === 2
+                            ? 2
+                            : user.Start === 3
+                            ? 3
+                            : user.Start === 4
+                            ? 4
+                            : 5
+                        }
+                        readOnly
+                      />
+                    </Box>
+                    <Typography variant="body1" style={{ marginBottom: "8px" }}>
+                      {user.Comment}
+                    </Typography>
+                    <Divider />
+                  </div>
+                </div>
               ))}
             </Grid>
           </CardContent>
