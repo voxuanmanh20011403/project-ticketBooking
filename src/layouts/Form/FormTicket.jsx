@@ -40,7 +40,7 @@ function a11yProps(index) {
 }
 
 export default function FormTicket() {
-  // const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -54,10 +54,10 @@ export default function FormTicket() {
           <Tab label="Đã Đi" {...a11yProps(1)} />
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
+      <TabPanel  index={0}>
         Item One
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel  index={1}>
         Item Two
       </TabPanel>
     </Box>

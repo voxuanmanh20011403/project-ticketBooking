@@ -1,3 +1,4 @@
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
 import React, { useEffect, useState } from "react";
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';

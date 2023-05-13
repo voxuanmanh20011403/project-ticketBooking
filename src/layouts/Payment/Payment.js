@@ -79,7 +79,6 @@ const Payment = () => {
     } catch (error) {
       toast.error("Đã có lỗi xảy ra!" + error);
     }
-
   };
   setTimeout(() => {
     setLoading(false);

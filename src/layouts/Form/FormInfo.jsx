@@ -1,83 +1,138 @@
-import React,{ useState,useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-} from '@material-ui/core';
-import Box from '@mui/material/Box';
-// import firebase from 'firebase/app';
-// import 'firebase/firestore';
-import firebase from 'firebase/compat/app'
+  Grid,
+  Paper,
+  Typography,
+} from "@material-ui/core";
+// import { db, docRef } from "../../data/firebase";
+import { db } from "../../data/firebase";
 
-const useStyles = makeStyles((theme) => ({
-  formWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  textField: {
-    margin: theme.spacing(2),
-    width: '500px',
-  },
-  button: {
-    margin: theme.spacing(2),
-  },
-}));
-
-
-
+import { collection, doc, updateDoc } from "firebase/firestore";
 const FormInfo = () => {
-  const [accounts, setAccounts] = useState([]);
-  // const classes = useStyles();
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const db = firebase.firestore();
-  //     const data = await db.collection('Account').get();
-  //     setAccounts(data.docs.map(doc => ({ ...doc.data(), id: doc.Email })));
-  //   }
-  //   console.log(accounts);
-  //   fetchData();
-  // }, []);
 
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordText, setShowPasswordText] = useState("Hiển Thị");
+ 
+  const statisticsRef = doc(collection(db, "Account"), '${id}');
+    // Tăng trường "viewer" lên 1 đơn vị
+    updateDoc(statisticsRef, {
+      Name: name,
+      Phone: phone,
+    })
+    .then(() => {
+      console.log(`Updated document with ID ${id} in collection "Garage".`);
+    })
+    .catch((error) => {
+      console.error(`Error updating document with ID ${id} in collection "Garage":`, error);
+    });
 
+  useEffect(() => {
+    const dataAccount = JSON.parse(localStorage.getItem("account"));
+    console.log(dataAccount)
+    setEmail(dataAccount.Email);
+    setName(dataAccount.Name);
+    setPhone(dataAccount.NumberPhone);
+    setPassword(dataAccount.Password)
+  }, [])
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+    setShowPasswordText(showPassword ? "Hiển Thị" : "Ẩn");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Name", name);
+    console.log("Email:", email);
+    console.log("Phone:", phone);
+    console.log("Password:", password);
+    // const dataAccount = JSON.parse(localStorage.getItem("account"));
+    // const updatedData = {
+    //   ...dataAccount,
+    //   Name: name,
+    //   NumberPhone: phone,
+    //   Password: password,
+    // };
+    // localStorage.setItem("account", JSON.stringify(updatedData));
+  };
   return (
+    <Grid container justifyContent="center" alignItems="center">
+      <Grid item xs={20} sm={20} md={6} lg={4}>
+        <Paper elevation={3} style={{ padding: 20 }}>
+          <Typography variant="h5" component="h1" align="center" gutterBottom>
+            Thông Tin Tài Khoản
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Họ và Tên"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Số Điện Thoại"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Mật Khẩu"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={15}>
+                <Button
+                  onClick={handleShowPassword}
+                  variant="contained"
+                  color="secondary"
+                >
+                  {showPasswordText} Mật Khẩu
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                >
+                  Lưu
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
+      </Grid>
+    </Grid>
+  
 
-<div className={classes.formWrapper}>
-<Box
-  sx={{
-    flexGrow: 1,
-    bgcolor: 'background.paper',
-    display: 'flex',
-    minHeight: 224,
-  }}
->
-  <form className={classes.form}>
-    <TextField className={classes.textField} label="Họ và tên" variant="outlined" value={accounts[0]?.Name} />
-    <TextField className={classes.textField} label="Số điện thoại" variant="outlined" value={accounts[0]?.NumberPhone} />
-    <TextField className={classes.textField} label="Mật Khẩu" variant="outlined" value={accounts[0]?.Password} />
-    <FormControl className={classes.textField}>
-      <FormLabel>Giới tính</FormLabel>
-      <RadioGroup>
-        <FormControlLabel value="female" control={<Radio />} label="Nam" />
-        <FormControlLabel value="male" control={<Radio />} label="Nữ" />
-      </RadioGroup>
-    </FormControl>
-    <Button className={classes.button} variant="contained" color="primary">
-      Lưu
-    </Button>
-  </form>
-</Box>
-</div>
   );
 };
 

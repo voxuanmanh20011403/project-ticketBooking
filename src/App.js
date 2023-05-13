@@ -66,6 +66,7 @@ export default function App() {
 
   const dispatch = useDispatch();
   const { displayName } = useSelector((state) => state.user);
+  console.log(displayName);
 
   let role = 0;
   const data = JSON.parse(localStorage.getItem("account"));

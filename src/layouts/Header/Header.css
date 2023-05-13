@@ -79,3 +79,22 @@
     width: 100px;
     height: 100px;
 }
+.head_cart:hover {
+    color: rgb(0, 96, 196);
+    cursor: pointer;
+  }
+
+.logout-btn {
+    background-color: #f00;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  
+  
+  
+  
+  
+  
