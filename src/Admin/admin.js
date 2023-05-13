@@ -29,6 +29,7 @@ import TestAddCar from "./layouts/TestAddCar";
 import Garage from "./layouts/Garage/Garage";
 import Tables from "./layouts/tables";
 import ListCar from "./layouts/ListCar/ListCar";
+import { ManagerTickets } from "./layouts/ManagerTickets/ManagerTickets";
 
 
 export default function Admin() {
@@ -130,7 +131,7 @@ export default function Admin() {
     setSelectedValue(value);
   };
   const renderComponent = () => {
-    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <UserTable /> : (selectedValue === 3 ? <Garage /> : <ListCar/>));
+    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <UserTable /> : (selectedValue === 3 ? <Garage /> : (selectedValue === 4 ? <ListCar /> : <ManagerTickets/>)));
   };
   return (
     <>
