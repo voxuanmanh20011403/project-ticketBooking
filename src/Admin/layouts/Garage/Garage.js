@@ -13,7 +13,7 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
-import { Button, Card, Grid } from "@mui/material";
+import { Button, Card, Grid, IconButton } from "@mui/material";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { db } from "data/firebase";
@@ -22,6 +22,8 @@ import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
 import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
 import AddGarage from "./AddGarage/AddGarage";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   createData,
   getComparator,
@@ -274,6 +276,7 @@ export default function Garage() {
     console.log("Searchvalue:", searchValue);
     setSearchTerm(searchValue);
   };
+  const [open, setOpen] = React.useState(false);
 
   return (
     <DashboardLayout>
@@ -359,22 +362,30 @@ export default function Garage() {
                                   sx={{ cursor: "pointer" }}
                                   className="abc"
                                 >
-                                  <TableCell padding="checkbox">
-                                    <Checkbox
-                                      onClick={(event) =>
-                                        handleClick(event, row.name)
-                                      }
-                                      color="primary"
-                                      checked={isItemSelected}
-                                      inputProps={{
-                                        "aria-labelledby": labelId,
-                                      }}
-                                    />
+                                  <TableCell>
+                                    <IconButton
+                                      aria-label="expand row"
+                                      size="small"
+                                      onClick={() => setOpen(!open)}
+                                    >
+                                      {open ? (
+                                        <KeyboardArrowUpIcon />
+                                      ) : (
+                                        <KeyboardArrowDownIcon />
+                                      )}
+                                    </IconButton>
                                   </TableCell>
                                   <TableCell align="right">
                                     <div>{row.id}</div>
                                   </TableCell>
-                                  <TableCell style={{ display:'flex', marginLeft: '5px' }}>{row.name}</TableCell>
+                                  <TableCell
+                                    style={{
+                                      display: "flex",
+                                      marginLeft: "5px",
+                                    }}
+                                  >
+                                    {row.name}
+                                  </TableCell>
                                   <TableCell align="right">
                                     {row.calories}
                                   </TableCell>

@@ -74,7 +74,7 @@ export default function App() {
   }catch(e) {
     console.log(e);
   }
-  
+
 
   useEffect(() => {
 
@@ -88,7 +88,7 @@ export default function App() {
     });
   }, [dispatch]);
   console.log("role: " + role);
-  
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
