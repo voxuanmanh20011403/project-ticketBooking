@@ -48,6 +48,11 @@ console.log("selectDate: " + selectDate);
         });
       }, 1000);
       try {
+        // reset lại data trước khi search
+        await dispatch(
+          tripActions.clearStateSearch()
+        );
+
         await dispatch(
           tripActions.addSearch({
             origin: origin,

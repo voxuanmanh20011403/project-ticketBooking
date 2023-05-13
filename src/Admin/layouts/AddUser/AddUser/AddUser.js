@@ -121,6 +121,7 @@ function AddUser(props) {
           Name: data.lastname + " " + data.firstname,
           numberphone: data.numberphone,
           CreateTime: formattedDate,
+          role:"0",
           ...formData,
         });
         console.log("Document written with ID: ", docRef.id);
@@ -265,21 +266,6 @@ function AddUser(props) {
                             {errors.numberphone?.message}
                           </Typography>
                         </Grid>
-                        <FormControl fullWidth>
-                          <InputLabel id="demo-simple-select-label">
-                            Quyền
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={formData.role}
-                            name="role"
-                            onChange={handleChangeValue}
-                          >
-                            <MenuItem value={0}>Nhân viên</MenuItem>
-                            <MenuItem value={1}>Người dùng</MenuItem>
-                          </Select>
-                        </FormControl>
                         <Button
                           variant="contained"
                           style={{

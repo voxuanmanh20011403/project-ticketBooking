@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
+import {
+  Container,
+  Typography,
+  Grid,
+  Paper,
+} from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-
-
+import emailjs from '@emailjs/browser';
 import { db } from "data/firebase";
 import { addDoc, collection, where, getDocs, query, getDoc, updateDoc, doc } from "firebase/firestore";
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -20,9 +23,9 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function Return() {
-  const [returnUrl, setReturnUrl] = useState([
-  ]);
+  const [returnUrl, setReturnUrl] = useState([]);
   const [removeLocal, setRemoveLocal] = useState(false);
+
   // lấy thông tin thanh toán từ returnUrl do vnpay trả về
   const search = window.location.search;
   const params = new URLSearchParams(search);
@@ -44,8 +47,11 @@ function Return() {
   const formattedDateString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
   // get db từ localStorage
   const getLocalUserDB = JSON.parse(localStorage.getItem('getLocalUserDB'));
+  const getLocalAccount = JSON.parse(localStorage.getItem('account'));
+  // console.log('getLocalAccount: ' + getLocalAccount)
   // console.log("getLocalUserDB: " + (getLocalUserDB));
 
+  // foramt timestamp từ firestore
   const timeStart = getLocalUserDB.dataBooking[0].StartTime;
   const dateS = new Date(timeStart.seconds * 1000);
   const dayS = dateS.getDate();
@@ -54,30 +60,44 @@ function Return() {
   const hoursS = dateS.getHours();
   const minutesS = dateS.getMinutes();
 
+  const timeEnd = getLocalUserDB.dataBooking[0].EndTime;
+  const dateEnd = new Date(timeEnd.seconds * 1000);
+  const dayEnd = dateEnd.getDate();
+  const monthEnd = dateEnd.getMonth() + 1;
+  const yearEnd = dateEnd.getFullYear();
+  const hoursEnd = dateEnd.getHours();
+  const minutesEnd = dateEnd.getMinutes();
   useEffect(() => {
     setReturnUrl([amount, bankCode, bankTranNo, cardType, formattedDateString, vnpResponseCode]);
-    // create collection checkout 
+    // create datetime hiện tại
     const today = new Date();
     const date = today.getDate();
-    const month = today.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1 để lấy tháng hiện tại
+    const month = today.getMonth() + 1;
     const year = today.getFullYear();
+    
     if (vnpResponseCode === '00') { //checkout success
       async function addDB() {
         try {
+          // create collection checkout 
           const docRef = await addDoc(collection(db, 'Checkout'), {
             // IdTrip: getLocalUserDB.dataBooking[0].IdTrip,
-            FullName: getLocalUserDB.data.firstName + ' ' + getLocalUserDB.data.lastName,
-            NumberPhone: getLocalUserDB.data.phoneNumber,
-            Email: getLocalUserDB.data.phoneNumber,
+            idDoc: getLocalUserDB.dataBooking[0].id,
+            ID_Garage: getLocalUserDB.dataBooking[0].ID_Garage,
+            FullName: getLocalUserDB.data.lastName,
+            NumberPhone: getLocalUserDB.data.numberPhone,
+            Email: getLocalUserDB.data.email,
             NameGarage: getLocalUserDB.dataBooking[0].NameGarage,
             NameTrip: getLocalUserDB.dataBooking[0].NameTrip,
             StartTime: `${hoursS}:${minutesS}" "${dayS}/${monthS}/${yearS}`,
+            EndTime: `${hoursEnd}:${minutesEnd}" "${dayEnd}/${monthEnd}/${yearEnd}`,
+            duration: getLocalUserDB.dataBooking[0].duration,
             PakingStart: getLocalUserDB.dataBooking[0].PakingStart,
             PakingEnd: getLocalUserDB.dataBooking[0].PakingEnd,
             TotalSeated: getLocalUserDB.dataBooking[0].totalSeat,
             ListSeated: getLocalUserDB.dataBooking[0].listSeated,
             TotalPrice: getLocalUserDB.dataBooking[0].totalPrice,
             DateCheckout: `${date}/${month}/${year}`,
+            Status: "Thành công",
           });
           console.log('Document written with ID: ', docRef.id);
         } catch (e) {
@@ -85,46 +105,61 @@ function Return() {
         }
       }
       addDB();
+      //  update data trips after checkout success
+      const listSeated = getLocalUserDB.dataBooking[0].listSeated;
+      const id = getLocalUserDB.dataBooking[0].id;
+  
+      const tripRef = doc(collection(db, "Trips"), id);
+  
+      const updateTrip = async () => {
+        try {
+          const docSnap = await getDoc(tripRef);
+          const data = docSnap.data();
+          const updatedSeat = data.seat.map(s => {
+            if (listSeated.includes(s.name)) {
+              return { ...s, status: "book" };
+            }
+            return s;
+          });
+          await updateDoc(tripRef, { seat: updatedSeat });
+          console.log("Seats updated successfully!");
+        } catch (e) {
+          console.error("Error updating seats: ", e);
+        }
+      };
+      updateTrip();
+      // Tạo mail và gửi đi
+      const templateParams = {
+        toEmail: getLocalUserDB.data.email,
+        name: getLocalUserDB.data.lastName,
+        nameTrip: getLocalUserDB.dataBooking[0].NameTrip,
+        date: `Ngày ${dayS} tháng ${monthS} năm ${yearS}`,
+        timeStart: `${hoursS}:${minutesS}`,
+        endTime: `${hoursEnd}:${minutesEnd}" "${dayEnd}/${monthEnd}/${yearEnd}`,
+        nameGarage: getLocalUserDB.dataBooking[0].NameGarage,
+        from: getLocalUserDB.dataBooking[0].PakingStart,
+        to: getLocalUserDB.dataBooking[0].PakingEnd,
+        seats: getLocalUserDB.dataBooking[0].listSeated,
+        duration: getLocalUserDB.dataBooking[0].duration,
+      };
+      // emailjs.send('gmail', 'template_nzsnsp7', templateParams, 'nw10q72SaDSc17UUF')
+      //   .then((response) => {
+      //     console.log('SUCCESS!', response.status, response.text);
+      //   }, (error) => {
+      //     console.log('FAILED...', error);
+      //   });
       setRemoveLocal(true);
     } else {
       console.log("error")
     }
   }, [vnpResponseCode]);
 
-
-  // update data trips after checkout success
-  if (removeLocal === true) {
-    const listSeated = getLocalUserDB.dataBooking[0].listSeated;
-    const id = getLocalUserDB.dataBooking[0].id;
-
-    const tripRef = doc(collection(db, "Trips"), id);
-
-    const updateTrip = async () => {
-      try {
-        const docSnap = await getDoc(tripRef);
-        const data = docSnap.data();
-        const updatedSeat = data.seat.map(s => {
-          if (listSeated.includes(s.name)) {
-            return { ...s, status: "book" };
-          }
-          return s;
-        });
-        await updateDoc(tripRef, { seat: updatedSeat });
-        console.log("Seats updated successfully!");
-      } catch (e) {
-        console.error("Error updating seats: ", e);
-      }
-    };
-    updateTrip();
-  }
-
-
   // clear local sau 1p
-  if (removeLocal === true) {
-    setTimeout(() => {
-      localStorage.removeItem('getLocalUserDB');
-    }, 60000);
-  }
+  // if (removeLocal === true) {
+  //   setTimeout(() => {
+  //     localStorage.removeItem('getLocalUserDB');
+  //   }, 60000);
+  // }
   // bắt sự kiện beforeunload thì clear storage
   window.addEventListener('beforeunload', function (e) {
     localStorage.clear();
@@ -133,31 +168,59 @@ function Return() {
   // console.log("returnUrl: " + returnUrl);
 
   // 9704198526191432198 - NGUYEN VAN A  - 07/15 - 123456 
+  let price = returnUrl[0];
+  // let price = returnUrl[0].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  // console.log(price)
+  // const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
   return (
     <React.Fragment>
       <CssBaseline />
       <Container >
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={12}>
+            <h2 className="title_checkout">
+              THANH TOÁN THÀNH CÔNG
+              <CheckCircleOutlineIcon color="success" />
+            </h2>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={5}>
             <Item>
+              <Typography variant="h4" align="center" className="title_checkout">
+                Thông tin giao dịch
+              </Typography>
               <div className='return__card'>
-                <h2>THANH TOÁN THÀNH CÔNG <CheckCircleOutlineIcon color="success" /></h2>
-                <br></br>
-                <h4 >Mã giao dịch <span>{returnUrl[2]}</span></h4>
-                <h4>Ngân hàng thanh toán<span>{returnUrl[1]}</span></h4>
+                <h4 >Mã giao dịch: <span>{returnUrl[2]}</span></h4>
+                <h4>Ngân hàng thanh toán:<span>{returnUrl[1]}</span></h4>
                 <h4>
-                  Thanh toán với<span>{returnUrl[3]}</span>
+                  Thanh toán với:<span>{returnUrl[3]}</span>
                 </h4>
-                <h4>Thời gian thanh toán<span> {returnUrl[4]}</span></h4>
-                <h4>Tổng tiền thanh toán<span>{returnUrl[0]} VNĐ</span></h4>
+                <h4>Thời gian thanh toán:<span> {returnUrl[4]}</span></h4>
+                <h4>Tổng tiền thanh toán:<span>{price}</span></h4>
               </div>
-
             </Item>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={7}>
+            <Item>
+              <Typography variant="h4" align="center" className="title_checkout">
+                Thông tin khách hàng
+              </Typography>
+              <div className='return__card'>
+                <h4>Họ tên khách hàng:<span>{getLocalAccount.Name}</span></h4>
+                <h4>Email:<span>{getLocalAccount.Email}</span></h4>
+                <h4>Số điện thoại:<span>{getLocalAccount.NumberPhone}</span></h4>
+                <h4>Tên nhà xe:<span>{getLocalUserDB.dataBooking[0].NameGarage}</span></h4>
+                <h4>Chuyến đi:<span>{getLocalUserDB.dataBooking[0].NameTrip}</span></h4>
+                <h4>Nơi khởi hành:<span>{getLocalUserDB.dataBooking[0].PakingStart}</span></h4>
+                <h4>Nơi đến:<span>{getLocalUserDB.dataBooking[0].PakingEnd}</span></h4>
+                <h4>Vị trí:<span>{getLocalUserDB.dataBooking[0].listSeated.map((name, index) => (
+                  <span key={index}>
+                    {name}
+                    {index !== getLocalUserDB.dataBooking[0].listSeated.length - 1 && ", "}
+                  </span>
+                ))}</span></h4>
+              </div>
+            </Item>
           </Grid>
         </Grid>
       </Container>

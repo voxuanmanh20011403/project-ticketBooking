@@ -48,7 +48,9 @@ function SignIn(props) {
     };
     getAccounts();
   }, []);
+  
   console.log("setAccounts", accounts);
+
   const onSubmit = async (data) => {
     try {
       for (let i = 0; i < accounts.length; i++) {
@@ -119,7 +121,7 @@ function SignIn(props) {
           localStorage.setItem("account", accountJSON);
           localStorage.setItem('isLoggedIn', true);
           {
-            accounts[i].Role === "1" ? history("/admin") : history("/");
+            accounts[i].Role === "1" ? history("/") : history("/admin");
           }
           break;
         }

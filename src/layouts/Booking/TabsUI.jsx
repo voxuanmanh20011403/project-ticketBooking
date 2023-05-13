@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -10,7 +10,10 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import StarIcon from "@mui/icons-material/Star";
 import StarRateIcon from "@mui/icons-material/StarRate";
-
+import Comment from "./Comment.jsx";
+import { db } from "./../../data/firebase";
+import { collection, query, onSnapshot, where } from "firebase/firestore";
+// Tab
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -49,12 +52,34 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   color: theme.palette.text.secondary,
 }));
-const TabsUI = ({items}) => {
+
+const TabsUI = ({ items }) => {
   const [value, setValue] = React.useState(0);
+  const [dataComment, setDataComment] = useState([]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  useEffect(() => {
+    try {
+      const q = query(
+        collection(db, "Comment"),
+        where("ID_Garage", "==", items.ID_Garage)
+      );
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        let tempDB = [];
+        querySnapshot.forEach((doc) => {
+          tempDB.push({ ...doc.data(), id: doc.id });
+        });
+        // console.log(tempDB);
+        setDataComment(tempDB);
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -95,18 +120,11 @@ const TabsUI = ({items}) => {
         </Container>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <span className="star">
-          <StarIcon sx={{ fontSize: 15 }} />
-          4.2{" "}
-        </span>
-        <span>
-          <StarRateIcon sx={{ fontSize: 20, color: "rgb(255, 199, 0)" }} />
-          <StarRateIcon sx={{ fontSize: 20 , color: "rgb(255, 199, 0)"}} />
-          <StarRateIcon sx={{ fontSize: 20 , color: "rgb(255, 199, 0)"}} />
-          <StarRateIcon sx={{ fontSize: 20 , color: "rgb(255, 199, 0)"}} />
-          <StarRateIcon sx={{ fontSize: 20 , color: "rgb(255, 199, 0)" }} />
-        </span>
-        <span>• 328 đánh giá</span>
+        <Grid container spacing={2}>
+          <Grid item xs={12} >
+            <Comment comments={dataComment} />
+          </Grid>
+        </Grid>
       </TabPanel>
     </Box>
   );

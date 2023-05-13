@@ -20,26 +20,17 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import {
-  collection,
-  getDocs,
-} from "firebase/firestore";
-import { db } from "./../../data/firebase";
 // Router
 import { useNavigate, useHistory } from "react-router-dom";
 // redux
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTrips } from "redux/slices/tripsSilce";
+import { tripActions } from "redux/slices/tripsSilce";
+
 import "./style.css";
 import BannerSearch from "layouts/Body/Banner/BannerSearch";
-import dayjs from "dayjs";
-import '../Body/Banner/Banner.css';
+import "../Body/Banner/Banner.css";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -69,13 +60,17 @@ const Trip = ({ fetchData }) => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
   let [filteredData, setFilteredData] = useState();
-  //Typography
+
   const [selectedTypography, setSelectedTypography] = useState("");
   const [statusSeat, setStatusSeat] = useState(false);
 
   const [startPointRedux, setStartPointRedux] = useState("");
   const [endPointRedux, setEndPointRedux] = useState("");
-  // const [selectDate, setSelectDate] = useState("");
+
+  const [removeStateSearch, setRemoveStateSearch] = useState(false);
+
+  const stateSearch = useSelector((state) => state.trip.stateSearch);
+
   const navigate = useNavigate();
 
   filteredData = fetchData.filter((item) => {
@@ -117,15 +112,7 @@ const Trip = ({ fetchData }) => {
         );
       }
     }
-    return false;
-    // if (selectedCheckboxes.length === 0) {
-    //   return item.NameGarage.toLowerCase().includes(searchValue.toLowerCase());
-    // } else {
-    //   return (
-    //     item.TypeVehicle === selectedCheckboxes[0] &&
-    //     item.NameGarage.toLowerCase().includes(searchValue.toLowerCase())
-    //   );
-    // }
+    
   });
 
   const handleSearch = (e) => {
@@ -179,17 +166,20 @@ const Trip = ({ fetchData }) => {
   }, [statusSeat]);
 
   // get data from redux
-  const stateSearch = useSelector((state) => state.trip.stateSearch);
   useEffect(() => {
     try {
       setStartPointRedux(stateSearch[0].origin);
       setEndPointRedux(stateSearch[0].destination);
+
       // setSelectDate(stateSearch[0].selectDate);
+      setRemoveStateSearch(true);
     } catch (e) {
       navigate("/");
     }
   }, []);
-
+  const dispatch = useDispatch();
+  if (removeStateSearch) {
+  }
   // console.log("filteredData: " + JSON.stringify(filteredData));
 
   const breadcrumbs = [
@@ -210,93 +200,6 @@ const Trip = ({ fetchData }) => {
     setShowNumber(true);
   }, 3000);
 
-  // Search and datetime 
-  const [dataFake, setDataFake] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const accountsCol = collection(db, "Location");
-      const accountsSnapshot = await getDocs(accountsCol);
-      const accountsList = accountsSnapshot.docs.map((doc) => {
-        return {
-          id: doc.id,
-          ...doc.data(),
-        };
-      });
-      console.log("accountsList", accountsList);
-      setDataFake(accountsList[0].title);
-    }
-    fetchData();
-  }, []);
-
-  const locations = dataFake;
-  const [origin, setOrigin] = useState(locations);
-  const [destination, setDestination] = useState(locations);
-
-  const [stateOrigin, setStateOrigin] = useState(false);
-  const [stateDestination, setStateDestination] = useState(false);
-
-  const handleOriginChange = (event, value) => {
-    setOrigin(value);
-    setStateOrigin(true);
-  };
-  const handleDestinationChange = (event, value) => {
-    setDestination(value);
-    setStateDestination(true);
-  };
-  //handle click 1 chiều set từ đi ssang đến
-  const destinationOptions = locations.filter(
-    (location) => location !== origin
-  );
-
-  const [selectDate, setSelectDate] = useState(dayjs());
-
-  const today = dayjs().startOf("day");
-  const isDateDisabled = (date) => {
-    return date.isBefore(today, "day");
-  };
-  const handleChangeDate = (date) => {
-    setSelectDate(date);
-  };
-// console.log("selectDate: " + selectDate);
-  const dispatch = useDispatch();
-
-  const handleSearchDateTime = async () => {
-    if (stateOrigin === true && stateDestination === true) {
-      toast.loading("Đang tìm kiếm...", { duration: 1000, autoClose: true });
-      setTimeout(() => {
-        toast.dismiss(); // đóng toast
-      }, 1000);
-      setTimeout(() => {
-        toast.success("Tìm kiếm thành công!", {
-          autoClose: 1000,
-        });
-      }, 1000);
-      try {
-         await dispatch(
-          tripActions.addSearch({
-            origin: origin,
-            destination: destination,
-            selectDate: selectDate,
-          })
-        );
-        // setTimeout(() => {
-        //   navigate("/booking");
-        // }, 2500);
-      } catch (error) {
-        toast.error("Tìm kiếm thất bại!");
-      }
-
-    } else if(stateOrigin === false && stateDestination === true) {
-      toast.error("Bạn chưa nhập nơi đi!");
-    } else if(stateDestination === false && stateOrigin === true){
-      toast.error("Bạn chưa nhập nơi đến!");
-    } else{
-      toast.error("Bạn chưa nhập nơi đi và nơi đến!");
-    }
-  };
-
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -314,57 +217,7 @@ const Trip = ({ fetchData }) => {
         <Container maxWidth="lg">
           <Grid container spacing={2}>
             <Grid item xs={12} className="form__search">
-              <Stack
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-                spacing={1}
-              >
-                <div>
-                  <Autocomplete
-                    value={origin}
-                    onChange={handleOriginChange}
-                    id="fromLocation"
-                    options={locations}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Nơi xuất phát" />
-                    )}
-                  />
-                </div>
-                <div>
-                  <Autocomplete
-                    value={destination}
-                    onChange={handleDestinationChange}
-                    id="toLocation"
-                    options={destinationOptions}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Nơi đến" />
-                    )}
-                  />
-                </div>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Ngày đi"
-                    value={selectDate}
-                    onChange={handleChangeDate}
-                    shouldDisableDate={isDateDisabled}
-                    disablePast
-                    showTodayButton
-                    todayLabel="Now"
-                  ></DatePicker>
-                  <Stack direction="row">
-                    <Button
-                      variant="contained"
-                      disableElevation
-                      onClick={handleSearchDateTime}
-                    >
-                      <h3 className="btn">Tìm Chuyến</h3>
-                    </Button>
-                  </Stack>
-                </LocalizationProvider>
-              </Stack>
+              <BannerSearch />
             </Grid>
             <Grid item xs={6}></Grid>
             <Grid item xs={6}>
