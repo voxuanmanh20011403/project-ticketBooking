@@ -172,6 +172,7 @@ const ListSeat = ({ items }) => {
           tripActions.addBooking({
             id: items.id,
             // IdTrip: items.ID_Trip,
+            ID_Garage: items.ID_Garage,
             NameGarage: items.NameGarage,
             NameTrip: items.NameTrip,
             StartTime: items.StartTime,
