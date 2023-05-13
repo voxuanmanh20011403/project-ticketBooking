@@ -42,6 +42,7 @@ import { Infor } from "redux/slices/auth";
 import User from "layouts/User/User";
 
 import { TripsAuto } from "Admin/layouts/RenderTableTripsAuto/TripsAuto";
+import FormComment from "layouts/Comment/FormComment";
 
 
 export default function App() {
@@ -65,6 +66,7 @@ export default function App() {
 
   const dispatch = useDispatch();
   const { displayName } = useSelector((state) => state.user);
+  console.log(displayName);
 
   let role = 0;
   const data = JSON.parse(localStorage.getItem("account"));
@@ -110,7 +112,7 @@ export default function App() {
 
         <Route path="TestAddCar" element={<TestAddCar />} />
         <Route path="addusser" element={<AddUser />} />
-
+        <Route path='/comment' element ={<FormComment />}></Route>
       </Routes>
       <TripsAuto />
     </ThemeProvider>

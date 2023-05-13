@@ -9,14 +9,14 @@ import MDTypography from "Admin/components/MDTypography";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import { Avatar, Button, Grid, TextField, Typography } from "@mui/material";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Notification from "layouts/notication/Notification";
 import "./login.css";
 import { getDocs } from "firebase/firestore";
 import { collection, doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 import { db, auth } from "data/firebase";
-function SignIn() {
+function SignIn(props) {
   const [rememberMe, setRememberMe] = useState(false);
   const [showError, setShowError] = useState(false);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
@@ -119,6 +119,7 @@ function SignIn() {
           });
           //end
           localStorage.setItem("account", accountJSON);
+          localStorage.setItem('isLoggedIn', true);
           {
             accounts[i].Role === "1" ? history("/") : history("/admin");
           }
@@ -213,6 +214,7 @@ function SignIn() {
                 }}
                 color="error"
                 onClick={handleSubmit(onSubmit)}
+
               >
                 Đăng nhập
               </Button>

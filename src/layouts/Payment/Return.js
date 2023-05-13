@@ -7,9 +7,6 @@ import {
   Typography,
   Grid,
   Paper,
-  TextField,
-  Button,
-  FormControl,
 } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import emailjs from '@emailjs/browser';
@@ -84,6 +81,8 @@ function Return() {
           // create collection checkout 
           const docRef = await addDoc(collection(db, 'Checkout'), {
             // IdTrip: getLocalUserDB.dataBooking[0].IdTrip,
+            idDoc: getLocalUserDB.dataBooking[0].id,
+            ID_Garage: getLocalUserDB.dataBooking[0].ID_Garage,
             FullName: getLocalUserDB.data.lastName,
             NumberPhone: getLocalUserDB.data.numberPhone,
             Email: getLocalUserDB.data.email,

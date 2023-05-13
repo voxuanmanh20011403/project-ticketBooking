@@ -1,4 +1,4 @@
-import React,{ useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -13,10 +13,27 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import { blue } from '@mui/material/colors';
+import Login from './../Login/index';
+import { useDispatch, useSelector } from "react-redux";
+// import { auth } from './../../data/firebase';
 
-export default function AccountMenu() {
 
+function handleCartClick() {
+  const cart = document.getElementById('cart'); // lấy thẻ chứa tuyến phổ biến
+  cart.scrollIntoView({ behavior: 'smooth' }); // cuộn trang web đến vị trí của thẻ cart
+}
+
+function handleBusClick() {
+  const bus = document.getElementById('bus'); // lấy thẻ chứa tuyến phổ biến
+  bus.scrollIntoView({ behavior: 'smooth' }); // cuộn trang web đến vị trí của thẻ cart
+}
+
+
+
+export default function Contact() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,34 +42,55 @@ export default function AccountMenu() {
     setAnchorEl(null);
   };
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+  const { displayName } = useSelector((state) => state.user);
+  console.log(displayName);
+
   const [userName, setUserName] = useState('');
 
-  const handleLoginSuccess = (user) => {
-    setIsLoggedIn(true);
-    setUserName(user.name);
-  };
-
+  // const handleLoginSuccess = (user) => {
+  //   setIsLoggedIn(true);
+  //   setUserName(user.name);
+  // };
   const navigate = useNavigate();
+
+  const Logged = localStorage.getItem("isLoggedIn");
+  console.log(Logged);
 
   const handleLoginClick = () => {
     // Lưu dữ liệu vào localStorage
-    localStorage.setItem('isLoggedIn', true);
 
     // Chuyển hướng đến tab login
     navigate('/SignIn');
+
+    console.log(handleLoginClick);
   };
   const handleRegisterClick = () => {
     localStorage.setItem('isLoggedIn', true)
     navigate('/Register');
   };
+  // const navigate1 = useNavigate();
+  // const auth = firebase.auth();
+  // const logout = () => {
+  //   auth.signOut();
+  //   localStorage.clear();
+  //   navigate('/');
+  // };
+
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  function handleLogin() {
+    // Xử lý đăng nhập ở đây
+    setIsLoggedIn(true);
+  }
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography className='logo__img' sx={{ minWidth: 300}}></Typography>
-        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" color="secondary"  >Tìm Chuyến</Typography>
-        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" color="secondary" >Tuyến Phổ Biến</Typography>
-        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" color="secondary" >Bến Xe Khách</Typography>
+        <Typography className='logo__img' sx={{ minWidth: 300 }}></Typography>
+        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" className="head_cart" color="secondary"  >Tìm Chuyến</Typography>
+        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" color="secondary" className="head_cart" onClick={handleCartClick} >
+          Tuyến Phổ Biến
+        </Typography>
+        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" className="head_cart" color="secondary" onClick={handleBusClick}>Bến Xe Khách</Typography>
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
@@ -62,9 +100,19 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           > <div className='icon'>
-                 {isLoggedIn ? `Xin chào,` :  <Avatar sx={{ width: 45, height: 45 }}></Avatar>}
-          </div>
-           
+              <div>
+                {Logged ? (
+                  <>
+                    <p>Xin chào, {displayName}</p>
+               
+                  </>
+                ) : (
+                  <Avatar sx={{ width: 40, height: 40 }} />
+                )}
+              </div>
+            </div>
+
+
           </IconButton>
         </Tooltip>
       </Box>
@@ -103,14 +151,20 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleLoginClick}>
-           Đăng Nhập
+        <MenuItem
+          onClick={handleLoginClick} >
+          {/* onClick={handleLogin} >  */}
+          Đăng Nhập
         </MenuItem>
         <MenuItem onClick={handleRegisterClick}>
-           Đăng Ký
+          Đăng Ký
+        </MenuItem>
+        <MenuItem >
+        Đăng xuất
         </MenuItem>
         <Divider />
       </Menu>
     </React.Fragment>
+    
   );
 }

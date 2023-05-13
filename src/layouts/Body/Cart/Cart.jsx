@@ -18,11 +18,13 @@ import cart7 from "./../../../assets/img/Cart7.png"
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+// const cartRef = useRef(null);
+
 function Cart() {
   return (
-    <div className="container">
+    <div className="container" id="cart">
       <p className='title'>Tuyến phổ biến </p>
-      <div className="iteam">
+      <div className="iteam" >
         <div className="row">
           <div className="iteam-container">
             <div className='mark'>
