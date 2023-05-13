@@ -18,6 +18,7 @@ import React, { useEffect, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
+import MDBox from "Admin/components/MDBox";
 
 export function ManagerTickets() {
   const [garages, setGarages] = useState([]);
@@ -102,9 +103,9 @@ export function ManagerTickets() {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>Tên nhà xe</TableCell>
-              <TableCell>Số xe chạy</TableCell>
-              <TableCell>Tổng tiền thu về</TableCell>
+              <TableCell style={{ width: "40%" }}>Tên nhà xe</TableCell>
+              <TableCell style={{ width: "30%" }}>Số xe chạy</TableCell>
+              <TableCell style={{ width: "30%" }}>Tổng tiền thu về</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -141,7 +142,9 @@ export function ManagerTickets() {
                         )}
                       </IconButton>
                     </TableCell>
-                    <TableCell>{garage.NameGarage}</TableCell>
+                    <TableCell style={{ display: "flex", marginLeft: "30px" }}>
+                      {garage.NameGarage}
+                    </TableCell>
                     <TableCell>
                       {
                         trips.filter((trip) => {
@@ -163,7 +166,7 @@ export function ManagerTickets() {
                       }
                     </TableCell>
                     {/* Tổng tiền thu về */}
-                    <TableCell>{totalRevenue}</TableCell>
+                    <TableCell>{totalRevenue.toLocaleString()}</TableCell>
                     {/* <TableCell>{garage.id}</TableCell> */}
                   </TableRow>
                   <TableRow>
@@ -234,21 +237,40 @@ export function ManagerTickets() {
                                           onClick={() =>
                                             setSelectedTripId(trip.id)
                                           }
+                                          style={{
+                                            display: "flex",
+                                            borderBottom: "2px red solid",
+                                            marginTop: "20px",
+                                          }}
                                         >
-                                          <TableCell>
+                                          <TableCell style={{ width: "40%" }}>
                                             Biển số xe:{trip.LicensePlate}
-                                            -Tuyến:
+                                            Tuyến:
                                             {trip.NameTrip}
                                           </TableCell>
-                                          <Table>
+                                          <Table style={{ marginTop: "0px" }}>
                                             <TableHead>
                                               <TableRow>
-                                                <TableCell>
-                                                  Số điện thoại
+                                                <TableCell
+                                                  style={{ width: "25%" }}
+                                                >
+                                                  Số điện thoại/Email
                                                 </TableCell>
-                                                <TableCell>Tên khách</TableCell>
-                                                <TableCell>Số ghế</TableCell>
-                                                <TableCell>Tổng tiền</TableCell>
+                                                <TableCell
+                                                  style={{ width: "25%" }}
+                                                >
+                                                  Tên khách
+                                                </TableCell>
+                                                <TableCell
+                                                  style={{ width: "25%" }}
+                                                >
+                                                  Số ghế
+                                                </TableCell>
+                                                <TableCell
+                                                  yle={{ width: "25%" }}
+                                                >
+                                                  Tổng tiền
+                                                </TableCell>
                                               </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -277,17 +299,22 @@ export function ManagerTickets() {
                                                       }
                                                     </TableCell>
                                                     <TableCell>
-                                                      {checkout.TotalPrice}
+                                                      {checkout.TotalPrice.toLocaleString()}
                                                     </TableCell>
                                                   </TableRow>
                                                 ))}
                                               <TableRow>
                                                 <TableCell colSpan={2} />
-                                                <TableCell>
+                                                <TableCell
+                                                  style={{ fontWeight: "bold" }}
+                                                >
                                                   Số ghế đã đặt: {totalSeats}
                                                 </TableCell>
-                                                <TableCell>
-                                                  Tổng tiền: {totalPrice}
+                                                <TableCell
+                                                  style={{ fontWeight: "bold" }}
+                                                >
+                                                  Tổng tiền:{" "}
+                                                  {totalPrice.toLocaleString()}
                                                 </TableCell>
                                                 <TableCell colSpan={1} />
                                               </TableRow>
