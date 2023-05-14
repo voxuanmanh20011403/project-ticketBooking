@@ -276,7 +276,6 @@ export default function Garage() {
     console.log("Searchvalue:", searchValue);
     setSearchTerm(searchValue);
   };
-  const [open, setOpen] = React.useState(false);
 
   return (
     <DashboardLayout>
@@ -362,18 +361,17 @@ export default function Garage() {
                                   sx={{ cursor: "pointer" }}
                                   className="abc"
                                 >
-                                  <TableCell>
-                                    <IconButton
-                                      aria-label="expand row"
-                                      size="small"
-                                      onClick={() => setOpen(!open)}
-                                    >
-                                      {open ? (
-                                        <KeyboardArrowUpIcon />
-                                      ) : (
-                                        <KeyboardArrowDownIcon />
-                                      )}
-                                    </IconButton>
+                                  <TableCell padding="checkbox">
+                                    <Checkbox
+                                      onClick={(event) =>
+                                        handleClick(event, row.name)
+                                      }
+                                      vcolor="primary"
+                                      checked={isItemSelected}
+                                      inputProps={{
+                                        "aria-labelledby": labelId,
+                                      }}
+                                    />
                                   </TableCell>
                                   <TableCell align="right">
                                     <div>{row.id}</div>
