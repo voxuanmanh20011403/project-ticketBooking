@@ -15,8 +15,18 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { Button, Card, Grid, TableHead } from "@mui/material";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  TableHead,
+} from "@mui/material";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "data/firebase";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -188,7 +198,33 @@ export default function CancelTickets() {
       item.Status
     )
   );
+  //onlcik
+  const [open1, setOpen1] = useState(false);
+  const [idUpdate, setIdUpdate] = useState("");
 
+  const handleClose = () => {
+    setOpen1(false);
+    setIdUpdate("");
+  };
+  const handleClickStatus = (id) => {
+    setOpen1(true);
+    setIdUpdate(id);
+  };
+  const handleUpdate = () => {
+    setOpen1(false);
+    //update
+    const statisticsRef = doc(collection(db, "Checkout"), `${idUpdate}`);
+
+    updateDoc(statisticsRef, {
+      Status: "cancel",
+    })
+      .then(() => {
+        alert("huỷ vé thành công");
+      })
+      .catch((error) => {
+        alert("huỷ vé thất bại");
+      });
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -197,7 +233,7 @@ export default function CancelTickets() {
           <Grid container spacing={6}>
             <Grid item xs={12}>
               <Card>
-              <MDBox
+                <MDBox
                   mx={2}
                   mt={-3}
                   py={3}
@@ -210,9 +246,7 @@ export default function CancelTickets() {
                   <MDTypography variant="h6" color="white">
                     <div style={{ width: "100%", display: "flex" }}>
                       <h3 className="h3Title"> Quản lý huỷ vé xe</h3>
-                      <div className="btnAdd">
-                        
-                      </div>
+                      <div className="btnAdd"></div>
                     </div>
                   </MDTypography>
                 </MDBox>
@@ -233,7 +267,7 @@ export default function CancelTickets() {
                           <TableCell align="right">Ngày thanh toán</TableCell>
                         </TableRow>
                       </TableHead>
-                      <TableBody>
+                      <TableBody >
                         {(rowsPerPage > 0
                           ? rows
                               .filter((row) => row.status === "Xem xét")
@@ -243,7 +277,7 @@ export default function CancelTickets() {
                               )
                           : rows.filter((row) => row.status === "Xem xét")
                         ).map((row) => (
-                          <TableRow key={row.id_Trip}>
+                          <TableRow key={row.id_Trip} >
                             <TableCell style={{ width: 160 }} align="right">
                               {row.fullname}
                             </TableCell>
@@ -255,17 +289,17 @@ export default function CancelTickets() {
                             </TableCell>
                             <TableCell component="th" scope="row">
                               {row.startTime}
-                              
                             </TableCell>
                             <TableCell style={{ width: 160 }} align="right">
                               {row.totalSeated}
                             </TableCell>
                             <TableCell style={{ width: 160 }} align="right">
-                              {row.totalPrice}
+                              {row.totalPrice.toLocaleString()}
                             </TableCell>
                             <TableCell style={{ width: 160 }} align="right">
                               {row.dateCheckout}
                             </TableCell>
+                            <TableCell>
                             <Button
                               style={{
                                 backgroundColor: "lemonchiffon",
@@ -273,9 +307,11 @@ export default function CancelTickets() {
                               }}
                               variant="contained"
                               color="success"
+                              onClick={(id) => handleClickStatus(row.id)}
                             >
                               {row.status}
                             </Button>
+                            </TableCell>
                           </TableRow>
                         ))}
 
@@ -295,7 +331,10 @@ export default function CancelTickets() {
                               { label: "All", value: -1 },
                             ]}
                             colSpan={3}
-                            count={rows.length}
+                            count={
+                              rows.filter((row) => row.status === "Xem xét")
+                                .length
+                            }
                             rowsPerPage={rowsPerPage}
                             page={page}
                             SelectProps={{
@@ -313,6 +352,33 @@ export default function CancelTickets() {
                     </Table>
                   </TableContainer>
                 </Box>
+                <Dialog
+                  open={open1}
+                  onClose={() => setOpen1(false)}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Xác nhận huỷ vé"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Bạn có chắc chắn hoàn thành thao tác HUỶ VÉ này?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => handleClose()}>Hủy</Button>
+                    <Button
+                      onClick={() => {
+                        handleUpdate();
+                      }}
+                      color="primary"
+                      autoFocus
+                    >
+                      Xác nhận
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Card>
             </Grid>
           </Grid>
