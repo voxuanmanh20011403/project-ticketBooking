@@ -133,21 +133,6 @@ function createData(
     status,
   };
 }
-// const rows = [
-//   createData("Cupcake", 305, 3.7),
-//   createData("Donut", 452, 25.0),
-//   createData("Eclair", 262, 16.0),
-//   createData("Frozen yoghurt", 159, 6.0),
-//   createData("Gingerbread", 356, 16.0),
-//   createData("Honeycomb", 408, 3.2),
-//   createData("Ice cream sandwich", 237, 9.0),
-//   createData("Jelly Bean", 375, 0.0),
-//   createData("KitKat", 518, 26.0),
-//   createData("Lollipop", 392, 0.2),
-//   createData("Marshmallow", 318, 0),
-//   createData("Nougat", 360, 19.0),
-//   createData("Oreo", 437, 18.0),
-// ].sort((a, b) => (a.calories < b.calories ? -1 : 1));
 
 export default function CancelTickets() {
   const [page, setPage] = React.useState(0);
@@ -184,20 +169,22 @@ export default function CancelTickets() {
   }, []);
   console.log("checkout", data);
   //craete Data
-  const rows = data.map((item) =>
-    createData(
-      item.id,
-      item.ID_Trip,
-      item.FullName,
-      item.Email,
-      item.StartTime,
-      item.NameTrip,
-      item.DateCheckout,
-      item.TotalSeated,
-      item.TotalPrice,
-      item.Status
+  const rows = data
+    .map((item) =>
+      createData(
+        item.id,
+        item.ID_Trip,
+        item.FullName,
+        item.Email,
+        item.StartTime,
+        item.NameTrip,
+        item.DateCheckout,
+        item.TotalSeated,
+        item.TotalPrice,
+        item.Status
+      )
     )
-  );
+    .sort((a, b) => (a.calories < b.calories ? -1 : 1));
   //onlcik
   const [open1, setOpen1] = useState(false);
   const [idUpdate, setIdUpdate] = useState("");
@@ -258,16 +245,16 @@ export default function CancelTickets() {
                     >
                       <TableHead>
                         <TableRow>
-                          <TableCell align="right">Khách hàng</TableCell>
-                          <TableCell align="right">Email/Sdt</TableCell>
-                          <TableCell align="right">Chuyến xe</TableCell>
-                          <TableCell align="right">Ngày khởi hành</TableCell>
-                          <TableCell align="right">Số vé </TableCell>
-                          <TableCell align="right">Tổng thanh toán</TableCell>
-                          <TableCell align="right">Ngày thanh toán</TableCell>
+                          <TableCell style={{width:'10%'}} align="">Khách hàng</TableCell>
+                          <TableCell style={{width:'15%'}} align="">Email/Sdt</TableCell>
+                          <TableCell style={{width:'15%'}} align="">Chuyến xe</TableCell>
+                          <TableCell  style={{width:'15%'}} align="">Ngày khởi hành</TableCell>
+                          <TableCell  style={{width:'5%'}} align="">Số vé </TableCell>
+                          <TableCell  style={{width:'15%'}} align="">Tổng thanh toán</TableCell>
+                          <TableCell  style={{width:'15%'}} align="">Ngày thanh toán</TableCell>
                         </TableRow>
                       </TableHead>
-                      <TableBody >
+                      <TableBody>
                         {(rowsPerPage > 0
                           ? rows
                               .filter((row) => row.status === "Xem xét")
@@ -277,40 +264,41 @@ export default function CancelTickets() {
                               )
                           : rows.filter((row) => row.status === "Xem xét")
                         ).map((row) => (
-                          <TableRow key={row.id_Trip} >
-                            <TableCell style={{ width: 160 }} align="right">
+                          <TableRow key={row.id_Trip}>
+                            <TableCell style={{ width: 160 }} align="">
                               {row.fullname}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
+                            <TableCell style={{ width: 160 }} align="">
                               {row.email}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
+                            <TableCell style={{ width: 160 }} align="">
                               {row.nameTrip}
                             </TableCell>
                             <TableCell component="th" scope="row">
                               {row.startTime}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
+                            <TableCell style={{ width: 160 }} align="center">
                               {row.totalSeated}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
+                            <TableCell style={{ width: 160 }} align="">
                               {row.totalPrice.toLocaleString()}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
+                            <TableCell style={{ width: 160 }} align="">
                               {row.dateCheckout}
                             </TableCell>
                             <TableCell>
-                            <Button
-                              style={{
-                                backgroundColor: "lemonchiffon",
-                                marginLeft: "10px",
-                              }}
-                              variant="contained"
-                              color="success"
-                              onClick={(id) => handleClickStatus(row.id)}
-                            >
-                              {row.status}
-                            </Button>
+                              <Button
+                                style={{
+                                  backgroundColor: "lemonchiffon",
+                                  display: 'table',
+                                  height: 'fit-content',
+                                }}
+                                variant="contained"
+                                color="success"
+                                onClick={(id) => handleClickStatus(row.id)}
+                              >
+                                {row.status}
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
