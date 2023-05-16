@@ -242,16 +242,31 @@ export default function CancelTickets() {
                     <Table
                       sx={{ minWidth: 500 }}
                       aria-label="custom pagination table"
+                      style={{ display: "block", padding: "1%" }}
                     >
                       <TableHead>
                         <TableRow>
-                          <TableCell style={{width:'10%'}} align="">Khách hàng</TableCell>
-                          <TableCell style={{width:'15%'}} align="">Email/Sdt</TableCell>
-                          <TableCell style={{width:'15%'}} align="">Chuyến xe</TableCell>
-                          <TableCell  style={{width:'15%'}} align="">Ngày khởi hành</TableCell>
-                          <TableCell  style={{width:'5%'}} align="">Số vé </TableCell>
-                          <TableCell  style={{width:'15%'}} align="">Tổng thanh toán</TableCell>
-                          <TableCell  style={{width:'15%'}} align="">Ngày thanh toán</TableCell>
+                          <TableCell style={{ width: "12%" }} align="">
+                            Khách hàng
+                          </TableCell>
+                          <TableCell style={{ width: "17%" }} align="">
+                            Email/Sdt
+                          </TableCell>
+                          <TableCell style={{ width: "15%" }} align="">
+                            Chuyến xe
+                          </TableCell>
+                          <TableCell style={{ width: "15%" }} align="center">
+                            Ngày khởi hành
+                          </TableCell>
+                          <TableCell style={{ width: "5%" }} align="center">
+                            Số vé{" "}
+                          </TableCell>
+                          <TableCell style={{ width: "15%" }} align="center">
+                            Tổng thanh toán
+                          </TableCell>
+                          <TableCell style={{ width: "15%" }} align="center">
+                            Ngày thanh toán
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -265,33 +280,33 @@ export default function CancelTickets() {
                           : rows.filter((row) => row.status === "Xem xét")
                         ).map((row) => (
                           <TableRow key={row.id_Trip}>
-                            <TableCell style={{ width: 160 }} align="">
-                              {row.fullname}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="">
-                              {row.email}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="">
-                              {row.nameTrip}
-                            </TableCell>
-                            <TableCell component="th" scope="row">
+                            <TableCell align="">{row.fullname}</TableCell>
+                            <TableCell align="">{row.email}</TableCell>
+                            <TableCell align="">{row.nameTrip}</TableCell>
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              align="center"
+                            >
                               {row.startTime}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="center">
+                            <TableCell align="center">
                               {row.totalSeated}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="">
+                            <TableCell align="center">
                               {row.totalPrice.toLocaleString()}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="">
+                            <TableCell align="center">
                               {row.dateCheckout}
                             </TableCell>
                             <TableCell>
                               <Button
                                 style={{
-                                  backgroundColor: "lemonchiffon",
-                                  display: 'table',
-                                  height: 'fit-content',
+                                  backgroundColor: "#49a3f1",
+                                  color: "white",
+                                  display: "table",
+                                  height: "fit-content",
+                                  margin: "2px 0px",
                                 }}
                                 variant="contained"
                                 color="success"
