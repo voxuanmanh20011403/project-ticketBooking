@@ -107,7 +107,7 @@ export default function ListCar() {
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
 
-  useEffect(() => {
+ useEffect(() => {
     async function fetchData() {
       const accountsCol = collection(db, "ListCar");
       const accountsSnapshot = await getDocs(accountsCol);
@@ -120,7 +120,7 @@ export default function ListCar() {
       setData(accountsList);
     }
     fetchData();
-  }, []);
+  }, []); 
   console.log("data.data", data.length);
 
   const rows = data.map((item) =>

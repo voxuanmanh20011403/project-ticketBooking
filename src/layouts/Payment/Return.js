@@ -88,16 +88,16 @@ function Return() {
             Email: getLocalUserDB.data.email,
             NameGarage: getLocalUserDB.dataBooking[0].NameGarage,
             NameTrip: getLocalUserDB.dataBooking[0].NameTrip,
-            StartTime: `${hoursS}:${minutesS}" "${dayS}/${monthS}/${yearS}`,
-            EndTime: `${hoursEnd}:${minutesEnd}" "${dayEnd}/${monthEnd}/${yearEnd}`,
+            StartTime: getLocalUserDB.dataBooking[0].StartTime,
+            EndTime: getLocalUserDB.dataBooking[0].EndTime,
             duration: getLocalUserDB.dataBooking[0].duration,
             PakingStart: getLocalUserDB.dataBooking[0].PakingStart,
             PakingEnd: getLocalUserDB.dataBooking[0].PakingEnd,
             TotalSeated: getLocalUserDB.dataBooking[0].totalSeat,
             ListSeated: getLocalUserDB.dataBooking[0].listSeated,
             TotalPrice: getLocalUserDB.dataBooking[0].totalPrice,
-            DateCheckout: `${date}/${month}/${year}`,
-            Status: "Thành công",
+            DateCheckout: today,
+            Status: "Success",
           });
           console.log('Document written with ID: ', docRef.id);
         } catch (e) {
