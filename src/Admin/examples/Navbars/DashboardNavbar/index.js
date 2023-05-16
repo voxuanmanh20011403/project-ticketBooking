@@ -168,11 +168,7 @@ function DashboardNavbar({ absolute, light, isMini, onSearch }) {
               />
             </MDBox>
             <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-              </Link>
+              
               <IconButton
                 size="small"
                 disableRipple

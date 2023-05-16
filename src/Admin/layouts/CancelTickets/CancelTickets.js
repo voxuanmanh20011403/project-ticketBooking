@@ -246,10 +246,10 @@ export default function CancelTickets() {
                     >
                       <TableHead>
                         <TableRow>
-                          <TableCell style={{ width: "12%" }} align="">
+                          <TableCell style={{ width: "13%" }} align="">
                             Khách hàng
                           </TableCell>
-                          <TableCell style={{ width: "17%" }} align="">
+                          <TableCell style={{ width: "19%" }} align="">
                             Email/Sdt
                           </TableCell>
                           <TableCell style={{ width: "15%" }} align="">
