@@ -9,13 +9,16 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import { blue } from '@mui/material/colors';
 import Login from './../Login/index';
 import { useDispatch, useSelector } from "react-redux";
-// import { auth } from './../../data/firebase';
+import { auth } from 'data/firebase';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Hotline from 'layouts/Header/Hotline';
+import Email from 'layouts/Header/Email'
 
 
 function handleCartClick() {
@@ -41,6 +44,11 @@ export default function Contact() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const logout = () => {
+    auth.signOut();
+    localStorage.clear();
+    navigate('/');
+  };
 
   const dispatch = useDispatch();
   const { displayName } = useSelector((state) => state.user);
@@ -62,12 +70,15 @@ export default function Contact() {
 
     // Chuyển hướng đến tab login
     navigate('/SignIn');
-
-    console.log(handleLoginClick);
+    // console.log(handleLoginClick);
   };
   const handleRegisterClick = () => {
     localStorage.setItem('isLoggedIn', true)
     navigate('/Register');
+  };
+  const handleUserClick = () => {
+    localStorage.setItem('isLoggedIn', true)
+    navigate('/user');
   };
   // const navigate1 = useNavigate();
   // const auth = firebase.auth();
@@ -85,26 +96,29 @@ export default function Contact() {
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography className='logo__img' sx={{ minWidth: 300 }}></Typography>
-        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" className="head_cart" color="secondary"  >Tìm Chuyến</Typography>
-        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" color="secondary" className="head_cart" onClick={handleCartClick} >
+        <Typography className='logo__img' sx={{ minWidth: 100 }}></Typography>
+        <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 200 }} count={13} variant="button" className="head_cart" color="info"  >Tìm Chuyến</Typography>
+        <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 150 }} count={13} variant="button" color="info" className="head_cart" onClick={handleCartClick} >
           Tuyến Phổ Biến
         </Typography>
-        <Typography fontSize="large" sx={{ minWidth: 150 }} count={13} variant="outlined" className="head_cart" color="secondary" onClick={handleBusClick}>Bến Xe Khách</Typography>
+        <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 200 }} count={13} variant="button" className="head_cart" color="info" onClick={handleBusClick}>Bến Xe Khách</Typography>
+        <Stack direction="row" spacing={1}>
+        <Email/>
+        <Hotline/>
+        </Stack>
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 20 }}
+            sx={{ ml: 10 }}
             aria-controls={open ? 'account-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           > <div className='icon'>
-              <div>
+              <div display='flex'>
                 {Logged ? (
                   <>
-                    <p>Xin chào, {displayName}</p>
-               
+                    <p>Xin chào, {displayName} </p>
                   </>
                 ) : (
                   <Avatar sx={{ width: 40, height: 40 }} />
@@ -151,20 +165,32 @@ export default function Contact() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem
-          onClick={handleLoginClick} >
-          {/* onClick={handleLogin} >  */}
-          Đăng Nhập
-        </MenuItem>
-        <MenuItem onClick={handleRegisterClick}>
-          Đăng Ký
-        </MenuItem>
-        <MenuItem >
-        Đăng xuất
-        </MenuItem>
-        <Divider />
+        {Logged ? (
+          <>
+            <MenuItem
+              onClick={handleUserClick}
+            >
+              Thông Tin
+            </MenuItem>
+            <MenuItem
+              onClick={logout}>
+              Đăng xuất
+            </MenuItem>
+
+            <Divider />
+          </>
+        ) : null}
+        {!Logged ? (
+          <>
+            <MenuItem onClick={handleLoginClick}>
+              Đăng Nhập
+            </MenuItem>
+            <MenuItem onClick={handleRegisterClick}>
+              Đăng Ký
+            </MenuItem>
+            <Divider />
+          </>) : null}
       </Menu>
     </React.Fragment>
-    
   );
 }
