@@ -170,20 +170,22 @@ export default function CancelTickets() {
   console.log("checkout", data);
   //craete Data
   const rows = data
-    .map((item) =>
-      createData(
+    .map((item) => {
+      const startTime = new Date(item.StartTime?.seconds * 1000);
+      const dateCheckout = new Date(item.DateCheckout?.seconds * 1000);
+      return createData(
         item.id,
         item.ID_Trip,
         item.FullName,
         item.Email,
-        item.StartTime,
+        startTime,
         item.NameTrip,
-        item.DateCheckout,
+        dateCheckout,
         item.TotalSeated,
         item.TotalPrice,
         item.Status
-      )
-    )
+      );
+    })
     .sort((a, b) => (a.calories < b.calories ? -1 : 1));
   //onlcik
   const [open1, setOpen1] = useState(false);
@@ -211,6 +213,11 @@ export default function CancelTickets() {
       .catch((error) => {
         alert("huỷ vé thất bại");
       });
+  };
+  const handleClose2 = () => {
+    setOpen(false);
+    setIdUpdate("");
+    setStatus("");
   };
   return (
     <DashboardLayout>
@@ -272,12 +279,12 @@ export default function CancelTickets() {
                       <TableBody>
                         {(rowsPerPage > 0
                           ? rows
-                              .filter((row) => row.status === "Xem xét")
+                              .filter((row) => row.status === "Wait")
                               .slice(
                                 page * rowsPerPage,
                                 page * rowsPerPage + rowsPerPage
                               )
-                          : rows.filter((row) => row.status === "Xem xét")
+                          : rows.filter((row) => row.status === "Wait")
                         ).map((row) => (
                           <TableRow key={row.id_Trip}>
                             <TableCell align="">{row.fullname}</TableCell>
@@ -288,7 +295,7 @@ export default function CancelTickets() {
                               scope="row"
                               align="center"
                             >
-                              {row.startTime}
+                              {row.startTime.toLocaleString()}
                             </TableCell>
                             <TableCell align="center">
                               {row.totalSeated}
@@ -297,7 +304,7 @@ export default function CancelTickets() {
                               {row.totalPrice.toLocaleString()}
                             </TableCell>
                             <TableCell align="center">
-                              {row.dateCheckout}
+                              {row.dateCheckout.toLocaleString()}
                             </TableCell>
                             <TableCell>
                               <Button
@@ -335,7 +342,7 @@ export default function CancelTickets() {
                             ]}
                             colSpan={3}
                             count={
-                              rows.filter((row) => row.status === "Xem xét")
+                              rows.filter((row) => row.status === "Wait")
                                 .length
                             }
                             rowsPerPage={rowsPerPage}
@@ -357,7 +364,7 @@ export default function CancelTickets() {
                 </Box>
                 <Dialog
                   open={open1}
-                  onClose={() => setOpen1(false)}
+                  onClose={() => handleClose2()}
                   aria-labelledby="alert-dialog-title"
                   aria-describedby="alert-dialog-description"
                 >

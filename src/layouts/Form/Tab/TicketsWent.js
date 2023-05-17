@@ -161,7 +161,7 @@ import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import { useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "data/firebase";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -196,23 +196,22 @@ export default function TicketsWent() {
   const dispatch = useDispatch();
   const { email } = useSelector((state) => state.user);
   const currentDate = new Date();
+
+  const dataRef = collection(db, "Checkout");
+  const getDatas = query(dataRef, orderBy("StartTime", "asc"));
   useEffect(() => {
-    async function fetchData() {
-      const accountsCol = collection(db, "Checkout");
-      const accountsSnapshot = await getDocs(accountsCol);
-      const accountsList = accountsSnapshot.docs.map((doc) => {
-        return {
-          id: doc.id,
-          ...doc.data(),
-        };
-      });
-      setData(accountsList);
-    }
-    fetchData();
+    const getData = async () => {
+      const data = await getDocs(getDatas);
+      setData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getData();
   }, []);
+
+  //
   //craete data
   const rows = data.map((item) => {
     const startTime = new Date(item.StartTime?.seconds * 1000);
+    const dateCheckout = new Date(item.DateCheckout?.seconds * 1000);
     return createData(
       item.id,
       item.ID_Trip,
@@ -222,11 +221,11 @@ export default function TicketsWent() {
       item.TotalSeated,
       item.TotalPrice,
       item.Status,
-      // item.StartTime,
       startTime,
-      item.DateCheckout
+      dateCheckout
     );
   });
+  const [open, setOpen] = useState(false);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -257,8 +256,12 @@ export default function TicketsWent() {
         </TableHead>
         <TableBody>
           {rows
-            .filter((row) => row.status === "Success" && email === row.email && row.startTime < currentDate)
-           
+            .filter(
+              (row) =>
+                row.status === "Success" &&
+                email === row.email &&
+                row.startTime < currentDate
+            )
 
             .map((row) => (
               <TableRow
@@ -271,12 +274,15 @@ export default function TicketsWent() {
                 <TableCell align="center">
                   {row.startTime.toLocaleString()}
                 </TableCell>
-                <TableCell align="center">Thời gian khởi hành</TableCell>
+
                 <TableCell align="center">{row.totalSeated}</TableCell>
                 <TableCell align="center">
                   {row.totalPrice.toLocaleString()}
                 </TableCell>
-                <TableCell align="center">Ngày thanh toán</TableCell>
+                <TableCell align="center">
+                  {" "}
+                  {row.dateCheckout.toLocaleString()}
+                </TableCell>
                 <Button>Đánh giá</Button>
               </TableRow>
             ))}
