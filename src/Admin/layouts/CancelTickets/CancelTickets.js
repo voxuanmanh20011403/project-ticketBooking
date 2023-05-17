@@ -203,7 +203,7 @@ export default function CancelTickets() {
     const statisticsRef = doc(collection(db, "Checkout"), `${idUpdate}`);
 
     updateDoc(statisticsRef, {
-      Status: "cancel",
+      Status: "Cancel",
     })
       .then(() => {
         alert("huỷ vé thành công");

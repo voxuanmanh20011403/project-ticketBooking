@@ -19,18 +19,7 @@ const FormInfo = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordText, setShowPasswordText] = useState("Hiển Thị");
  
-  const statisticsRef = doc(collection(db, "Account"), '${id}');
-    // Tăng trường "viewer" lên 1 đơn vị
-    updateDoc(statisticsRef, {
-      Name: name,
-      Phone: phone,
-    })
-    .then(() => {
-      console.log(`Updated document with ID ${id} in collection "Garage".`);
-    })
-    .catch((error) => {
-      console.error(`Error updating document with ID ${id} in collection "Garage":`, error);
-    });
+  
 
   useEffect(() => {
     const dataAccount = JSON.parse(localStorage.getItem("account"));
@@ -61,76 +50,77 @@ const FormInfo = () => {
     // localStorage.setItem("account", JSON.stringify(updatedData));
   };
   return (
-    <Grid container justifyContent="center" alignItems="center">
-      <Grid item xs={20} sm={20} md={6} lg={4}>
-        <Paper elevation={3} style={{ padding: 20 }}>
-          <Typography variant="h5" component="h1" align="center" gutterBottom>
-            Thông Tin Tài Khoản
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  label="Email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  label="Họ và Tên"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  label="Số Điện Thoại"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  label="Mật Khẩu"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={15}>
-                <Button
-                  onClick={handleShowPassword}
-                  variant="contained"
-                  color="secondary"
-                >
-                  {showPasswordText} Mật Khẩu
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                >
-                  Lưu
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        </Paper>
-      </Grid>
-    </Grid>
+    // <Grid container justifyContent="center" alignItems="center">
+    //   <Grid item xs={20} sm={20} md={6} lg={4}>
+    //     <Paper elevation={3} >
+    //       <Typography variant="h5" component="h1" align="center" gutterBottom>
+    //         Thông Tin Tài Khoản
+    //       </Typography>
+    //       <form onSubmit={handleSubmit}>
+    //         <Grid container spacing={3}>
+    //           <Grid item xs={12}>
+    //             <TextField
+    //               fullWidth
+    //               variant="outlined"
+    //               label="Email"
+    //               type="email"
+    //               value={email}
+    //               onChange={(e) => setEmail(e.target.value)}
+    //             />
+    //           </Grid>
+    //           <Grid item xs={12}>
+    //             <TextField
+    //               fullWidth
+    //               variant="outlined"
+    //               label="Họ và Tên"
+    //               value={name}
+    //               onChange={(e) => setName(e.target.value)}
+    //             />
+    //           </Grid>
+    //           <Grid item xs={12}>
+    //             <TextField
+    //               fullWidth
+    //               variant="outlined"
+    //               label="Số Điện Thoại"
+    //               value={phone}
+    //               onChange={(e) => setPhone(e.target.value)}
+    //             />
+    //           </Grid>
+    //           <Grid item xs={12}>
+    //             <TextField
+    //               fullWidth
+    //               variant="outlined"
+    //               label="Mật Khẩu"
+    //               type={showPassword ? "text" : "password"}
+    //               value={password}
+    //               onChange={(e) => setPassword(e.target.value)}
+    //             />
+    //           </Grid>
+    //           <Grid item xs={15}>
+    //             <Button
+    //               onClick={handleShowPassword}
+    //               variant="contained"
+    //               color="secondary"
+    //             >
+    //               {showPasswordText} Mật Khẩu
+    //             </Button>
+    //           </Grid>
+    //           <Grid item xs={12}>
+    //             <Button
+    //               type="submit"
+    //               fullWidth
+    //               variant="contained"
+    //               color="primary"
+    //             >
+    //               Lưu
+    //             </Button>
+    //           </Grid>
+    //         </Grid>
+    //       </form>
+    //     </Paper>
+    //   </Grid>
+    // </Grid>
+    <>a</>
   
 
   );

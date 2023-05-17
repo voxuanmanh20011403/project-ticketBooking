@@ -39,10 +39,11 @@ import { LogoutAction } from "redux/slices/auth";
 import { in4 } from "redux/slices/auth";
 import { Infor } from "redux/slices/auth";
 
-import User from "layouts/User/User";
+
 
 import { TripsAuto } from "Admin/layouts/RenderTableTripsAuto/TripsAuto";
 import FormComment from "layouts/Comment/FormComment";
+import User from "layouts/Form/User/User";
 
 
 export default function App() {
