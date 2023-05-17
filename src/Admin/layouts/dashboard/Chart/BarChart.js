@@ -82,7 +82,7 @@ export const BarChart = () => {
     };
   }, []);
 
-  console.log("alooooooooooo");
+  // console.log("alooooooooooo");
 
   return <Bar data={chartData} options={chartOptions} />;
 };

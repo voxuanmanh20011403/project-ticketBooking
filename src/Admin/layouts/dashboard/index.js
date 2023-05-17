@@ -11,6 +11,7 @@ import { useMemo } from "react";
 import Projects from "./components/Projects";
 import OrdersOverview from "./components/OrdersOverview";
 import { BarChart } from "./Chart/BarChart";
+import RevenueStatistics from "./Chart/RevenueStatistics";
 function Dashboard() {
   const [viewerLastest, setViewerLastest] = useState(0);
   const [viewerLastMonth, setViewerLastMonth] = useState(0);
@@ -147,19 +148,24 @@ function Dashboard() {
         {/* phan2 : chart */}
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid item xs={12} md={6} lg={6}>
               <MDBox mb={3}>
                 <BarChart/>
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid item xs={12} md={6} lg={6}>
               <MDBox mb={3}>
                 <ChartNe />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+          {/* Chart doanh thu */}
+          </Grid>
+        </MDBox>
+        <MDBox mt={4.5}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={12}>
               <MDBox mb={3}>
-                <ChartNe />
+               <RevenueStatistics />
               </MDBox>
             </Grid>
           </Grid>

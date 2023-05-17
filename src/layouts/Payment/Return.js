@@ -11,7 +11,7 @@ import {
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import emailjs from '@emailjs/browser';
 import { db } from "data/firebase";
-import { addDoc, collection, where, getDocs, query, getDoc, updateDoc, doc } from "firebase/firestore";
+import { addDoc, collection, where, getDocs, query, getDoc, updateDoc, doc ,Timestamp} from "firebase/firestore";
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -54,6 +54,8 @@ function Return() {
   // foramt timestamp từ firestore
   const timeStart = getLocalUserDB.dataBooking[0].StartTime;
   const dateS = new Date(timeStart.seconds * 1000);
+  const timestampStart = Timestamp.fromDate(dateS);
+
   const dayS = dateS.getDate();
   const monthS = dateS.getMonth() + 1;
   const yearS = dateS.getFullYear();
@@ -62,6 +64,7 @@ function Return() {
 
   const timeEnd = getLocalUserDB.dataBooking[0].EndTime;
   const dateEnd = new Date(timeEnd.seconds * 1000);
+  const timestampEnd = Timestamp.fromDate(dateEnd);
   const dayEnd = dateEnd.getDate();
   const monthEnd = dateEnd.getMonth() + 1;
   const yearEnd = dateEnd.getFullYear();
@@ -88,8 +91,8 @@ function Return() {
             Email: getLocalUserDB.data.email,
             NameGarage: getLocalUserDB.dataBooking[0].NameGarage,
             NameTrip: getLocalUserDB.dataBooking[0].NameTrip,
-            StartTime: getLocalUserDB.dataBooking[0].StartTime,
-            EndTime: getLocalUserDB.dataBooking[0].EndTime,
+            StartTime: timestampStart,
+            EndTime: timestampEnd,
             duration: getLocalUserDB.dataBooking[0].duration,
             PakingStart: getLocalUserDB.dataBooking[0].PakingStart,
             PakingEnd: getLocalUserDB.dataBooking[0].PakingEnd,
