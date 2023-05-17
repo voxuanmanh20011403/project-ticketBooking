@@ -3,7 +3,6 @@ import BannerSearch from './BannerSearch'
 import BannerDateTime from './BannerDateTime'
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import './Banner.css'
-import imgBanner from '../../../assets/img/Banner.jpg'
 import Cart from '../Cart/Cart';
 import Intro from '../Intro/Intro';
 import Quality from '../Quality/Quality';
@@ -115,18 +114,23 @@ const StyledTabsList = styled(TabsList)(
   `,
 );
 const Banner = () => {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <div className='banner'>
       <div className="banner__img"  >
         <div className="banner_form">
           <h2>SwiftRide - Cam kết hoàn 150% nếu nhà xe không giữ vé</h2>
           <div className="wrap__form">
-
-            <Tabs >
+            <Tabs value={value} onChange={handleChange}>
               <StyledTabsList>
-                <StyledTab ><DirectionsBusIcon></DirectionsBusIcon>Xe Khách</StyledTab>
+                <StyledTab><DirectionsBusIcon />Xe Khách</StyledTab>
               </StyledTabsList>
-              <StyledTabPanel ><BannerSearch /></StyledTabPanel>
+              <StyledTabPanel value={value} index={0}><BannerSearch /></StyledTabPanel>
             </Tabs>
           </div>
 
@@ -150,5 +154,3 @@ const Banner = () => {
 }
 
 export default Banner
-
-
