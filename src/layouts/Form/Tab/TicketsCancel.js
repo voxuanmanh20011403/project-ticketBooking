@@ -18,24 +18,24 @@ function createData(
   id_Trip,
   fullname,
   email,
-  // startTime,
   nameTrip,
-  // dateCheckout,
   totalSeated,
   totalPrice,
-  status
+  status,
+  startTime,
+  dateCheckout
 ) {
   return {
     id,
     id_Trip,
     fullname,
     email,
-    // startTime,
     nameTrip,
-    // dateCheckout,
     totalSeated,
     totalPrice,
     status,
+    startTime,
+    dateCheckout,
   };
 }
 
@@ -59,26 +59,27 @@ export default function TicketsCancel() {
     fetchData();
   }, []);
   //craete data
-  const rows = data.map((item) =>
-
-    createData(
+  const rows = data.map((item) => {
+    const startTime = new Date(item.StartTime?.seconds * 1000);
+    return createData(
       item.id,
       item.ID_Trip,
       item.FullName,
       item.Email,
-      // item.StartTime,
       item.NameTrip,
-      // item.DateCheckout,
       item.TotalSeated,
       item.TotalPrice,
-      item.Status
-    )
-  );
+      item.Status,
+      // item.StartTime,
+      startTime,
+      item.DateCheckout
+    );
+  });
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
-        <TableRow>
+          <TableRow>
             <TableCell style={{ width: "%" }} align="">
               Khách hàng
             </TableCell>
@@ -105,7 +106,7 @@ export default function TicketsCancel() {
         <TableBody>
           {rows
             .filter((row) => row.status === "Cancel" && email === row.email)
-            // .filter((row) => row.status === "Thành công")
+           
 
             .map((row) => (
               <TableRow
@@ -115,14 +116,15 @@ export default function TicketsCancel() {
                 <TableCell align="">{row.fullname}</TableCell>
                 <TableCell align="">{row.email}</TableCell>
                 <TableCell align="">{row.nameTrip}</TableCell>
+                <TableCell align="center">
+                  {row.startTime.toLocaleString()}
+                </TableCell>
                 <TableCell align="center">Thời gian khởi hành</TableCell>
                 <TableCell align="center">{row.totalSeated}</TableCell>
                 <TableCell align="center">
                   {row.totalPrice.toLocaleString()}
                 </TableCell>
                 <TableCell align="center">Ngày thanh toán</TableCell>
-
-                
               </TableRow>
             ))}
         </TableBody>
