@@ -14,6 +14,9 @@ import cart4 from "./../../../assets/img/Cart4.png"
 import cart5 from "./../../../assets/img/Cart5.png"
 import cart6 from "./../../../assets/img/Cart16.png"
 import cart7 from "./../../../assets/img/Cart7.png"
+import cart8 from "./../../../assets/img/Cart8.png"
+import cart9 from "./../../../assets/img/Cart9.png"
+import cart10 from "./../../../assets/img/Cart10.png"
 
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -52,7 +55,6 @@ function Cart() {
               </div>
             </div>
           </div>
-        </div>
           <div className="iteam-container">
             <div className='mark'>
               <img src={cart7} alt="" />
@@ -77,6 +79,61 @@ function Cart() {
                 <AccessTimeIcon />12h
                 <ConfirmationNumberIcon />320.000đ
               </div>
+            </div>
+            </div>
+        </div>
+        <div className="row_r">
+          <div className="iteam-container">
+            <div className='mark'>
+              <img src={cart3} alt="" />
+              <div className='text'>
+                <h3>SÀI GÒN ⇒ NHA TRANG</h3>
+              </div>
+              <div className='detail'>
+                <LocationOnIcon />980km
+                <AccessTimeIcon />20h
+                <ConfirmationNumberIcon />395.000đ
+              </div>
+            </div>
+          </div>
+          <div className="iteam-container">
+            <div className='mark'>
+              <img src={cart2} alt="" />
+              <div className='text1'>
+                <h3>CẦN THƠ ⇒ SÀI GÒN</h3>
+              </div>
+              <div className='detail'>
+                <LocationOnIcon />1050km
+                <AccessTimeIcon />22h
+                <ConfirmationNumberIcon />400.000đ
+              </div>
+            </div>
+          </div>
+          <div className="iteam-container">
+            <div className='mark'>
+              <img src={cart8} alt="" />
+              <div className='text'>
+                <h3>SÀI GÒN ⇒ CÀ MAU</h3>
+              </div>
+              <div className='detail'>
+                <LocationOnIcon />745km
+                <AccessTimeIcon />18h
+                <ConfirmationNumberIcon />360.000đ
+              </div>
+            </div>
+          </div>
+          <div className="iteam-container">
+            <div className='mark'>
+              <img src={cart10} alt="" />
+              <div className='text1'>
+                <h3>SÀI GÒN ⇒ QUẢNG BÌNH</h3>
+              </div>
+              <div className='detail'>
+                <LocationOnIcon />654km
+                <AccessTimeIcon />12h
+                <ConfirmationNumberIcon />320.000đ
+              </div>
+            </div>
             </div>
         </div>
       </div>
