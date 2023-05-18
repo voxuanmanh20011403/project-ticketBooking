@@ -10,7 +10,6 @@ import {
 import { Line, Bar } from "react-chartjs-2";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-
 import Grid from "@mui/material/Grid";
 import MDBox from "Admin/components/MDBox";
 
@@ -36,6 +35,8 @@ const RevenueStatistics = () => {
   const [revenue, setRevenue] = useState(0);
   const [start, setStart] = useState(false);
   const [end, setEnd] = useState(false);
+
+  const [websiteRevenue, setWebsiteRevenue] = useState(0);
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -87,7 +88,12 @@ const RevenueStatistics = () => {
       );
       setRevenueData(formattedRevenueData);
       setRevenue(totalRevenue);
+        // doanh thu của websit
+      const websiteRevenue = totalRevenue * 0.05;
+
+      setWebsiteRevenue(websiteRevenue);
       setEnd(true);
+
     } catch (error) {
       console.error("Error fetching revenue data:", error);
     }
@@ -102,11 +108,16 @@ const RevenueStatistics = () => {
         label: "Doanh thu",
         data: revenueData.map((item) => item.revenue),
         fill: false,
-        borderColor: "rgb(75, 192, 192)",
+        borderColor: "#00aaff",
+        backgroundColor: "#00aaff",
+        borderWidth: 1,
         tension: 0.1,
       },
     ],
   };
+
+
+
   const dateStart = new Date(startDate).toLocaleDateString();
   const dateEnd = new Date(endDate).toLocaleDateString();
 
@@ -119,7 +130,8 @@ const RevenueStatistics = () => {
               direction="row"
               justifyContent="center"
               alignItems="center"
-              spacing={4}
+              spacing={2}
+              style={{ marginBottom: '1rem' }}
             >
               <DatePicker
                 label="Ngày bắt đầu"
@@ -137,6 +149,7 @@ const RevenueStatistics = () => {
                 variant="contained"
                 color="primary"
                 onClick={handleStatistics}
+                style={{ color: 'white' }}
               >
                 Thống kê
               </Button>
@@ -149,19 +162,19 @@ const RevenueStatistics = () => {
               ""
             )}
           </LocalizationProvider>
-          <Table>
+          <Table style={{ borderCollapse: 'collapse', width: '100%' }}>
             <TableHead>
               <TableRow>
-                <TableCell>Nhà xe</TableCell>
-                <TableCell>Doanh thu: </TableCell>
+                <TableCell style={{ fontWeight: 'bold', borderBottom: '1px solid #ccc' }} >Nhà xe</TableCell>
+                <TableCell style={{ fontWeight: 'bold', borderBottom: '1px solid #ccc' }}>Doanh thu: </TableCell>
               </TableRow>
             </TableHead>
             {revenueData ? (
               revenueData.map((item, index) => (
                 <TableBody key={index}>
                   <TableRow>
-                    <TableCell>{item.nameGarage}</TableCell>
-                    <TableCell>
+                    <TableCell style={{ borderBottom: '1px solid #ccc' }}>{item.nameGarage}</TableCell>
+                    <TableCell style={{ borderBottom: '1px solid #ccc' }}>
                       {item.revenue.toLocaleString("vi-VN", {
                         style: "currency",
                         currency: "VND",
@@ -179,10 +192,10 @@ const RevenueStatistics = () => {
             )}
             <TableBody>
               <TableRow>
-                <TableCell>
+                <TableCell style={{ fontWeight: 'bold', borderTop: '1px solid #ccc' }}>
                   {revenue === 0 ? "" : "Tổng doanh thu: "}{" "}
                 </TableCell>
-                <TableCell>
+                <TableCell style={{ borderTop: '1px solid #ccc' }}>
                   {revenue === 0
                     ? ""
                     : revenue.toLocaleString("vi-VN", {
@@ -196,8 +209,9 @@ const RevenueStatistics = () => {
         </MDBox>
       </Grid>
       <Grid item xs={12} md={6} lg={6}>
+        {/* chart doanh thu nhà xe */}
         <MDBox mb={1.5}>
-          <Bar data={chartData} />
+          <Bar data={chartData}  />
         </MDBox>
       </Grid>
     </Grid>
