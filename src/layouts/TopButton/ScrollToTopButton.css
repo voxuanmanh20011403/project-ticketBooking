@@ -1,0 +1,36 @@
+.show-button {
+    display: block;
+    width: auto;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 5px; /* Định dạng góc cong thành góc vuông */
+    background-color: rgb(194 224 255); /* Đặt màu nền là xanh */
+    border: none; /* Loại bỏ viền */
+    padding: 10px; /* Tùy chỉnh khoảng cách bên trong nút button */
+    z-index: 999; /* Đặt vị trí lớn hơn các phần tử khác trên trang */
+    cursor: pointer;
+    font-size: 1.5rem;
+    animation-name: jump;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    transition: transform 0.3s;
+  }
+  .show-button:hover {
+    transform: translateY(-10px);
+}
+  .hide-button {
+    display: none;
+  }
+  
+@keyframes jump {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
