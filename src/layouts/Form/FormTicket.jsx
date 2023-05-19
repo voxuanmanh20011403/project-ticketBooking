@@ -58,7 +58,7 @@ export default function FormTicket() {
   };
 
   return (
-    <Box sx={{ bgcolor: "background.paper"}}>
+    <Box sx={{ bgcolor: 'background.paper', padding: '20px' }}>
      
       <AppBar position="static">
         <Tabs
