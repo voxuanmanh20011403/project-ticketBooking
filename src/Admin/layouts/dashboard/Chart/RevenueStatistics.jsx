@@ -110,8 +110,8 @@ const RevenueStatistics = () => {
         fill: false,
         borderColor: "#00aaff",
         backgroundColor: "#00aaff",
-        borderWidth: 1,
-        tension: 0.1,
+        borderWidth: 2,
+        tension: 10,
       },
     ],
   };
