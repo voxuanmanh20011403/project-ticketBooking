@@ -10,8 +10,14 @@ import { Card } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { auth, EmailAuthProvider } from "data/firebase";
-import { updatePassword } from "firebase/auth";
+import { auth } from "data/firebase";
+import {
+  EmailAuthProvider,
+  sendPasswordResetEmail,
+  updatePassword,
+  reauthenticateWithCredential,
+} from "firebase/auth";
+
 const FormPassWord = () => {
   // const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -60,23 +66,33 @@ const FormPassWord = () => {
 
   const onSubmit = async (data) => {
     const user = auth.currentUser;
+    console.log(" data.password", data.password);
+    //cập nhật trong authen
+    updatePassword(user, data.password)
+      .then(() => {
+        console.log("Update successful");
+      })
+      .catch((error) => {
+        // An error ocurred
+        // ...
+      });
+    const statisticsRef = doc(collection(db, "Accounts"), `${id}`);
 
-    console.log("  user.email,", password);
-    // try {
-    //   // Reauthenticate the user if necessary
-    //   const credential = auth.EmailAuthProvider.credential(
-    //     user.email,
-    //     password
-    //   );
-    //   await user.reauthenticateWithCredential(credential);
-
-    //   // Update the password
-    //   await updatePassword(user, data.password);
-
-    //   console.log("Password updated successfully");
-    // } catch (error) {
-    //   console.log("An error occurred", error);
-    // }
+    // Cập nhật trong collection
+    updateDoc(statisticsRef, {
+      NameGarage: formData.NameGarage,
+      Address: formData.Address,
+      Owner: formData.Owner,
+      Hotline: formData.Hotline,
+    })
+      .then(() => {
+        console.log(
+          `Updated viewer count for NameGarage ${formData.NameGarage}`
+        );
+      })
+      .catch((error) => {
+        console.error(`Error updating viewer count: ${error}`);
+      });
   };
   return (
     <Grid container justifyContent="center" alignItems="center">
@@ -85,6 +101,10 @@ const FormPassWord = () => {
           <Typography variant="h5" component="h1" align="center" gutterBottom>
             Đổi mật khẩu
           </Typography>
+          <h6>
+            Chỉ dành cho tài khoản đã xác minh, nếu bạn chưa xác minh vui lòng
+            bấm <a>Tại đây</a>
+          </h6>
 
           <MDBox pt={4} pb={3} px={3}>
             <MDBox component="form" role="form">

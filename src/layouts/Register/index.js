@@ -11,9 +11,22 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from 'yup';
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { auth } from "data/firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { db } from "data/firebase";
-import { addDoc, collection, doc, getDoc, increment, setDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  increment,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 function Register() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -51,7 +64,7 @@ function Register() {
   const history = useNavigate();
   const onSubmit = async (data) => {
     try {
-      //Add thong tin vào authen 
+      //Add thong tin vào authen
       const users = await createUserWithEmailAndPassword(
         auth,
         data.email,
@@ -118,7 +131,10 @@ function Register() {
       } catch (e) {
         console.error('Error adding document: ', e);
       }
-      history('/')
+      history("/");
+      sendEmailVerification(auth.currentUser).then(() => {
+        
+      });
     } catch (error) {
       console.log(error.message);
     }
@@ -269,7 +285,7 @@ function Register() {
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-               Bạn đã có tài khoản?{" "}
+                Bạn đã có tài khoản?{" "}
                 <MDTypography
                   component={Link}
                   to="/"
@@ -278,7 +294,7 @@ function Register() {
                   fontWeight="medium"
                   textGradient
                 >
-                 Đăng nhập
+                  Đăng nhập
                 </MDTypography>
               </MDTypography>
             </MDBox>

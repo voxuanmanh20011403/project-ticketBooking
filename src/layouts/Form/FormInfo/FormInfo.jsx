@@ -5,7 +5,7 @@ import { TextField, Button, Grid, Paper, Typography } from "@material-ui/core";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginAction } from "redux/slices/auth";
-import { updateProfile } from "firebase/auth";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
 import { auth } from "data/firebase";
 import { db } from "data/firebase";
 const FormInfo = () => {
@@ -59,7 +59,10 @@ const FormInfo = () => {
     existingAccount.NumberPhone = phone;
     const updatedAccountJSON = JSON.stringify(existingAccount);
     localStorage.setItem("account", updatedAccountJSON);
-
+    sendEmailVerification(auth.currentUser)
+    .then(() => {
+      alert("dang xác minh")
+    });
    
   };
   return (
