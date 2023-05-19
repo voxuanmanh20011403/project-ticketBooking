@@ -1,58 +1,71 @@
 import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  Button,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { TextField, Button, Grid, Paper, Typography } from "@material-ui/core";
 // import { db, docRef } from "../../data/firebase";
 
-
 import { collection, doc, updateDoc } from "firebase/firestore";
+import { useDispatch, useSelector } from "react-redux";
+import { LoginAction } from "redux/slices/auth";
+import { updateProfile } from "firebase/auth";
+import { auth } from "data/firebase";
+import { db } from "data/firebase";
 const FormInfo = () => {
-
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordText, setShowPasswordText] = useState("Hiển Thị");
- 
-  
+  const [id, setID] = useState("");
 
   useEffect(() => {
     const dataAccount = JSON.parse(localStorage.getItem("account"));
-    console.log(dataAccount)
+    console.log(dataAccount);
     setEmail(dataAccount.Email);
     setName(dataAccount.Name);
     setPhone(dataAccount.NumberPhone);
-    setPassword(dataAccount.Password)
-  }, [])
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-    setShowPasswordText(showPassword ? "Hiển Thị" : "Ẩn");
-  };
+    setID(dataAccount.id);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Name", name);
-    console.log("Email:", email);
-    console.log("Phone:", phone);
-    console.log("Password:", password);
-    // const dataAccount = JSON.parse(localStorage.getItem("account"));
-    // const updatedData = {
-    //   ...dataAccount,
-    //   Name: name,
-    //   NumberPhone: phone,
-    //   Password: password,
-    // };
-    // localStorage.setItem("account", JSON.stringify(updatedData));
+    updateProfile(auth.currentUser, {
+      displayName: name,
+    })
+      .then(() => {
+        // Profile updated!
+        // ...
+        alert("Updated");
+      })
+      .catch((error) => {
+        // An error occurred
+        // ...
+        alert("No update");
+      });
+    const statisticsRef = doc(collection(db, "Account"), `${id}`);
+
+    updateDoc(statisticsRef, {
+      Name: name,
+      NumberPhone: phone,
+    })
+      .then(() => {
+        console.log(
+          `Updated viewer count for NameGarage ${formData.NameGarage}`
+        );
+      })
+      .catch((error) => {
+        console.error(`Error updating viewer count: ${error}`);
+      });
+
+    const existingAccountJSON = localStorage.getItem("account");
+    const existingAccount = JSON.parse(existingAccountJSON);
+    existingAccount.Name = name;
+    existingAccount.NumberPhone = phone;
+    const updatedAccountJSON = JSON.stringify(existingAccount);
+    localStorage.setItem("account", updatedAccountJSON);
+
+   
   };
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={20} sm={20} md={6} lg={4}>
-        <Paper elevation={3} >
+        <Paper elevation={3}>
           <Typography variant="h5" component="h1" align="center" gutterBottom>
             Thông Tin Tài Khoản
           </Typography>
@@ -60,12 +73,12 @@ const FormInfo = () => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
+                  disabled
                   fullWidth
                   variant="outlined"
                   label="Email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -86,8 +99,7 @@ const FormInfo = () => {
                   onChange={(e) => setPhone(e.target.value)}
                 />
               </Grid>
-              
-              
+
               <Grid item xs={12}>
                 <Button
                   type="submit"
@@ -103,12 +115,7 @@ const FormInfo = () => {
         </Paper>
       </Grid>
     </Grid>
-
-  
-
   );
 };
 
 export default FormInfo;
-
-
