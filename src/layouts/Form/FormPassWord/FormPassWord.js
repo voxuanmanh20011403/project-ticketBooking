@@ -16,6 +16,7 @@ import {
   sendPasswordResetEmail,
   updatePassword,
   reauthenticateWithCredential,
+  sendEmailVerification,
 } from "firebase/auth";
 
 const FormPassWord = () => {
@@ -48,6 +49,8 @@ const FormPassWord = () => {
   const [listAccounts, setListAccounts] = useState([]);
   const dispatch = useDispatch();
   const { email } = useSelector((state) => state.user);
+  const user = auth.currentUser;
+  console.log("user", user.emailVerified);
   useEffect(() => {
     async function fetchData() {
       const accountsCol = collection(db, "Account");
@@ -94,6 +97,11 @@ const FormPassWord = () => {
         console.error(`Error updating viewer count: ${error}`);
       });
   };
+  const HandleSendMailVeri = () => {
+    sendEmailVerification(auth.currentUser).then(() => {
+     alert("đã gửi email veri !!!");
+    });
+  };
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item xs={20} sm={20} md={6} lg={4}>
@@ -101,81 +109,108 @@ const FormPassWord = () => {
           <Typography variant="h5" component="h1" align="center" gutterBottom>
             Đổi mật khẩu
           </Typography>
-          <h6>
-            Chỉ dành cho tài khoản đã xác minh, nếu bạn chưa xác minh vui lòng
-            bấm <a>Tại đây</a>
-          </h6>
 
           <MDBox pt={4} pb={3} px={3}>
             <MDBox component="form" role="form">
-              <MDBox mb={2}>
-                <Grid className="row2__input">
-                  <TextField
-                    required
-                    id="passwordNow"
-                    name="passwordNow"
-                    fullWidth
-                    placeholder="Mật khẩu hiện tại"
-                    variant="outlined"
-                    // margin="dense"
-                    {...register("passwordNow")}
-                    error={errors.passwordNow ? true : false}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
-                  />
-                  <Typography variant="inherit" color="textSecondary">
-                    {errors.passwordNow?.message}
-                  </Typography>
-                </Grid>
+              {user.emailVerified === true ? (
+                <>
+                  <MDBox mb={2}>
+                    <Grid className="row2__input">
+                      <TextField
+                        required
+                        id="passwordNow"
+                        name="passwordNow"
+                        fullWidth
+                        placeholder="Mật khẩu hiện tại"
+                        variant="outlined"
+                        // margin="dense"
+                        {...register("passwordNow")}
+                        error={errors.passwordNow ? true : false}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                        }}
+                      />
+                      <Typography variant="inherit" color="textSecondary">
+                        {errors.passwordNow?.message}
+                      </Typography>
+                    </Grid>
 
-                <Grid className="row2__input">
-                  <TextField
-                    required
-                    id="password"
-                    name="password"
-                    type="password"
-                    fullWidth
-                    placeholder="Mật khẩu"
-                    variant="outlined"
-                    {...register("password")}
-                    error={errors.password ? true : false}
-                  />
-                  <Typography variant="inherit" color="textSecondary">
-                    {errors.password?.message}
-                  </Typography>
-                </Grid>
-                <Grid className="row2__input">
-                  <TextField
-                    required
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    fullWidth
-                    placeholder="Xác nhận mật khẩu"
-                    variant="outlined"
-                    {...register("confirmPassword")}
-                    error={errors.confirmPassword ? true : false}
-                  />
-                  <Typography variant="inherit" color="textSecondary">
-                    {errors.password?.message}
-                  </Typography>
-                </Grid>
-              </MDBox>
+                    <Grid className="row2__input">
+                      <TextField
+                        required
+                        id="password"
+                        name="password"
+                        type="password"
+                        fullWidth
+                        placeholder="Mật khẩu"
+                        variant="outlined"
+                        {...register("password")}
+                        error={errors.password ? true : false}
+                      />
+                      <Typography variant="inherit" color="textSecondary">
+                        {errors.password?.message}
+                      </Typography>
+                    </Grid>
+                    <Grid className="row2__input">
+                      <TextField
+                        required
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        fullWidth
+                        placeholder="Xác nhận mật khẩu"
+                        variant="outlined"
+                        {...register("confirmPassword")}
+                        error={errors.confirmPassword ? true : false}
+                      />
+                      <Typography variant="inherit" color="textSecondary">
+                        {errors.password?.message}
+                      </Typography>
+                    </Grid>
+                  </MDBox>
 
-              <MDBox mt={4} mb={1}>
-                <Button
-                  variant="contained"
-                  style={{
-                    width: "60%",
-                    margin: "0 20% 0 20%",
-                  }}
-                  color="error"
-                  onClick={handleSubmit(onSubmit)}
-                >
-                  Đổi mật khẩu
-                </Button>
-              </MDBox>
+                  <MDBox mt={4} mb={1}>
+                    <Button
+                      variant="contained"
+                      style={{
+                        width: "60%",
+                        margin: "0 20% 0 20%",
+                      }}
+                      color="error"
+                      onClick={handleSubmit(onSubmit)}
+                    >
+                      Đổi mật khẩu
+                    </Button>
+                  </MDBox>
+                </>
+              ) : (
+                <>
+                  <MDBox mb={2}>
+                    <Grid className="row2__input">
+                      Tài khoản của bạn chưa thực hiện veri email, vui lòng thực
+                      hiện veri để thực hiện tính năng đổi mật khẩu này
+                    </Grid>
+                    <TextField
+                      disabled
+                      id="outlined-basic"
+                      label="Email tài khoản"
+                      variant="outlined"
+                      name="IdGarage"
+                      value={email}
+                      onChange={() => setEmailVeri(email)}
+                      placeholder="ID nhà xe"
+                      className="Garage"
+                    />
+                    <Button
+                      onClick={() => {
+                        HandleSendMailVeri();
+                      }}
+                    >
+                      Gửi email veri tài khoản
+                    </Button>
+                  </MDBox>
+                </>
+              )}
             </MDBox>
           </MDBox>
         </Paper>
