@@ -140,7 +140,7 @@ export default function ListCar() {
       item.duration
     )
   );
-  console.log("rows", rows);
+
   useEffect(() => {
     let rowsOnMount = stableSort(
       rows,
@@ -480,7 +480,7 @@ export default function ListCar() {
         <></>
       )}
       {activeButton ? (
-        <AddCar activeButton={activeButton} setActiveButton={setActiveButton} />
+        <AddCar activeButton={activeButton} setActiveButton={setActiveButton} data={data}/>
       ) : (
         <></>
       )}

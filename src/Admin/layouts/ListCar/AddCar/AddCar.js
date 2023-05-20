@@ -40,7 +40,8 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function AddCar(props) {
-  const { activeButton, setActiveButton } = props;
+  const { activeButton, setActiveButton, data } = props;
+
   const [state, setstate] = useState([]);
   const [seat, setSeat] = useState(0);
   useEffect(() => {
@@ -61,116 +62,45 @@ function AddCar(props) {
     console.log(state);
   }, [seat]);
   //set show/hide form
-  const [open, setOpen] = React.useState(true);
-  // const [post, setPost] = useState();
-  const handleOpen = () => {
-    // console.log("da click vao add post");
-  };
+  const open = true;
+
   // const addPost = () => {};
   const handleClose = () => {
     setActiveButton(false);
   };
-  //implement add image and video
-  const [uploadData, setUploadData] = useState({
-    description: "",
-    file: {
-      type: "",
-      name: "",
-      data: "",
-    },
-  });
 
-  const [progress, setProgress] = useState("");
-
-  const uploadToFirebaseDB = (fileData) => {
-    // uploading to collection called posts
-    db.collection("posts")
-      .add({
-        profile: photoURL,
-        username: displayName,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        description: uploadData.description,
-        fileType: uploadData.file.type,
-        fileName: uploadData.file.name,
-        fileData: fileData,
-      })
-      .then(() => resetState());
-  };
-
-  const handleSubmitButton = (e) => {
-    e.preventDefault();
-
-    // verify atleast one of the input fields are not empyt
-    if (uploadData.description || uploadData.file.data) {
-      // if file input is true...upload the file to Fire-Store
-      if (uploadData.file.data) {
-        const id = uuid();
-        const uploadTask = storage
-          .ref(`posts/${id}`)
-          .putString(uploadData.file.data, "data_url");
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const value = Math.floor(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            setProgress(value);
-          },
-
-          (error) => {
-            alert(error);
-          },
-
-          () => {
-            storage
-              .ref("posts")
-              .child(id)
-              .getDownloadURL()
-              .then((url) => uploadToFirebaseDB(url));
-          }
-        );
-
-        // do not go further..
-        return;
-      }
-      // if not file input provided
-      uploadToFirebaseDB(uploadData.file.data);
-    } else {
-    }
-  };
-
-  // if file name is too long.. compress it
-  const resetState = () => {
-    setUploadData({
-      description: "",
-      file: {
-        type: "",
-        name: "",
-        data: "",
-      },
-    });
-    setProgress("");
-  };
   //TODO : CUSTOM FIELD THÊM NHÀ XE
   const [formData, setFormData] = useState({});
   const handleChangeValue = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const [disabledTextFieldValue, setDisabledTextFieldValue] = useState("");
+  const [hotline, setHotline] = useState("");
+  const [namegarage, setNamegarage] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const existingGarage = data.find((item) => item.ID_Car === formData.ID_Car);
+    if (existingGarage) {
+      alert(`ID: ${formData.ID_Car} đã tồn tại`);
+      return;
+    }
+    const formattedPrice = price.replace(/,/g, "");
+    const priceNumber = parseInt(formattedPrice);
+
     try {
       const docRef = await addDoc(collection(db, "ListCar"), {
         ...formData,
-        Price: price,
+        Price: priceNumber,
         StartTime: timestamp,
         StartTimeNext: timestamp2,
         ID_Garage: disabledTextFieldValue,
         Hotline: hotline,
         Namegarage: namegarage,
         seat: seat,
-        NameTrip:formData.StartPoint+'-'+formData.EndPoint,
+        NameTrip: formData.StartPoint + "-" + formData.EndPoint,
       });
       console.log("Document written with ID: ", docRef.id);
+      location.reload();
     } catch (e) {}
   };
   const [garages, setGarages] = useState([]);
@@ -235,7 +165,8 @@ function AddCar(props) {
   };
   const handleChangeDate = (date) => {
     setSelectDate(date);
-  };const handleChangeDate2 = (date) => {
+  };
+  const handleChangeDate2 = (date) => {
     setSelectDate2(date);
   };
 
@@ -244,20 +175,17 @@ function AddCar(props) {
   const date2 = new Date(selectDate2);
   const timestamp2 = Timestamp.fromDate(date2);
   //
-  const [disabledTextFieldValue, setDisabledTextFieldValue] = useState("");
-  const [hotline, setHotline] = useState("");
-  const [namegarage, setNamegarage] = useState("");
-
 
   useEffect(() => {
     if (garageInfo.ID_Garage) {
       setDisabledTextFieldValue(garageInfo.ID_Garage);
     }
-    if (garageInfo.hotline) {
-      setHotline(garageInfo.hotline);
+
+    if (garageInfo.Hotline) {
+      setHotline(garageInfo.Hotline);
     }
-    if (garageInfo.label) {
-      setNamegarage(garageInfo.label);
+    if (garageInfo.NameGarage) {
+      setNamegarage(garageInfo.NameGarage);
     }
   }, [garageInfo]);
 
@@ -335,8 +263,8 @@ function AddCar(props) {
                         placeholder="Điểm ID Xe"
                         className="Garage RenderFromGarage"
                       />
-                       <CustomTextField
-                        label="Nơi bắt đầu "
+                      <CustomTextField
+                        label="Bến xe xuất phát "
                         name="PakingStart"
                         value={formData.PakingStart}
                         onChange={handleChangeValue}
@@ -348,7 +276,7 @@ function AddCar(props) {
                         name="PakingEnd"
                         value={formData.PakingEnd}
                         onChange={handleChangeValue}
-                        placeholder="Nơi kết thúc"
+                        placeholder="Bến xe kết thúc"
                         className="Garage RenderFromGarage"
                       />
                       <CustomTextField
@@ -367,7 +295,7 @@ function AddCar(props) {
                         placeholder="Điểm đến"
                         className="Garage RenderFromGarage"
                       />
-                     
+
                       <FormControl className="Garage RenderFromGarage">
                         <InputLabel
                           style={{ backgroundColor: "white" }}
@@ -375,6 +303,7 @@ function AddCar(props) {
                           name="Price"
                           value={formData.Price}
                           onChange={handleChangeValue}
+                          type="number"
                         >
                           Giá vé
                         </InputLabel>
@@ -454,7 +383,7 @@ function AddCar(props) {
                       </LocalizationProvider>
 
                       <div className="modal__body">
-                        <form onSubmit={handleSubmitButton}>
+                        <form>
                           <div className="modal__footer">
                             <Grid
                               container

@@ -456,6 +456,7 @@ export default function Garage() {
         <AddGarage
           activeButton={activeButton}
           setActiveButton={setActiveButton}
+          data={data}
         />
       ) : (
         <></>
