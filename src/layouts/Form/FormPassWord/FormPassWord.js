@@ -50,17 +50,13 @@ const FormPassWord = () => {
   const dispatch = useDispatch();
   const { email } = useSelector((state) => state.user);
   const user = auth.currentUser;
-  console.log("user", user.emailVerified);
   useEffect(() => {
     async function fetchData() {
       const accountsCol = collection(db, "Account");
       const accountsSnapshot = await getDocs(accountsCol);
-      const accountsList = accountsSnapshot.docs.map((doc) => {
-        return {
-          id: doc.id,
-          ...doc.data(),
-        };
-      });
+      const accountsList = accountsSnapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((account) => account.Email === user.email);
 
       setListAccounts(accountsList);
     }
@@ -69,37 +65,35 @@ const FormPassWord = () => {
 
   const onSubmit = async (data) => {
     const user = auth.currentUser;
-    console.log(" data.password", data.password);
-    //cập nhật trong authen
-    updatePassword(user, data.password)
-      .then(() => {
-        console.log("Update successful");
-      })
-      .catch((error) => {
-        // An error ocurred
-        // ...
-      });
-    const statisticsRef = doc(collection(db, "Accounts"), `${id}`);
-
-    // Cập nhật trong collection
-    updateDoc(statisticsRef, {
-      NameGarage: formData.NameGarage,
-      Address: formData.Address,
-      Owner: formData.Owner,
-      Hotline: formData.Hotline,
-    })
-      .then(() => {
+    if (password === listAccounts[0].Password) {
+      //cập nhật trong authen
+      updatePassword(user, data.password)
+        .then(() => {
+          console.log("Update successful");
+        })
+        .catch((error) => {
+          // An error ocurred
+          // ...
+        });
+      const statisticsRef = doc(
+        collection(db, "Account"),
+        `${listAccounts[0].id}`
+      );
+      // Cập nhật trong collection
+      updateDoc(statisticsRef, {
+        Password: data.password,
+      }).then(() => {
         console.log(
           `Updated viewer count for NameGarage ${formData.NameGarage}`
         );
-      })
-      .catch((error) => {
-        console.error(`Error updating viewer count: ${error}`);
       });
+    } else {
+      alert("Mật khẩu hiện tại chưa chính xác");
+    }
   };
   const HandleSendMailVeri = () => {
     sendEmailVerification(auth.currentUser).then(() => {
-     alert("đã gửi email veri !!!");
+      alert("đã gửi email veri !!!");
     });
   };
   return (

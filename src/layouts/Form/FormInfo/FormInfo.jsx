@@ -46,11 +46,11 @@ const FormInfo = () => {
     })
       .then(() => {
         console.log(
-          `Updated viewer count for NameGarage ${formData.NameGarage}`
+          `Updated success`
         );
       })
       .catch((error) => {
-        console.error(`Error updating viewer count: ${error}`);
+        console.error(`Error updating`);
       });
 
     const existingAccountJSON = localStorage.getItem("account");
@@ -59,10 +59,10 @@ const FormInfo = () => {
     existingAccount.NumberPhone = phone;
     const updatedAccountJSON = JSON.stringify(existingAccount);
     localStorage.setItem("account", updatedAccountJSON);
-    sendEmailVerification(auth.currentUser)
-    .then(() => {
-      alert("dang xác minh")
-    });
+    // sendEmailVerification(auth.currentUser)
+    // .then(() => {
+    //   alert("dang xác minh")
+    // });
    
   };
   return (
