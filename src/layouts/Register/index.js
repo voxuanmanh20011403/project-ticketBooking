@@ -8,7 +8,7 @@ import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { auth } from "data/firebase";
 import {
@@ -28,30 +28,31 @@ import {
   updateDoc,
 } from "firebase/firestore";
 function Register() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [numberPhone, setNumberPhone] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [numberPhone, setNumberPhone] = useState("");
   // YUP: VALIDATION
-  const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+  const phoneRegExp =
+    /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
-      .required('Bạn chưa nhập email hoặc số điện thoại.')
-      .required('email is required'),
-    password: Yup.string().required('Password is required'),
+      .required("Bạn chưa nhập email hoặc số điện thoại.")
+      .required("email is required"),
+    password: Yup.string().required("Password is required"),
     confirmPassword: Yup.string()
-      .required('Confirm Password is required')
-      .oneOf([Yup.ref('password'), null], 'Confirm Password does not match'),
+      .required("Confirm Password is required")
+      .oneOf([Yup.ref("password"), null], "Confirm Password does not match"),
     lastname: Yup.string()
-      .required('Bạn chưa nhập Name.')
-      .required('lastname is required'),
+      .required("Bạn chưa nhập Name.")
+      .required("lastname is required"),
     firstname: Yup.string()
-      .required('Bạn chưa nhập Name.')
-      .required('firstname is required'),
+      .required("Bạn chưa nhập Name.")
+      .required("firstname is required"),
     numberphone: Yup.string()
-      .required('Bạn chưa nhập Số điện thoại.')
-      .matches(phoneRegExp, 'Phone number is not valid')
-      .required('NumberPhone is required'),
+      .required("Bạn chưa nhập Số điện thoại.")
+      .matches(phoneRegExp, "Phone number is not valid")
+      .required("NumberPhone is required"),
   });
   const {
     register,
@@ -68,26 +69,29 @@ function Register() {
       const users = await createUserWithEmailAndPassword(
         auth,
         data.email,
-        data.password,
+        data.password
       );
       //add display name cho user
       const updateName = () => {
         return updateProfile(auth.currentUser, {
-          displayName: lastName + ' ' + firstName,
+          displayName: lastName + " " + firstName,
         });
       };
       updateName();
       //add thong tin vào bằng user với role default : role=1 =user;
       const currentDate = new Date();
-      const formattedDate = currentDate.toISOString().slice(0, 10).replace('T', ' ');
+      const formattedDate = currentDate
+        .toISOString()
+        .slice(0, 10)
+        .replace("T", " ");
       try {
-        const docRef = await addDoc(collection(db, 'Account'), {
+        const docRef = await addDoc(collection(db, "Account"), {
           Email: data.email,
           Password: data.password,
-          Name:  lastName + ' ' + firstName,
-          Role:'1',
+          Name: lastName + " " + firstName,
+          Role: "1",
           CreateTime: formattedDate,
-          NumberPhone: numberPhone
+          NumberPhone: numberPhone,
         });
         //start
         const now = new Date();
@@ -120,21 +124,19 @@ function Register() {
                 );
               })
               .catch((error) => {
-                console.error(
-                  `Error creating new statistics record: ${error}`
-                );
+                console.error(`Error creating new statistics record: ${error}`);
               });
           }
         });
         //end
-        console.log('Document written with ID: ', docRef.id);
+        console.log("Document written with ID: ", docRef.id);
       } catch (e) {
-        console.error('Error adding document: ', e);
+        console.error("Error adding document: ", e);
       }
-      history("/");
       sendEmailVerification(auth.currentUser).then(() => {
-        
+        alert("Vui lòng kiểm tra email để thực hiện veri tài khoản !!!");
       });
+      history("/");
     } catch (error) {
       console.log(error.message);
     }
@@ -154,14 +156,14 @@ function Register() {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            <marquee style={{ fontSize: ' 70%' }}  >Đăng kí tài khoản SwiftRide</marquee>
+            <marquee style={{ fontSize: " 70%" }}>
+              Đăng kí tài khoản SwiftRide
+            </marquee>
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
-            <MDBox mb={2}>
-
-            </MDBox>
+            <MDBox mb={2}></MDBox>
             <MDBox mb={2}>
               <Grid className="row2__input">
                 <TextField
@@ -172,7 +174,7 @@ function Register() {
                   placeholder="Họ đệm"
                   variant="outlined"
                   // margin="dense"
-                  {...register('lastname')}
+                  {...register("lastname")}
                   error={errors.lastname ? true : false}
                   onChange={(e) => {
                     setLastName(e.target.value);
@@ -191,7 +193,7 @@ function Register() {
                   fullWidth
                   placeholder="Tên"
                   variant="outlined"
-                  {...register('firstname')}
+                  {...register("firstname")}
                   error={errors.firstname ? true : false}
                   onChange={(e) => {
                     setFirstName(e.target.value);
@@ -209,7 +211,7 @@ function Register() {
                   fullWidth
                   placeholder="Email tài khoản"
                   variant="outlined"
-                  {...register('email')}
+                  {...register("email")}
                   error={errors.email ? true : false}
                 />
                 <Typography variant="inherit" color="textSecondary">
@@ -225,7 +227,7 @@ function Register() {
                   fullWidth
                   placeholder="Mật khẩu"
                   variant="outlined"
-                  {...register('password')}
+                  {...register("password")}
                   error={errors.password ? true : false}
                 />
                 <Typography variant="inherit" color="textSecondary">
@@ -241,7 +243,7 @@ function Register() {
                   fullWidth
                   placeholder="Xác nhận mật khẩu"
                   variant="outlined"
-                  {...register('confirmPassword')}
+                  {...register("confirmPassword")}
                   error={errors.confirmPassword ? true : false}
                 />
                 <Typography variant="inherit" color="textSecondary">
@@ -258,7 +260,7 @@ function Register() {
                   fullWidth
                   placeholder="Số điện thoại"
                   variant="outlined"
-                  {...register('numberphone')}
+                  {...register("numberphone")}
                   error={errors.numberphone ? true : false}
                   onChange={(e) => {
                     setNumberPhone(e.target.value);
@@ -274,8 +276,8 @@ function Register() {
               <Button
                 variant="contained"
                 style={{
-                  width: '60%',
-                  margin: '0 20% 0 20%'
+                  width: "60%",
+                  margin: "0 20% 0 20%",
                 }}
                 color="error"
                 onClick={handleSubmit(onSubmit)}
