@@ -18,6 +18,7 @@ import {
   reauthenticateWithCredential,
   sendEmailVerification,
 } from "firebase/auth";
+ 
 
 const FormPassWord = () => {
   // const [email, setEmail] = useState("");

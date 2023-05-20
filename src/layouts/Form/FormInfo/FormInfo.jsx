@@ -146,19 +146,38 @@ import {
   Typography,
 } from "@material-ui/core";
 // import { db, docRef } from "../../data/firebase";
+import {Fab } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import SaveIcon from "@mui/icons-material/Save";
 
+
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    height: "50vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  paper: {
+    padding: theme.spacing(3),
+    textAlign: "center",
+  },
+  saveButton: {
+    width: "200px",
+    margin: "0 auto",
+    marginTop: theme.spacing(2),
+  },
+}));
 
 import { collection, doc, updateDoc } from "firebase/firestore";
 const FormInfo = () => {
-
+  const classes = useStyles();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordText, setShowPasswordText] = useState("Hiển Thị");
  
-  
 
   useEffect(() => {
     const dataAccount = JSON.parse(localStorage.getItem("account"));
@@ -168,85 +187,74 @@ const FormInfo = () => {
     setPhone(dataAccount.NumberPhone);
     setPassword(dataAccount.Password)
   }, [])
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-    setShowPasswordText(showPassword ? "Hiển Thị" : "Ẩn");
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Name", name);
     console.log("Email:", email);
     console.log("Phone:", phone);
     console.log("Password:", password);
-    // const dataAccount = JSON.parse(localStorage.getItem("account"));
-    // const updatedData = {
-    //   ...dataAccount,
-    //   Name: name,
-    //   NumberPhone: phone,
-    //   Password: password,
-    // };
-    // localStorage.setItem("account", JSON.stringify(updatedData));
   };
 
   return (
-    <Grid container justifyContent="center" alignItems="center">
-      <Grid item xs={20} sm={20} md={6} lg={4}>
-        <Paper elevation={3} >
-          <Typography variant="h5" component="h1" align="center" gutterBottom>
-            Thông Tin Tài Khoản
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  disabled
-                  fullWidth
-                  variant="outlined"
-                  label="Email"
-                  type="email"
-                  value={email}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  label="Họ và Tên"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  label="Số Điện Thoại"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </Grid>
-              
-              
-              <Grid item xs={12}>
-                <Fab
-                  variant="extended"
-                  color="primary"
-                  onClick={handleSubmit}
-                  className={classes.saveButton}
-                >
-                  <SaveIcon sx={{ marginRight: 1 }} />
-                  Lưu
-                </Fab>
-              </Grid>
+    <Grid
+    container
+    justifyContent="center"
+    alignItems="center"
+    className={classes.container}
+  >
+    <Grid item xs={12} sm={12} md={6} lg={4}>
+      <Paper elevation={4} className={classes.paper}>
+        <Typography variant="h5" component="h1" gutterBottom>
+          Thông Tin Tài Khoản
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </Grid>
-          </form>
-        </Paper>
-      </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Họ và Tên"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Số Điện Thoại"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Fab
+                variant="extended"
+                color="primary"
+                onClick={handleSubmit}
+                className={classes.saveButton}
+              >
+                <SaveIcon sx={{ marginRight: 1 }} />
+                Lưu
+              </Fab>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
     </Grid>
-  );
+  </Grid>
+);
 };
-
 export default FormInfo;
 
 
