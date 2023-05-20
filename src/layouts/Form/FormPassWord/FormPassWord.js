@@ -85,7 +85,7 @@ const FormPassWord = () => {
         Password: data.password,
       }).then(() => {
         console.log(
-          `Updated viewer count for NameGarage ${formData.NameGarage}`
+          `Updated viewer count for NameGarage `
         );
       });
     } else {
