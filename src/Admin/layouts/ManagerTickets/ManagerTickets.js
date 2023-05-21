@@ -9,9 +9,11 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Button,
 } from "@mui/material";
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
+import { styled } from '@mui/material/styles';
 import { db } from "data/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -19,6 +21,32 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
 import MDBox from "Admin/components/MDBox";
+import { tableCellClasses } from '@mui/material/TableCell';
+import MDTypography from "Admin/components/MDTypography";
+import TableContainer from "@mui/material/TableContainer";
+
+import './ManagerTickets.css'
+
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
 export function ManagerTickets() {
   const [garages, setGarages] = useState([]);
@@ -90,20 +118,41 @@ export function ManagerTickets() {
     <DashboardLayout>
       <DashboardNavbar />
       <Grid item md={6}>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <TextField
-            label="Search"
-            variant="outlined"
-            size="small"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </Box>
-        <Table>
+        <MDBox
+          mx={3}
+          mt={-3}
+          py={3}
+          px={2}
+          variant="gradient"
+          bgColor="info"
+          borderRadius="lg"
+          coloredShadow="info"
+          marginTop="10px"
+        >
+          <MDTypography variant="h6" color="white" >
+            <div style={{ width: "100%", display: "flex", }}>
+              <h3 className="h3Title"> Quản lý vé xe</h3>
+              <div className="btnAdd">
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  <TextField
+                    label="Search"
+                    variant="outlined"
+                    size="small"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                </Box>
+              </div>
+            </div>
+          </MDTypography>
+        </MDBox>
+        <Box sx={{ width: "100%" }}>
+                  <TableContainer>
+        <Table          >
           <TableHead>
             <TableRow>
-              <TableCell />
-              <TableCell style={{ width: "40%" }}>Tên nhà xe</TableCell>
+              <TableCell align="right" className="code-container"/>
+              <TableCell style={{ width: "40%", marginLeft:"10px"}}>Tên nhà xe</TableCell>
               <TableCell style={{ width: "30%" }}>Số xe chạy</TableCell>
               <TableCell style={{ width: "30%" }}>Tổng tiền thu về</TableCell>
             </TableRow>
@@ -203,11 +252,11 @@ export function ManagerTickets() {
                                         // tripStartTime.getHours() <=
                                         //   today.getHours() &&
                                         tripStartTime.getDate() ===
-                                          today.getDate() &&
+                                        today.getDate() &&
                                         tripStartTime.getMonth() ===
-                                          today.getMonth() &&
+                                        today.getMonth() &&
                                         tripStartTime.getFullYear() ===
-                                          today.getFullYear()
+                                        today.getFullYear()
                                       );
                                     })
                                     .map((trip) => {
@@ -217,7 +266,7 @@ export function ManagerTickets() {
                                             checkout.ID_Trip === trip.id &&
                                             (checkout.Status === "Thành công" ||
                                               checkout.Status ===
-                                                "Thành công 1")
+                                              "Thành công 1")
                                         );
                                       const totalSeats =
                                         tripCheckoutData.reduce(
@@ -278,11 +327,11 @@ export function ManagerTickets() {
                                                 .filter(
                                                   (checkout) =>
                                                     checkout.ID_Trip ===
-                                                      trip.id &&
+                                                    trip.id &&
                                                     (checkout.Status ===
                                                       "Thành công" ||
                                                       checkout.Status ===
-                                                        "Thành công 1")
+                                                      "Thành công 1")
                                                 )
                                                 .map((checkout) => (
                                                   <TableRow key={checkout.id}>
@@ -336,7 +385,9 @@ export function ManagerTickets() {
             })}
           </TableBody>
         </Table>
+        </TableContainer>
+        </Box>
       </Grid>
-    </DashboardLayout>
+    </DashboardLayout >
   );
 }
