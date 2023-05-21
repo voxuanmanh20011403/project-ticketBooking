@@ -26,6 +26,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import './style.css'
+import {
+  Timestamp,
+} from "firebase/firestore";
 
 // redux
 import { tripActions, asyncAddBooking } from "redux/slices/tripsSilce";
@@ -40,7 +43,11 @@ const Payment = () => {
   const dataBooking = useSelector(state => state.trip.stateBooking);
 
   const timeStart = dataBooking[0].StartTime;
+  
   const dateS = new Date(timeStart.seconds * 1000);
+  const timestamp = Timestamp.fromDate(dateS);
+  console.log(timestamp);
+
   const dayS = dateS.getDate();
   const monthS = dateS.getMonth() + 1;
   const yearS = dateS.getFullYear();
