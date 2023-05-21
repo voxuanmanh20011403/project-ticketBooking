@@ -68,6 +68,7 @@ export default function App() {
   const { displayName } = useSelector((state) => state.user);
   // console.log(displayName);
 
+  const navigate = useNavigate();
   let role = 0;
   const data = JSON.parse(localStorage.getItem("account"));
   // console.log("data: " + data);
@@ -77,9 +78,7 @@ export default function App() {
     console.log(e);
   }
 
-
   useEffect(() => {
-
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         dispatch(LoginAction(authUser));
@@ -98,7 +97,7 @@ export default function App() {
         <Route path="/SignIN" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="/booking" element={<Booking />}></Route>
-        <Route path="/payment" element={<Payment />}></Route>
+        {/* <Route path="/payment" element={<Payment />}></Route> */}
         <Route path="/return" element={<Return />}></Route>
         {
           role === "0" ? <Route path="/admin" element={<Admin />}></Route> : (
