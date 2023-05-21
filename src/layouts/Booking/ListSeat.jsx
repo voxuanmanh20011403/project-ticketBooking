@@ -107,7 +107,7 @@ const ListSeat = ({ items }) => {
         const seatCol = choNgoi.slice(colStart, colEnd);
         seatCols.push(seatCol);
       }
-    } else if (choNgoi.length === 34) {
+    } else if (choNgoi.length === 36) {
       const numSeats = choNgoi.length;
       const numCols = 6; // số cột muốn hiển thị
       const seatsPerCol = Math.ceil(numSeats / numCols);
@@ -118,7 +118,7 @@ const ListSeat = ({ items }) => {
         const seatCol = choNgoi.slice(colStart, colEnd);
         seatCols.push(seatCol);
       }
-    } else {
+    } else if (choNgoi.length === 40) {
       const numSeats = choNgoi.length;
       const numCols = 10;
       const seatsPerCol = [6, 1, 6, 1, 6, 6, 1, 6, 1, 6];
@@ -135,39 +135,58 @@ const ListSeat = ({ items }) => {
         currentIndex += numSeatsInCol;
       }
     }
+    // console.log("seatCols: " + seatCols.length);
     return seatCols.map((col, colIndex) => (
-      <TableColumn key={colIndex} seats={col} />
+      <TableColumn key={colIndex} seats={col} columnIndex={colIndex} seatColsLength={seatCols.length}/>
     ));
   };
-  const TableColumn = ({ seats }) => (
-    <TableCell size="small">
-      {seats.map((seat) => (
-        <div
-          key={seat.id}
-          onClick={() => handleChoNgoi(seat.id, seat.name)}
-          className={` ${seats.length === 1 ? "seat__note_single" : ""} 
-            ${selectedSeats.includes(seat.id) ? "seat__note_choose" : ""}
-          `}
-        >
-          <Tooltip title={seat.name} placement="top">
-            {seat.ui}
-          </Tooltip>
-        </div>
-      ))}
-    </TableCell>
-  );
+  const TableColumn = ({ seats, columnIndex ,seatColsLength}) => {
+    console.log("seats: " + seatColsLength);
+    // console.log("columnIndex: " + columnIndex);
+    let columnClass = "";
+
+  if (seatColsLength === 10 && columnIndex === 4) {
+    columnClass = "seat__note_border10";
+  } else if (seatColsLength === 6 && columnIndex === 2) {
+    columnClass = "seat__note_border6";
+  }else if (seatColsLength === 6 && columnIndex === 3) {
+    columnClass = "seat__note_border63";
+  } 
+   else if (seatColsLength === 4 && columnIndex === 1) {
+    columnClass = "seat__note_border4";
+  }  else if (seatColsLength === 4 && columnIndex === 0) {
+    columnClass = "seat__note_border40";
+  }
+    
+    return (
+      <TableCell size="small">
+        {seats.map((seat) => (
+          <div
+            key={seat.id}
+            onClick={() => handleChoNgoi(seat.id, seat.name)}
+            className={` ${seats.length === 1 ? "seat__note_single" : ""}
+            ${columnClass}
+            ${selectedSeats.includes(seat.id) ? "seat__note_choose" : ""}  `}
+          >
+            <Tooltip title={seat.name} placement="top">
+              {seat.ui}
+            </Tooltip>
+          </div>
+        ))}
+      </TableCell>
+    );
+  };
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
- const tokenLocal = localStorage.getItem("token");
+  const tokenLocal = localStorage.getItem("token");
 
   const handleContinue = () => {
-    // console.log("data: " + JSON.stringify(items));
     if (totalPrice === 0) {
-      // console.log("1232121");
       toast.error("Bạn chưa chọn vé!");
-      console.log(typeof(tokenLocal));
+      console.log(typeof tokenLocal);
     } else {
-      if(tokenLocal){
+      if (tokenLocal) {
         dispatch(
           tripActions.addBooking({
             id: items.id,
@@ -189,8 +208,8 @@ const ListSeat = ({ items }) => {
         setTimeout(() => {
           navigate("/payment");
         }, 1500);
-      }else {
-        toast.error("Bạn chưa đăng nhập!",{
+      } else {
+        toast.error("Bạn chưa đăng nhập!", {
           autoClose: 1000,
         });
         setTimeout(() => {
@@ -249,14 +268,10 @@ const ListSeat = ({ items }) => {
         alignItems="flex-start"
         spacing={0}
       >
-        <Button
-          size="small"
-          className="btn"
-          onClick={handleContinue}
-        >
+        <Button size="small" className="btn" onClick={handleContinue}>
           Tiếp tục
         </Button>
-        <ArrowRightAltIcon fontSize="large" color="white"/>
+        <ArrowRightAltIcon fontSize="large" color="white" />
       </Stack>
     </div>
   );
