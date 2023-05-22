@@ -18,6 +18,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 // hook form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -26,6 +27,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import './style.css'
+import {
+  Timestamp,
+} from "firebase/firestore";
 
 // redux
 import { tripActions, asyncAddBooking } from "redux/slices/tripsSilce";
@@ -40,7 +44,11 @@ const Payment = () => {
   const dataBooking = useSelector(state => state.trip.stateBooking);
 
   const timeStart = dataBooking[0].StartTime;
+
   const dateS = new Date(timeStart.seconds * 1000);
+  const timestamp = Timestamp.fromDate(dateS);
+  console.log(timestamp);
+
   const dayS = dateS.getDate();
   const monthS = dateS.getMonth() + 1;
   const yearS = dateS.getFullYear();
@@ -80,9 +88,20 @@ const Payment = () => {
       toast.error("Đã có lỗi xảy ra!" + error);
     }
   };
-  setTimeout(() => {
+  // backdrop
+  const handleClose = () => {
     setLoading(false);
-  }, 2000);
+  };
+  const handleOpen = () => {
+    setLoading(true);
+  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(true);
+    }, 2000);
+  
+    return () => clearTimeout(timer);
+  }, []);
 
   // foramt price
   const price = dataBooking[0].price;
@@ -90,15 +109,15 @@ const Payment = () => {
   return (
     <>
       <Header />
-      <Container maxWidth="xl"  >
+      <Container maxWidth="xl" >
         {
           loading ? (
             <Container maxWidth="xl" className="container__payment" >
               <Stack
-               direction="column"
-               justifyContent="flex-end"
-               alignItems="center"
-               spacing={1}
+                direction="column"
+                justifyContent="flex-end"
+                alignItems="center"
+                spacing={1}
               >
                 <CircularProgress className="progress" />
               </Stack>

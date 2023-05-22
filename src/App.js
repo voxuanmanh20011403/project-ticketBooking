@@ -50,37 +50,28 @@ export default function App() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
-  var accountJSON = localStorage.getItem("account");
-
   // chuyển đối tượng từ dạng JSON sang đối tượng JavaScript
-
   const [account, setAccount] = useState(null);
-
+  const [role, setRole] = useState("");
   useEffect(() => {
     // Lấy dữ liệu từ localStorage
     var accountJSON = localStorage.getItem("account");
 
     setAccount(accountJSON);
   }, []);
-  console.log("account", account);
+  // console.log("account", account);
   const [uid, setUid] = useState();
 
   const dispatch = useDispatch();
   const { displayName } = useSelector((state) => state.user);
-  console.log(displayName);
 
-  let role = 0;
-  const data = JSON.parse(localStorage.getItem("account"));
-  console.log("data: " + data);
-  try{
-    role = data.Role;
-  }catch(e) {
-    console.log(e);
-  }
-
+  useEffect(() =>{
+    var data = JSON.parse(localStorage.getItem("account"));
+    const role = data ? data.Role : "-1";
+    setRole(role);
+  },[])
 
   useEffect(() => {
-
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         dispatch(LoginAction(authUser));
@@ -90,20 +81,18 @@ export default function App() {
       setUid(authUser.uid);
     });
   }, [dispatch]);
-  console.log("role: " + role);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/admin" element={<Admin />} />
         <Route path="/SignIN" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="/booking" element={<Booking />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/return" element={<Return />}></Route>
         {
-          role === "3" ? <Route path="/admin" element={<Admin />}></Route> : (
+          role === "0" ? <Route path="/admin" element={<Admin />}></Route> : (
             <Route path="*" element={<NotFoundPage />} />
           )
         }

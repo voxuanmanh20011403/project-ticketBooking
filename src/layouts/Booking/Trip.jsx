@@ -245,20 +245,20 @@ const Trip = ({ fetchData }) => {
                   <Typography className="filter__title">Loại xe:</Typography>
                   <FormControlLabel
                     control={<Checkbox {...label} />}
-                    label="Xe giường nằm 22 chỗ"
-                    value="Xe giường nằm 22 chỗ"
+                    label="Xe giường nằm 20 chỗ"
+                    value="Xe giường nằm 20 chỗ"
                     onChange={handleCheckboxChange}
                     checked={selectedCheckboxes.includes(
-                      "Xe giường nằm 22 chỗ"
+                      "Xe giường nằm 20 chỗ"
                     )}
                   />
                   <FormControlLabel
                     control={<Checkbox {...label} />}
-                    label="Xe giường nằm 34 chỗ"
-                    value="Xe giường nằm 34 chỗ"
+                    label="Xe giường nằm 36 chỗ"
+                    value="Xe giường nằm 36 chỗ"
                     onChange={handleCheckboxChange}
                     checked={selectedCheckboxes.includes(
-                      "Xe giường nằm 34 chỗ"
+                      "Xe giường nằm 36 chỗ"
                     )}
                   />
                   <FormControlLabel

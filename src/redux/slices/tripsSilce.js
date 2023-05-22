@@ -15,10 +15,8 @@ const tripSlice = createSlice({
         addBooking:(state,action) => {
             // console.log("Test reducers addbooking")
             state.stateBooking.push(action.payload); 
-           
         },
         clearStateSearch:(state,action) => {
-          console.log("check reducers clear")
           state.stateSearch =[];
         }
     }

@@ -69,7 +69,7 @@
 /* payment progress */
 .container__payment {
     height: 100vh;
-  }
+}
   
 .container__payment .progress {
     margin-top: 50vh;
