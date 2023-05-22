@@ -50,10 +50,45 @@ const FormInfo = () => {
   }, [])
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Name", name);
-    console.log("Email:", email);
-    console.log("Phone:", phone);
-    console.log("Password:", password);
+    updateProfile(auth.currentUser, {
+      displayName: name,
+    })
+      .then(() => {
+        // Profile updated!
+        // ...
+        alert("Updated");
+      })
+      .catch((error) => {
+        // An error occurred
+        // ...
+        alert("No update");
+      });
+    const statisticsRef = doc(collection(db, "Account"), `${id}`);
+
+    updateDoc(statisticsRef, {
+      Name: name,
+      NumberPhone: phone,
+    })
+      .then(() => {
+        console.log(
+          `Updated success`
+        );
+      })
+      .catch((error) => {
+        console.error(`Error updating`);
+      });
+
+    const existingAccountJSON = localStorage.getItem("account");
+    const existingAccount = JSON.parse(existingAccountJSON);
+    existingAccount.Name = name;
+    existingAccount.NumberPhone = phone;
+    const updatedAccountJSON = JSON.stringify(existingAccount);
+    localStorage.setItem("account", updatedAccountJSON);
+    // sendEmailVerification(auth.currentUser)
+    // .then(() => {
+    //   alert("dang xác minh")
+    // });
+   
   };
 
   return (
