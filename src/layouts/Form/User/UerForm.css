@@ -1,0 +1,31 @@
+.animation {
+  animation: example linear 3s infinite;
+}
+@keyframes example {
+  0% {
+    transform: translateX(20px);
+    opacity: 1;
+  }
+  20% {
+    transform: translateX(40px);
+    opacity: 0.8;
+  }
+  40% {
+    transform: translateX(60px);
+    opacity: 0.6;
+  }
+  60% {
+    transform: translateX(80px);
+    opacity: 0.4;
+  }
+  80% {
+    transform: translateX(100px);
+    opacity: 0.2;
+
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+
+  }
+}

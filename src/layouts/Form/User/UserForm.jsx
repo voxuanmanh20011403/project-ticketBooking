@@ -13,6 +13,8 @@ import { Button, Grid } from "@mui/material";
 import FormInfo from "../FormInfo/FormInfo";
 import FormPassWord from "../FormPassWord/FormPassWord";
 import Bg from "layouts/Body/Cart/Bg";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import './UerForm.css';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -25,7 +27,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>gi
+        <Box sx={{ p: 3 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -59,14 +61,64 @@ export default function UserForm() {
     localStorage.clear();
     navigate("/");
   };
+  const [active1, setActive1] = useState(true);
+  const [active2, setActive2] = useState(false);
+  const [active3, setActive3] = useState(false);
+
   return (
     <>
-      <Grid container rowSpacing={0} style={{ width: "100%", minHeight: "600px", paddingTop: '8rem' }}>
+      <Grid
+        container
+        rowSpacing={0}
+        style={{ width: "100%", minHeight: "600px", paddingTop: "8rem" }}
+      >
         <Bg />
+
         <Grid xs={2} style={{ display: "grid" }}>
-          <Button onClick={() => setValueTab(1)}>Thông tin cá nhân</Button>
-          <Button onClick={() => setValueTab(2)}>Lịch sử đặt vé</Button>
-          <Button onClick={() => setValueTab(3)}>Đổi mật khẩu</Button>
+          <Button
+          className={active1 === true ? "slide-right-button" : ""}
+            onClick={() => {
+              setValueTab(1);
+              setActive1(true);
+              setActive2(false);
+              setActive3(false);
+            }}
+          >
+            Thông tin cá nhân
+            <span className="animation">
+            {active1 === true ? <KeyboardDoubleArrowRightIcon /> : <></>}
+
+            </span>
+          </Button>
+          <Button
+            className={active2 === true ? "slide-right-button" : ""}
+            onClick={() => {
+              setValueTab(2);
+              setActive1(false);
+              setActive2(true);
+              setActive3(false);
+            }}
+          >
+            Lịch sử đặt vé
+            <span className="animation">
+            {active2 === true ? <KeyboardDoubleArrowRightIcon /> : <></>}
+
+            </span>
+          </Button>
+          <Button
+            onClick={() => {
+              setValueTab(3);
+              setActive1(false);
+              setActive2(false);
+              setActive3(true);
+            }}
+          >
+            Đổi mật khẩu
+            <span className="animation">
+            {active3 === true ? <KeyboardDoubleArrowRightIcon /> : <></>}
+
+            </span>
+          </Button>
         </Grid>
         <Grid
           item xs={10}
