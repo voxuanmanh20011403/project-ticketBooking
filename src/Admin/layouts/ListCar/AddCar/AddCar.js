@@ -58,8 +58,7 @@ function AddCar(props) {
       });
     }
     setstate(newState);
-    console.log('newState',newState);
-    console.log(state);
+   
   }, [seat]);
   //set show/hide form
   const open = true;
@@ -98,6 +97,7 @@ function AddCar(props) {
         Namegarage: namegarage,
         seat: seat,
         NameTrip: formData.StartPoint + "-" + formData.EndPoint,
+        TypeVehicle: `xe giường nằm ${seat} chỗ`,
       });
       console.log("Document written with ID: ", docRef.id);
       location.reload();

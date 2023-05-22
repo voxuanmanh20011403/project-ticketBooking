@@ -42,7 +42,7 @@ export const TripsAuto = () => {
   useEffect(() => {
     const intervalId = setInterval(function () {
       var now = new Date();
-      if (now.getHours() ==18 && now.getMinutes() === 30) {
+      if (now.getHours() == 6 && now.getMinutes() === 31) {
         for (let i = 0; i < listCars.length; i++) {
           const car = listCars[i];
           // Tính khoảng cách giữa 2 ngày dưới dạng số mili giây
@@ -68,7 +68,7 @@ export const TripsAuto = () => {
             let id = 0;
             let name = "A";
             let newState = [];
-            for (var ii = 1; ii <= car.Seat; ii++) {
+            for (var ii = 1; ii <= car.seat; ii++) {
               id++;
               newState.push({
                 id: id,
@@ -102,6 +102,19 @@ export const TripsAuto = () => {
             console.log(
               `Car ${car.ID_Car} ko tồn tại, tiến hành tạo bảng đầu tiên `
             );
+            //só seat:
+            let id = 0;
+            let name = "A";
+            let newState = [];
+            for (var ii = 1; ii <= car.seat; ii++) {
+              id++;
+              newState.push({
+                id: id,
+                name: name + ii,
+                status: "empty",
+                ui: "",
+              });
+            }
             try {
               const docRef = addDoc(collection(db, "Trips"), {
                 EndPoint: car.EndPoint,
@@ -115,9 +128,9 @@ export const TripsAuto = () => {
                 Price: car.Price,
                 Seat: newState,
                 StartPoint: car.StartPoint,
-                TypeVehicle: car.TypeVehicle,
+                // TypeVehicle: car.TypeVehicle,
                 duration: car.duration,
-                StartTime: StartTime,
+                StartTime: car.StartTime,
               });
               console.log("Document written with ID: ", docRef.id);
             } catch (e) {}
@@ -127,7 +140,6 @@ export const TripsAuto = () => {
           }
         }
       }
-     
     }, 100);
   }, [setGroupList]);
 
