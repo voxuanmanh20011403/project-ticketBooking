@@ -6,7 +6,6 @@ import styles from './Header.css';
 const Header = () => {
   return (
     <div className='navBar'>
-      <div className='navBar__img-lef'></div>
       <Container className='container' width='881' height='120' >
         <ContactNav />
         {/* <Auth /> */}

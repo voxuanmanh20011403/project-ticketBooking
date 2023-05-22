@@ -14,6 +14,7 @@ import TabsList from '@mui/base/TabsList';
 import TabPanel from '@mui/base/TabPanel';
 import Tab, { tabClasses } from '@mui/base/Tab';
 import Bus from '../Bus/Bus';
+import PolicyTicket from 'layouts/PolicyTicket/PolicyTicket';
 
 const blue = {
   50: '#F0F7FF',
@@ -143,11 +144,15 @@ const Banner = () => {
           </div>
         </div>
       </div>
+     
       <Intro />
       <Cart />
+      
       <Quality />
-      <Bg />
+      <Bg/>
       <Bus/>
+      <Bg/>
+      <PolicyTicket/>
     </div>
 
   )
