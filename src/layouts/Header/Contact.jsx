@@ -32,7 +32,10 @@ function handleBusClick() {
   bus.scrollIntoView({ behavior: 'smooth' }); // cuộn trang web đến vị trí của thẻ cart
 }
 
-
+function handlePolicyClick() {
+  const policy = document.getElementById('policy'); // lấy thẻ chứa tuyến phổ biến
+  policy.scrollIntoView({ behavior: 'smooth' }); // cuộn trang web đến vị trí của thẻ cart
+}
 
 export default function Contact() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -96,41 +99,50 @@ export default function Contact() {
   }
   return (
     <React.Fragment>
-      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography className='logo__img' sx={{ minWidth: 100 }}></Typography>
-        <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 200 }} count={13} variant="button" className="head_cart" color="info"  >Tìm Chuyến</Typography>
-        <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 150 }} count={13} variant="button" color="info" className="head_cart" onClick={handleCartClick} >
-          Tuyến Phổ Biến
-        </Typography>
-        <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 200 }} count={13} variant="button" className="head_cart" color="info" onClick={handleBusClick}>Bến Xe Khách</Typography>
-        <Stack direction="row" spacing={1}>
-        <Email/>
-        <Hotline/>
-        </Stack>
-        <Tooltip title="Account settings">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 10 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          > <div className='icon'>
-              <div display='flex'>
-                {Logged ? (
-                  <>
-                    <p>Xin chào, {displayName} </p>
-                  </>
-                ) : (
-                  <Avatar sx={{ width: 40, height: 40 }} />
-                )}
-              </div>
-            </div>
+
+<Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+  {/* Thẻ bên trái */}
+  <div className='logo__img' style={{ minWidth: 100 }}></div>
+
+  {/* Phần con của Box */}
+  <Box sx={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', ml: 2 }}>
+    <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 200 }} variant="button" className="head_cart" color="info" onClick={handleCartClick}>
+    Tuyến Phổ Biến
+    </Typography>
+    <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 150 }} variant="button" color="info" className="head_cart" onClick={handleBusClick}>
+    Bến Xe Khách
+    </Typography>
+    <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 250 }} variant="button" className="head_cart" color="info"  onClick={handlePolicyClick} >
+    Chính Sách Hủy Vé
+    </Typography>
+    <Stack direction="row" spacing={1}>
+      <Email />
+      <Hotline />
+    </Stack>
+    <Tooltip title="Account settings">
+      <IconButton
+        onClick={handleClick}
+        size="small"
+        sx={{ ml: 2 }}
+        aria-controls={open ? 'account-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+      >
+        <div className='icon'>
+          <div display='flex'>
+            {Logged ? (
+              <p>Xin chào, {displayName} </p>
+            ) : (
+              <Avatar sx={{ width: 40, height: 40 }} />
+            )}
+          </div>
+        </div>
+      </IconButton>
+    </Tooltip>
+  </Box>
+</Box>
 
 
-          </IconButton>
-        </Tooltip>
-      </Box>
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
