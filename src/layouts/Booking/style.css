@@ -22,11 +22,11 @@
 }
 .seat__note_null svg .icon-disabled {
     fill: rgb(242, 242, 242);
-    cursor: pointer;
+    cursor: pointer !important;
 }
 .seat__note_null svg .icon-selected {
     fill: rgb(39, 174, 96);
-    cursor: pointer;
+    cursor: pointer !important;
     
 }
 /* ChooseSeat */
@@ -322,6 +322,13 @@
 }
 .seat__note_border4{
     border-right: 3px solid !important;
+    transform: translateX(20px);
+}
+.seat__note_border42{
+    transform: translateX(80px);
+}
+.seat__note_border43{
+    transform: translateX(90px);
 }
 /* ui ds + total */
 .css-1iurrjr-MuiStack-root{

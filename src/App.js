@@ -88,8 +88,8 @@ export default function App() {
         <Route path="/SignIN" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="/booking" element={<Booking />}></Route>
-        {/* <Route path="/payment" element={<Payment />}></Route> */}
-        {/* <Route path="/return" element={<Return />}></Route> */}
+        <Route path="/payment" element={<Payment />}></Route>
+        <Route path="/return" element={<Return />}></Route>
         {
           role === "0" ? <Route path="/admin" element={<Admin />}></Route> : (
             <Route path="*" element={<NotFoundPage />} />

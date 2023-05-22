@@ -21,8 +21,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const ListSeat = ({ items }) => {
-  // console.log("data: " + JSON.stringify(items.id));
-
   let listSeat = items.seat;
 
   const newListSeat = listSeat.map((seat) => {
@@ -46,46 +44,67 @@ const ListSeat = ({ items }) => {
   const [selectedSeatNames, setSelectedSeatNames] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
+  // const handleChoNgoi = (id, name) => {
+  //   setSelectedSeats((prevSelectedSeats) => {
+  //     if (prevSelectedSeats.includes(id)) {
+  //       setTotalPrice(totalPrice - parseFloat(items.Price));
+  //       return prevSelectedSeats.filter((seatid) => seatid !== id);
+  //     } else {
+  //       setTotalPrice(totalPrice + parseFloat(items.Price));
+  //       return [...prevSelectedSeats, id];
+  //     }
+  //   });
+   
+  //   const newChoNgoi = [...choNgoi];
+
+  //   const updatedChoNgoi = newChoNgoi.map((item) => {
+  //     if (item.id === id) {
+
+  //       return {
+  //         ...item,
+  //         status: item.status === "empty" ? "book" : "empty",
+  //       };
+  //     } else {
+  //       return item;
+  //     }
+  //   });   
+  //   setChoNgoi(updatedChoNgoi);
+  // };
+  
   const handleChoNgoi = (id, name) => {
-    setSelectedSeats((prevSelectedSeats) => {
-      if (prevSelectedSeats.includes(id)) {
-        setTotalPrice(totalPrice - parseFloat(items.Price));
-        return prevSelectedSeats.filter((seatid) => seatid !== id);
-      } else {
-        setTotalPrice(totalPrice + parseFloat(items.Price));
-        return [...prevSelectedSeats, id];
-      }
-    });
+    const seat = choNgoi.find((item) => item.id === id);
+  
+    if (seat) {
+      if (seat.status === "book") {
+        return; // Không thực hiện gì nếu ghế đã được đặt
+      } else if (seat.status === "empty") {
+        setSelectedSeats((prevSelectedSeats) => {
+          if (prevSelectedSeats.includes(id)) {
+            setTotalPrice(totalPrice - parseFloat(items.Price));
+            return prevSelectedSeats.filter((seatid) => seatid !== id);
+          } else {
+            setTotalPrice(totalPrice + parseFloat(items.Price));
+            return [...prevSelectedSeats, id];
+          }
+        });
+        const newChoNgoi = [...choNgoi];
 
-    const newChoNgoi = [...choNgoi];
-    // console.log(
-    //   "Trạng thái ban đầu: " +
-    //     "Trạng thái - " +
-    //     JSON.stringify(newChoNgoi[0].status) +
-    //     "Người đặt - " +
-    //     JSON.stringify(newChoNgoi[0].nguoi_dat)
-    // );
-
-    const updatedChoNgoi = newChoNgoi.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          status: item.status === "empty" ? "book" : "empty",
-          // nguoi_dat: item.status === "empty" ? "username" : "",
-        };
-      } else {
-        return item;
+        const updatedChoNgoi = newChoNgoi.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              // status: item.status === "empty" ? "book" : "empty",
+            };
+          } else {
+            return item;
+          }
+        });
+  
+        setChoNgoi(updatedChoNgoi);
       }
-    });
-    // console.log(
-    //   "Trạng thái sau khi click: " +
-    //     "Trạng thái - " +
-    //     JSON.stringify(updatedChoNgoi[0].status) +
-    //     "Người đặt - " +
-    //     JSON.stringify(updatedChoNgoi[0].nguoi_dat)
-    // );
-    setChoNgoi(updatedChoNgoi);
+    }
   };
+  
 
   useEffect(() => {
     const names = choNgoi
@@ -156,6 +175,10 @@ const ListSeat = ({ items }) => {
     columnClass = "seat__note_border4";
   }  else if (seatColsLength === 4 && columnIndex === 0) {
     columnClass = "seat__note_border40";
+  }  else if (seatColsLength === 4 && columnIndex === 2) {
+    columnClass = "seat__note_border42";
+  }  else if (seatColsLength === 4 && columnIndex === 3) {
+    columnClass = "seat__note_border43";
   }
     
     return (
@@ -166,7 +189,7 @@ const ListSeat = ({ items }) => {
             onClick={() => handleChoNgoi(seat.id, seat.name)}
             className={` ${seats.length === 1 ? "seat__note_single" : ""}
             ${columnClass}
-            ${selectedSeats.includes(seat.id) ? "seat__note_choose" : ""}  `}
+            ${selectedSeats.includes(seat.id)  ? "seat__note_choose" : ""}  `}
           >
             <Tooltip title={seat.name} placement="top">
               {seat.ui}
@@ -184,7 +207,6 @@ const ListSeat = ({ items }) => {
   const handleContinue = () => {
     if (totalPrice === 0) {
       toast.error("Bạn chưa chọn vé!");
-      console.log(typeof tokenLocal);
     } else {
       if (tokenLocal) {
         dispatch(
