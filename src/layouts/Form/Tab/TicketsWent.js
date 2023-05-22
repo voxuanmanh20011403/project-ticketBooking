@@ -228,7 +228,7 @@ export default function TicketsWent() {
   const [open, setOpen] = useState(false);
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+      <Table sx={{ minWidth: 600 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             <TableCell style={{ width: "%" }} align="">

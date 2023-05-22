@@ -18,10 +18,22 @@ import {
   reauthenticateWithCredential,
   sendEmailVerification,
 } from "firebase/auth";
- 
+import {Fab } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+const useStyles = makeStyles((theme) => ({ 
+  saveButton: {
+  width: "200px",
+  margin: "0 auto",
+  marginTop: theme.spacing(2),
+},
+}));
+import './FormPassword.css'
+
 
 const FormPassWord = () => {
   // const [email, setEmail] = useState("");
+  const classes = useStyles();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -100,17 +112,22 @@ const FormPassWord = () => {
   };
   const HandleSendMailVeri = () => {
     sendEmailVerification(auth.currentUser).then(() => {
-     alert("đã gửi email veri !!!");
+      alert("đã gửi email veri !!!");
     });
   };
   return (
-    <Grid container justifyContent="center" alignItems="center">
-      <Grid item xs={20} sm={20} md={6} lg={4}>
-        <Paper elevation={3}>
-          <Typography variant="h5" component="h1" align="center" gutterBottom>
-            Đổi mật khẩu
-          </Typography>
-
+    <Grid container justifyContent="center" alignItems="center" className="code__container">
+      <Grid item xs={12} sm={12} md={6} lg={4} >
+        <Paper elevation={3} sx={{ mx: 'auto' }}>
+        <Typography
+        variant="h5"
+        component="h1"
+        align="center"
+        fontWeight="bold" color="primary"
+        gutterBottom 
+      >
+        Đổi mật khẩu
+      </Typography>
           <MDBox pt={4} pb={3} px={3}>
             <MDBox component="form" role="form">
               {user.emailVerified === true ? (
@@ -171,7 +188,7 @@ const FormPassWord = () => {
                   </MDBox>
 
                   <MDBox mt={4} mb={1}>
-                    <Button
+                    {/* <Button
                       variant="contained"
                       style={{
                         width: "60%",
@@ -181,7 +198,19 @@ const FormPassWord = () => {
                       onClick={handleSubmit(onSubmit)}
                     >
                       Đổi mật khẩu
-                    </Button>
+                    </Button> */}
+                    <Grid item xs={12}>
+                      <Fab
+                        variant="extended"
+                        color="primary"
+                        onClick={handleSubmit(onSubmit)}
+                        className={classes.saveButton}
+                      >
+                        <VpnKeyIcon sx={{ marginRight: 1 }} />
+                        Đổi mật khẩu
+                      </Fab>
+                    </Grid>
+                    
                   </MDBox>
                 </>
               ) : (
@@ -202,13 +231,25 @@ const FormPassWord = () => {
                       placeholder="ID nhà xe"
                       className="Garage"
                     />
-                    <Button
+                    {/* <Button
                       onClick={() => {
                         HandleSendMailVeri();
                       }}
                     >
                       Gửi email veri tài khoản
-                    </Button>
+                    </Button> */}
+                    <Grid item xs={12}>
+                      <Fab
+                        variant="extended"
+                        color="primary"
+                        onClick={() => {
+                          HandleSendMailVeri();
+                        }}
+                        className={classes.saveButton}
+                      >
+                        Gửi email veri tài khoản
+                      </Fab>
+                    </Grid>
                   </MDBox>
                 </>
               )}

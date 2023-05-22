@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "data/firebase";
 import { useDispatch, useSelector } from "react-redux";
+import './Tab.css'
 
 function createData(
   id,
@@ -72,8 +73,8 @@ export default function TicketsCancel() {
     );
   });
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+    <TableContainer component={Paper} className="form-table-container">
+      <Table sx={{ minWidth: 600 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             <TableCell style={{ width: "%" }} align="">

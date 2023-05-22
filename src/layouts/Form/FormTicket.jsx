@@ -58,8 +58,8 @@ export default function FormTicket() {
   };
 
   return (
-    <Box sx={{ bgcolor: 'background.paper', padding: '20px' }}>
-     
+    <Box sx={{ bgcolor: 'background.paper',height: '60vh'
+    }}>
       <AppBar position="static">
         <Tabs
           value={value}
@@ -70,16 +70,27 @@ export default function FormTicket() {
           aria-label="full width tabs example"
          
         >
-          <Tab label="Vé xe chưa đi" {...a11yProps(0)} />
-          <Tab label="Vé xe đã đi" {...a11yProps(1)} />
-          <Tab label="Vé xe đã huỷ" {...a11yProps(2)} />
+      <Tab
+    label={<Typography variant="body1" fontWeight="bold">Vé xe chưa đi</Typography>}
+    {...a11yProps(0)}
+    style={{ color: 'blue' }}
+  />
+  <Tab
+    label={<Typography variant="body1" fontWeight="bold">Vé xe đã đi</Typography>}
+    {...a11yProps(1)}
+    style={{ color: 'blue' }}
+  />
+  <Tab
+    label={<Typography variant="body1" fontWeight="bold">Vé xe đã huỷ</Typography>}
+    {...a11yProps(2)}
+    style={{ color: 'blue' }} />
+          
         </Tabs>
       </AppBar>
       <SwipeableViews
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={value}
         onChangeIndex={handleChangeIndex}
-        
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
           <DenseTable />
@@ -93,4 +104,5 @@ export default function FormTicket() {
       </SwipeableViews>
     </Box>
   );
+
 }
