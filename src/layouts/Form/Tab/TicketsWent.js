@@ -164,9 +164,11 @@ import { useEffect } from "react";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "data/firebase";
 import { useDispatch, useSelector } from "react-redux";
+import FormComment from '../../Comment/FormComment';
 
 function createData(
   id,
+  ID_Garage,
   id_Trip,
   fullname,
   email,
@@ -179,6 +181,7 @@ function createData(
 ) {
   return {
     id,
+    ID_Garage,
     id_Trip,
     fullname,
     email,
@@ -207,13 +210,13 @@ export default function TicketsWent() {
     getData();
   }, []);
 
-  //
   //craete data
   const rows = data.map((item) => {
     const startTime = new Date(item.StartTime?.seconds * 1000);
     const dateCheckout = new Date(item.DateCheckout?.seconds * 1000);
     return createData(
       item.id,
+      item.ID_Garage,
       item.ID_Trip,
       item.FullName,
       item.Email,
@@ -225,7 +228,9 @@ export default function TicketsWent() {
       dateCheckout
     );
   });
+  // console.log("rows: " + JSON.stringify(rows))
   const [open, setOpen] = useState(false);
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 600 }} size="small" aria-label="a dense table">
@@ -283,7 +288,9 @@ export default function TicketsWent() {
                   {" "}
                   {row.dateCheckout.toLocaleString()}
                 </TableCell>
-                <Button>Đánh giá</Button>
+                <Button>
+                <FormComment fullName={row.fullname}  idGarage={row.ID_Garage}/>
+                </Button>
               </TableRow>
             ))}
         </TableBody>

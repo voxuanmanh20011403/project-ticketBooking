@@ -2,11 +2,8 @@ import React, { useState } from "react";
 import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
-import Avatar from "@mui/material/Avatar";
-import Divider from "@mui/material/Divider";
 import {
-  Card,
-  CardContent,
+
   Typography,
   Grid,
   TextField,
@@ -37,7 +34,8 @@ function getLabelText(value) {
   return `${value} Star${value !== 1 ? "s" : ""}, ${labels[value]}`;
 }
 
-const FormComment = () => {
+const FormComment = ({fullName, idGarage}) => {
+  // console.log(fullName + " và " + idGarage);
   const [value, setValue] = React.useState(3);
   const [hover, setHover] = React.useState(-1);
 
@@ -57,9 +55,9 @@ const FormComment = () => {
     setComment(event.target.value);
   };
   const addComment = async () => {
-    const ID_Garage = "phtrang";
+    const ID_Garage = idGarage;
     const commentData = {
-      FullName: "Tân đẹp trai", // lấy fullname người dùng từ collection checkout
+      FullName: fullName, // lấy fullname người dùng từ collection checkout
       Comment: comment,
       Start: value,
       DateTime: new Date(),
@@ -82,7 +80,7 @@ const FormComment = () => {
     }
   };
   const handleSubmit = (event) => {
-    // event.preventDefault();
+    event.preventDefault();
     // console.log('Số sao:', value);
     // console.log('Nhận xét:', comment);
     addComment();
@@ -96,14 +94,12 @@ const FormComment = () => {
       container
       justify="center"
       alignItems="center"
-      style={{ height: "100vh" }}
+      // style={{ height: "100vh" }}
     >
-      <Button variant="contained" color="primary" onClick={handleOpen}>
-        Đánh giá
-      </Button>
+      <Button onClick={handleOpen}>Đánh giá</Button>
 
       <Dialog open={isOpen} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Đánh giá</DialogTitle>
+        <DialogTitle>Trải nghiệm của bạn như thế nào?</DialogTitle>
         <DialogContent>
           <Box>
             <form onSubmit={handleSubmit}>
@@ -121,7 +117,6 @@ const FormComment = () => {
                       }}
                     >
                       <Rating
-                        name="hover-feedback"
                         value={value}
                         // precision={0.5}
                         getLabelText={getLabelText}
@@ -158,8 +153,29 @@ const FormComment = () => {
                   onChange={handleCommentChange}
                 />
               </Box>
-              <Box mt={2}>
-                <Button type="submit" variant="contained" color="primary">
+              <Box mt={2}  display="flex" justifyContent="flex-end">
+                <Button
+                  style={{
+                    width: "100px",
+                    cursor: "pointer",
+                    color: "#555",
+                    background: "none",
+                    border: "1px solid black",
+                    marginRight: "10px",
+                  }}
+                  onClick={handleClose}
+                >
+                  Trở lại
+                </Button>
+                <Button
+                  type="submit"
+                  style={{
+                    width: "150px",
+                    color: "#fff",
+                    background: "#ee4d2d",
+                    cursor: "pointer",
+                  }}
+                >
                   Gửi nhận xét
                 </Button>
               </Box>
