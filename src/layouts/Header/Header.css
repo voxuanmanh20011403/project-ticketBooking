@@ -5,6 +5,7 @@
     height: var(--nav-height);
     position: absolute;
     /* color: black; */
+    display: flex;
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
 }
 
@@ -47,7 +48,7 @@
     background-position: left top;
     background-size: contain;
     overflow: hidden;
-
+    
 }
 
 .contact {
