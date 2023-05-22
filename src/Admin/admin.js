@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import {  Route, useLocation } from "react-router-dom";
+import { Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Icon from "@mui/material/Icon";
@@ -9,9 +9,12 @@ import themeDark from "../Admin/assets/theme-dark";
 import rtlPlugin from "stylis-plugin-rtl";
 import createCache from "@emotion/cache";
 
-
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "./context";
+import {
+  useMaterialUIController,
+  setMiniSidenav,
+  setOpenConfigurator,
+} from "./context";
 
 // Images
 import brandWhite from "./assets/images/logo-ct.png";
@@ -32,7 +35,6 @@ import ListCar from "./layouts/ListCar/ListCar";
 import { ManagerTickets } from "./layouts/ManagerTickets/ManagerTickets";
 import CancelTickets from "./layouts/CancelTickets/CancelTickets";
 
-
 export default function Admin() {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -48,7 +50,6 @@ export default function Admin() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
-
 
   // Cache for the rtl
   useMemo(() => {
@@ -77,7 +78,8 @@ export default function Admin() {
   };
 
   // Change the openConfigurator state
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+  const handleConfiguratorOpen = () =>
+    setOpenConfigurator(dispatch, !openConfigurator);
 
   // Setting the dir attribute for the body element
   useEffect(() => {
@@ -97,7 +99,14 @@ export default function Admin() {
       }
 
       if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
+        return (
+          <Route
+            exact
+            path={route.route}
+            element={route.component}
+            key={route.key}
+          />
+        );
       }
 
       return null;
@@ -132,17 +141,32 @@ export default function Admin() {
     setSelectedValue(value);
   };
   const renderComponent = () => {
-    return selectedValue === 1 ? <Dashboard /> : (selectedValue === 2 ? <UserTable /> : (selectedValue === 3 ? <Garage /> : (selectedValue === 4 ? <ListCar /> : (selectedValue === 5 ? <ManagerTickets /> : <CancelTickets/>))));
+    return selectedValue === 1 ? (
+      <Dashboard />
+    ) : selectedValue === 2 ? (
+      <UserTable />
+    ) : selectedValue === 3 ? (
+      <Garage />
+    ) : selectedValue === 4 ? (
+      <ListCar />
+    ) : selectedValue === 5 ? (
+      <ManagerTickets />
+    ) : (
+      <CancelTickets />
+    );
   };
   return (
     <>
-
       <ThemeProvider theme={darkMode ? themeDark : theme}>
         <CssBaseline />
         <>
           <Sidenav
             color={sidenavColor}
-            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+            brand={
+              (transparentSidenav && !darkMode) || whiteSidenav
+                ? brandDark
+                : brandWhite
+            }
             brandName="Material Dashboard 2"
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
@@ -154,9 +178,6 @@ export default function Admin() {
 
         {renderComponent()}
       </ThemeProvider>
-
     </>
-
-
-  )
+  );
 }
