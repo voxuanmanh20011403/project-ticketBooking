@@ -121,12 +121,12 @@ function SignIn(props) {
           localStorage.setItem("account", accountJSON);
           localStorage.setItem('isLoggedIn', true);
 
-          if (accounts[i].Role === "1") {
-            history("/");
-          } else {
+          if (accounts[i].Role === "0") {
             setTimeout(() => {
               history("/admin");
-            }, 1500);
+            }, 2000);
+          } else  {
+            history("/");
           }
          
           // {
