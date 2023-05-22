@@ -57,40 +57,45 @@ function Dashboard() {
     return unsubscribe;
   }, [handleSnapshot]);
   // Số vé đã đặt thành công
-  useEffect( async () => {
-    try {
-      const checkoutCol = collection(db, "Checkout");
-      const status = "Success";
-      const q = query(checkoutCol, where("Status", "==", status));
-      const querySnapshot = await getDocs(q);
-      const count = querySnapshot.size;
-      
-      console.log("Số vé đặt thành công: ", count);
-      setTicketCount(count);
-    } catch (error) {
-      console.error("Lỗi khi đếm số vé đặt thành công: ", error);
-    }
-  }, [])
+  useEffect(() => {
+    const fetchTicketCount = async () => {
+      try {
+        const checkoutCol = collection(db, "Checkout");
+        const status = "Success";
+        const q = query(checkoutCol, where("Status", "==", status));
+        const querySnapshot = await getDocs(q);
+        const count = querySnapshot.size;
+        console.log("Số vé đặt thành công: ", count);
+        setTicketCount(count);
+      } catch (error) {
+        console.error("Lỗi: ", error);
+      }
+    };
+    fetchTicketCount();
+  }, []);
   //  tính doanh thu của web
-  useEffect(async () => {
-    try {
-      const checkoutCol = collection(db, "Checkout");
-      const status = "Success";
-      const q = query(checkoutCol, where("Status", "==", status));
-      const querySnapshot = await getDocs(q);
-      const count = querySnapshot.size;
-      let totalAmount = 0;
-      querySnapshot.forEach((doc) => {
-        const totalPrice = doc.data().TotalPrice;
-        totalAmount += totalPrice;
-      });
-      let totalWeb = totalAmount * 0.05;
-      console.log("Doanh thu: ", totalWeb);
-      setRevenueWeb(totalWeb)
-    } catch (error) {
-      console.error("Lỗi: ", error);
-    }
-  }, [])
+  useEffect(() => {
+    const fetchRevenueWeb = async () => {
+      try {
+        const checkoutCol = collection(db, "Checkout");
+        const status = "Success";
+        const q = query(checkoutCol, where("Status", "==", status));
+        const querySnapshot = await getDocs(q);
+        const count = querySnapshot.size;
+        let totalAmount = 0;
+        querySnapshot.forEach((doc) => {
+          const totalPrice = doc.data().TotalPrice;
+          totalAmount += totalPrice;
+        });
+        let totalWeb = totalAmount * 0.05;
+        console.log("Doanh thu: ", totalWeb);
+        setRevenueWeb(totalWeb);
+      } catch (error) {
+        console.error("Lỗi: ", error);
+      }
+    };
+    fetchRevenueWeb();
+  }, []);
   // console.log("ticketCount: " + ticketCount);
 
   return (
