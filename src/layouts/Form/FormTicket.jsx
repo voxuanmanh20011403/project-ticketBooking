@@ -10,7 +10,6 @@ import Box from "@mui/material/Box";
 import DenseTable from "./Tab/TicketsNow";
 import TicketsCancel from "./Tab/TicketsCancel";
 import TicketsWent from "./Tab/TicketsWent";
-import { Grid } from "@mui/material";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -58,7 +57,8 @@ export default function FormTicket() {
   };
 
   return (
-    <Box sx={{ bgcolor: 'background.paper',height: '60vh'
+    <Box sx={{
+      bgcolor: 'background.paper', height: '60vh'
     }}>
       <AppBar position="static">
         <Tabs
@@ -68,23 +68,22 @@ export default function FormTicket() {
           textColor="inherit"
           variant="fullWidth"
           aria-label="full width tabs example"
-         
+
         >
-      <Tab
-    label={<Typography variant="body1" fontWeight="bold">Vé xe chưa đi</Typography>}
-    {...a11yProps(0)}
-    style={{ color: 'blue' }}
-  />
-  <Tab
-    label={<Typography variant="body1" fontWeight="bold">Vé xe đã đi</Typography>}
-    {...a11yProps(1)}
-    style={{ color: 'blue' }}
-  />
-  <Tab
-    label={<Typography variant="body1" fontWeight="bold">Vé xe đã huỷ</Typography>}
-    {...a11yProps(2)}
-    style={{ color: 'blue' }} />
-          
+          <Tab
+            label={<Typography variant="body1" fontWeight="bold"style={{ color: '#2474e5' }}>Vé xe chưa đi</Typography>}
+            {...a11yProps(0)}
+            
+          />
+          <Tab
+            label={<Typography variant="body1" fontWeight="bold" style={{ color: '#2474e5' }}>Vé xe đã đi</Typography>}
+            {...a11yProps(1)}
+          />
+          <Tab
+            label={<Typography variant="body1" fontWeight="bold" style={{ color: '#2474e5' }}>Vé xe đã huỷ</Typography>}
+            {...a11yProps(2)}
+            />
+
         </Tabs>
       </AppBar>
       <SwipeableViews

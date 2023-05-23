@@ -7,9 +7,21 @@ import {
   Typography,
 } from "@material-ui/core";
 // import { db, docRef } from "../../data/firebase";
-import {Fab } from "@mui/material";
+import { Fab } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import SaveIcon from "@mui/icons-material/Save";
+import { useDispatch, useSelector } from "react-redux";
+import { LoginAction } from "redux/slices/auth";
+import { updateProfile } from "firebase/auth";
+import { auth } from "data/firebase";
+import { db } from "data/firebase";
+import PropTypes from "prop-types";
+import SwipeableViews from "react-swipeable-views";
+import { useTheme } from "@mui/material/styles";
+import AppBar from "@mui/material/AppBar";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
 
 
 
@@ -37,8 +49,8 @@ const FormInfo = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
- 
+  const [id, setID] = useState("");
+
 
   useEffect(() => {
     const dataAccount = JSON.parse(localStorage.getItem("account"));
@@ -46,7 +58,7 @@ const FormInfo = () => {
     setEmail(dataAccount.Email);
     setName(dataAccount.Name);
     setPhone(dataAccount.NumberPhone);
-    setPassword(dataAccount.Password)
+    setID(dataAccount.id);
   }, [])
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,11 +83,11 @@ const FormInfo = () => {
     })
       .then(() => {
         console.log(
-          `Updated success`
+          `Updated viewer count for NameGarage ${formData.NameGarage}`
         );
       })
       .catch((error) => {
-        console.error(`Error updating`);
+        console.error(`Error updating viewer count: ${error}`);
       });
 
     const existingAccountJSON = localStorage.getItem("account");
@@ -88,69 +100,75 @@ const FormInfo = () => {
     // .then(() => {
     //   alert("dang xác minh")
     // });
-   
+
   };
 
   return (
     <Grid
-    container
-    justifyContent="center"
-    alignItems="center"
-    className={classes.container}
-  >
-    <Grid item xs={12} sm={12} md={6} lg={4}>
-      <Paper elevation={4} className={classes.paper}>
-        <Typography variant="h5" component="h1" gutterBottom fontWeight="bold" color="primary">
-          Thông Tin Tài Khoản
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+      container
+      justifyContent="center"
+      alignItems="center"
+      className={classes.container}
+    >
+      <Grid item xs={12} sm={12} md={6} lg={4}>
+        <Paper elevation={4} className={classes.paper}>
+          <h2 style={{
+          fontWeight: 'bold',
+          color: 'primary',
+          fontSize: '1.5rem',
+          marginBottom: '1rem',
+          color:'#2474e5',
+        }}>
+            Thông Tin Tài Khoản
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <TextField
+                  disabled
+                  fullWidth
+                  variant="outlined"
+                  label="Email"
+                  type="email"
+                  value={email}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Họ và Tên"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  label="Số Điện Thoại"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Fab
+                  variant="extended"
+                  color="primary"
+                  onClick={handleSubmit}
+                  className={classes.saveButton}
+                >
+                  <SaveIcon sx={{ marginRight: 1 }} />
+                  Lưu
+                </Fab>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="Họ và Tên"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="Số Điện Thoại"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Fab
-                variant="extended"
-                color="primary"
-                onClick={handleSubmit}
-                className={classes.saveButton}
-              >
-                <SaveIcon sx={{ marginRight: 1 }} />
-                Lưu
-              </Fab>
-            </Grid>
-          </Grid>
-        </form>
-      </Paper>
+          </form>
+        </Paper>
+      </Grid>
     </Grid>
-  </Grid>
-);
+
+  );
 };
 export default FormInfo;
-
 
