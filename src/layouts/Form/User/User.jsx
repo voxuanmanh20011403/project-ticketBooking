@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import UserForm from "./UserForm";
 import { useNavigate } from "react-router-dom";
 import { auth } from "data/firebase";
+import Ground from "layouts/Body/Cart/Ground";
 
 const User = () => {
   const user = auth.currentUser;
@@ -19,8 +20,10 @@ const User = () => {
           <Box>
             <UserForm />
           </Box>
-          <Footer />
+          <Ground />
+
         </>
+
       )}
     </>
   );

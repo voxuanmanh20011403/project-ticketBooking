@@ -90,9 +90,9 @@ function Cart() {
                 <h3>SÀI GÒN ⇒ NHA TRANG</h3>
               </div>
               <div className='detail'>
-                <LocationOnIcon />980km
-                <AccessTimeIcon />20h
-                <ConfirmationNumberIcon />395.000đ
+                <LocationOnIcon />450km
+                <AccessTimeIcon />9h
+                <ConfirmationNumberIcon />275.000đ
               </div>
             </div>
           </div>
@@ -103,9 +103,9 @@ function Cart() {
                 <h3>CẦN THƠ ⇒ SÀI GÒN</h3>
               </div>
               <div className='detail'>
-                <LocationOnIcon />1050km
-                <AccessTimeIcon />22h
-                <ConfirmationNumberIcon />400.000đ
+                <LocationOnIcon />190km
+                <AccessTimeIcon />4h
+                <ConfirmationNumberIcon />165.000đ
               </div>
             </div>
           </div>
@@ -116,9 +116,9 @@ function Cart() {
                 <h3>SÀI GÒN ⇒ CÀ MAU</h3>
               </div>
               <div className='detail'>
-                <LocationOnIcon />745km
-                <AccessTimeIcon />18h
-                <ConfirmationNumberIcon />360.000đ
+                <LocationOnIcon />375km
+                <AccessTimeIcon />8h
+                <ConfirmationNumberIcon />230.000đ
               </div>
             </div>
           </div>
@@ -129,9 +129,9 @@ function Cart() {
                 <h3>SÀI GÒN ⇒ QUẢNG BÌNH</h3>
               </div>
               <div className='detail'>
-                <LocationOnIcon />654km
-                <AccessTimeIcon />12h
-                <ConfirmationNumberIcon />320.000đ
+                <LocationOnIcon />1400km
+                <AccessTimeIcon />24h
+                <ConfirmationNumberIcon />450.000đ
               </div>
             </div>
             </div>

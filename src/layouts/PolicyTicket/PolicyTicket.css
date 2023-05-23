@@ -6,8 +6,8 @@
 .policy_container{
     justify-content: center;
     align-items: center;
-    width: 1200px;
-    height: 300px;
+    max-width: 940px;
+    height: 500px;
 }
 .head_policy{
   font-weight: 800;
