@@ -4,6 +4,7 @@ import Footer from 'layouts/Footer/Footer'
 import Banner from 'layouts/Body/Banner/Banner'
 import ScrollToTopButton from 'layouts/TopButton/ScrollToTopButton'
 import ContactCall from 'layouts/ContactCall/ContactCall'
+import ContactNetwork from 'layouts/ContactCall/ContactNetwork'
 export default function Home() {
   return (
    <>
@@ -14,6 +15,7 @@ export default function Home() {
    </>
    <Footer></Footer>
    <ContactCall/>
+   <ContactNetwork/>
    </>
   )
 }
