@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "data/firebase";
 import FormTicket from "layouts/Form/FormTicket";
-
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import { Button, Grid } from "@mui/material";
 import FormPassWord from "../FormPassWord/FormPassWord";

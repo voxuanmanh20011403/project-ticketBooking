@@ -1,6 +1,5 @@
 import Header from "layouts/Header/Header";
 import React from "react";
-import Footer from "layouts/Footer/Footer";
 import Box from "@mui/material/Box";
 import UserForm from "./UserForm";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +20,6 @@ const User = () => {
             <UserForm />
           </Box>
           <Ground />
-
         </>
 
       )}
