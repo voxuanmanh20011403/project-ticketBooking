@@ -29,9 +29,12 @@ import {
   doc,
   getDocs,
 } from "firebase/firestore";
-
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "data/firebase";
 function AddGarage(props) {
   const { activeButton, setActiveButton, data } = props;
+  const [URLImage, setURLImage] = useState("");
+  console.log("URLImage", URLImage);
   //set show/hide form
   const open = true;
   // const addPost = () => {};
@@ -45,9 +48,50 @@ function AddGarage(props) {
   const handleChangeValue = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  //start image
+  // State to store uploaded file
+  const [file, setFile] = useState("");
+  // progress
+  const [percent, setPercent] = useState(0);
 
+  // Handle file upload event and update state
+  function handleChange(event) {
+    setFile(event.target.files[0]);
+  }
+  const handleUpload = () => {};
+  //end iamge
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //start image
+    if (!file) {
+      alert("Please upload an image first!");
+    }
+
+    const storageRef = ref(storage, `/imageGarage/${file.name}`);
+
+    // progress can be paused and resumed. It also exposes progress updates.
+    // Receives the storage reference and the file to upload.
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+
+        // update progress
+        setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+        // download url
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          console.log(url);
+          setURLImage(url);
+        });
+      }
+    );
+    //end iamges
     const existingGarage = data.find(
       (item) => item.ID_Garage === formData.ID_Garage
     );
@@ -55,10 +99,10 @@ function AddGarage(props) {
       alert(`ID: ${formData.ID_Garage} đã tồn tại`);
       return;
     }
-
     try {
       const docRef = await addDoc(collection(db, "Garage"), {
         ...formData,
+        urlImage: URLImage,
       });
       console.log("Document written with ID: ");
     } catch (e) {}
@@ -144,10 +188,17 @@ function AddGarage(props) {
                               xs={10}
                               className="modal__footer__left "
                             >
-                              <p>Thêm hình ảnh minh hoạ cho nhà xe</p>
+                              <p>Thêm hình ảnh nhà xe</p>
                             </Grid>
                             <Grid container xs={2} className="">
-                              <IconButton>
+                              <input
+                                type="file"
+                                onChange={handleChange}
+                                accept="/image/*"
+                              />
+
+                              <p>{percent} "% done"</p>
+                              {/* <IconButton>
                                 <label htmlFor="upload-image">
                                   <PhotoLibraryIcon
                                     className="modal__footer__rigth"
@@ -157,7 +208,7 @@ function AddGarage(props) {
                                     }}
                                   />
                                 </label>
-                              </IconButton>
+                              </IconButton> */}
                             </Grid>
                           </div>
                         </form>
