@@ -11,9 +11,9 @@ export default function Home() {
    <>
     <Banner></Banner>
     <ScrollToTopButton/>
-    <ContactCall/>
    </>
    <Footer></Footer>
+   <ContactCall/>
    </>
   )
 }
