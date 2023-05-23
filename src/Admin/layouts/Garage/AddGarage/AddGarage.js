@@ -31,9 +31,12 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "data/firebase";
+import DoneIcon from "@mui/icons-material/Done";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 function AddGarage(props) {
   const { activeButton, setActiveButton, data } = props;
   const [URLImage, setURLImage] = useState("");
+  const [uploadComplete, setUploadComplete] = useState(false);
   console.log("URLImage", URLImage);
   //set show/hide form
   const open = true;
@@ -42,35 +45,29 @@ function AddGarage(props) {
     setActiveButton(false);
   };
   //implement add image and video
-
+  useEffect(() => {
+    if (uploadComplete) {
+      handleSubmit(); // Gọi hàm handleSubmit khi việc tải lên ảnh đã hoàn thành
+    }
+  }, [uploadComplete]);
   //TODO : CUSTOM FIELD THÊM NHÀ XE
   const [formData, setFormData] = useState({});
   const handleChangeValue = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   //start image
-  // State to store uploaded file
   const [file, setFile] = useState("");
-  // progress
   const [percent, setPercent] = useState(0);
-
-  // Handle file upload event and update state
   function handleChange(event) {
     setFile(event.target.files[0]);
   }
-  const handleUpload = () => {};
-  //end iamge
-  const handleSubmit = async (e) => {
+  const handleUpload = (e) => {
     e.preventDefault();
     //start image
     if (!file) {
       alert("Please upload an image first!");
     }
-
     const storageRef = ref(storage, `/imageGarage/${file.name}`);
-
-    // progress can be paused and resumed. It also exposes progress updates.
-    // Receives the storage reference and the file to upload.
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       "state_changed",
@@ -84,14 +81,18 @@ function AddGarage(props) {
       },
       (err) => console.log(err),
       () => {
-        // download url
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
           console.log(url);
           setURLImage(url);
+          setUploadComplete(true);
         });
       }
     );
-    //end iamges
+  };
+  //end iamge
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const existingGarage = data.find(
       (item) => item.ID_Garage === formData.ID_Garage
     );
@@ -99,12 +100,13 @@ function AddGarage(props) {
       alert(`ID: ${formData.ID_Garage} đã tồn tại`);
       return;
     }
+    console.log(formData);
     try {
       const docRef = await addDoc(collection(db, "Garage"), {
         ...formData,
-        urlImage: URLImage,
+        URLImage: URLImage,
       });
-      console.log("Document written with ID: ");
+      console.log("Document written with ID: ", docRef.id);
     } catch (e) {}
   };
 
@@ -180,7 +182,7 @@ function AddGarage(props) {
                         className="Garage"
                       />
 
-                      <div className="modal__body">
+                      <div className="modal__body Garage">
                         <form>
                           <div className="modal__footer">
                             <Grid
@@ -188,27 +190,35 @@ function AddGarage(props) {
                               xs={10}
                               className="modal__footer__left "
                             >
-                              <p>Thêm hình ảnh nhà xe</p>
+                              <p>Thêm hình ảnh</p>
                             </Grid>
-                            <Grid container xs={2} className="">
+                            <Grid
+                              container
+                              xs={12}
+                              className=""
+                              style={{ width: "100%", display: "flex" }}
+                            >
                               <input
+                                id="upload-image"
                                 type="file"
                                 onChange={handleChange}
                                 accept="/image/*"
+                                style={{ width: "80%", padding: "10px 0" }}
                               />
-
-                              <p>{percent} "% done"</p>
-                              {/* <IconButton>
-                                <label htmlFor="upload-image">
-                                  <PhotoLibraryIcon
-                                    className="modal__footer__rigth"
-                                    style={{
-                                      color: "green",
-                                      textAlign: "center",
-                                    }}
-                                  />
-                                </label>
-                              </IconButton> */}
+                              <IconButton
+                                style={{
+                                  width: "15%",
+                                  textAlign: "center",
+                                  margin: "0 ",
+                                }}
+                              >
+                                {percent < 100 ? (
+                                  <UploadFileIcon onClick={handleUpload} />
+                                ) : (
+                                  <DoneIcon />
+                                )}
+                              </IconButton>
+                              {/* <p>{percent} "% done"</p> */}
                             </Grid>
                           </div>
                         </form>
