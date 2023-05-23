@@ -76,6 +76,8 @@ function AddCar(props) {
   const [disabledTextFieldValue, setDisabledTextFieldValue] = useState("");
   const [hotline, setHotline] = useState("");
   const [namegarage, setNamegarage] = useState("");
+  // const [duration, setDuration] = useState(0);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const existingGarage = data.find((item) => item.ID_Car === formData.ID_Car);
@@ -85,6 +87,7 @@ function AddCar(props) {
     }
     const formattedPrice = price.replace(/,/g, "");
     const priceNumber = parseInt(formattedPrice);
+    // const durationNumber = parseInt(duration);
 
     try {
       const docRef = await addDoc(collection(db, "ListCar"), {
@@ -98,6 +101,7 @@ function AddCar(props) {
         seat: seat,
         NameTrip: formData.StartPoint + "-" + formData.EndPoint,
         TypeVehicle: `xe giường nằm ${seat} chỗ`,
+        // duration: durationNumber,
       });
       console.log("Document written with ID: ", docRef.id);
       location.reload();
@@ -359,9 +363,9 @@ function AddCar(props) {
                       </FormControl>
                       <CustomTextField
                         label="Thời gian hành trình"
-                        name="duration"
-                        value={formData.duration}
-                        onChange={handleChangeValue}
+                        // name="duration"
+                        // value={formData.duration}
+                        // onChange={(e) => setDuration(e.target.value)}
                         placeholder="Thời gian hành trình"
                       />
 
