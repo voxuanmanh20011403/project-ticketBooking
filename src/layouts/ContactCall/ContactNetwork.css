@@ -1,0 +1,44 @@
+.network {
+    position: fixed;
+    transition: .5s;
+    top: 25%;
+    right: -90px;
+    z-index: 999;
+}
+.network a{
+    height: 40px;
+    line-height: 40px;
+    padding: 0px 20px 0px 15px;
+    display: block;
+    width: 110px;
+    transform: translateX(10px);
+    margin-bottom: 5px;
+    text-align: left;
+    color: #fff;
+    transition: .4s;
+}
+.network a i{
+    margin-right: 25px;
+}
+
+.fb_icon{
+    background: #3B5998;
+    text-decoration: none;
+}
+
+.is_icon{
+    background: #C32AA3;
+    text-decoration: none;
+}
+.yt_icon{
+    background: #FF0000;
+    text-decoration: none;
+}
+.gg_icon{
+    background: #DF4A32;
+    text-decoration: none;
+}
+
+.network a:hover{
+    transform: translateX(-80px);
+}

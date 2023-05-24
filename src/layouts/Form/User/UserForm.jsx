@@ -7,14 +7,13 @@ import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "data/firebase";
 import FormTicket from "layouts/Form/FormTicket";
-
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import { Button, Grid } from "@mui/material";
-import FormInfo from "../FormInfo/FormInfo";
 import FormPassWord from "../FormPassWord/FormPassWord";
 import Bg from "layouts/Body/Cart/Bg";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import './UerForm.css';
+import FormInfo from "../FormInfo/FormInfo";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -72,7 +71,6 @@ export default function UserForm() {
         rowSpacing={0}
         style={{ width: "100%", minHeight: "600px", paddingTop: "8rem" }}
       >
-        <Bg />
 
         <Grid xs={2} style={{ display: "grid" }}>
           <Button
@@ -105,6 +103,7 @@ export default function UserForm() {
 
             </span>
           </Button>
+          
           <Button
             onClick={() => {
               setValueTab(3);
@@ -120,12 +119,14 @@ export default function UserForm() {
             </span>
           </Button>
         </Grid>
+        
         <Grid
           item xs={10}
           style={{ width: "100%", height: "100%", }}
         >
           {valueTab === 1 ? <FormInfo /> : (valueTab === 2 ? <FormTicket /> : <FormPassWord />)}
         </Grid>
+       
       </Grid>
     </>
   );

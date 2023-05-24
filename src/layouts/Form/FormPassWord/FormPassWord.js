@@ -18,16 +18,22 @@ import {
   reauthenticateWithCredential,
   sendEmailVerification,
 } from "firebase/auth";
-import {Fab } from "@mui/material";
+import { Fab } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
-const useStyles = makeStyles((theme) => ({ 
+const useStyles = makeStyles((theme) => ({
   saveButton: {
-  width: "200px",
-  margin: "0 auto",
-  marginTop: theme.spacing(2),
-},
+    width: "200px",
+    margin: "0 auto",
+    marginTop: theme.spacing(2),
+  },
+  paper: {
+    padding: theme.spacing(3),
+    textAlign: "center",
+  },
 }));
+import Box from "@mui/material/Box";
+
 import './FormPassword.css'
 
 
@@ -112,16 +118,15 @@ const FormPassWord = () => {
   return (
     <Grid container justifyContent="center" alignItems="center" className="code__container">
       <Grid item xs={12} sm={12} md={6} lg={4} >
-        <Paper elevation={3} sx={{ mx: 'auto' }}>
-        <Typography
-        variant="h5"
-        component="h1"
-        align="center"
-        fontWeight="bold" color="primary"
-        gutterBottom 
-      >
-        Đổi mật khẩu
-      </Typography>
+      <Paper elevation={4} className={classes.paper}>
+         <h2 style={{
+          fontWeight: 'bold',
+          color: 'primary',
+          fontSize: '1.5rem',
+          color:'#2474e5',
+        }}>
+            Đổi mật khẩu
+          </h2>
           <MDBox pt={4} pb={3} px={3}>
             <MDBox component="form" role="form">
               {user.emailVerified === true ? (
@@ -142,9 +147,9 @@ const FormPassWord = () => {
                           setPassword(e.target.value);
                         }}
                       />
-                      <Typography variant="inherit" color="textSecondary">
+                      <h5 variant="inherit" color="textSecondary">
                         {errors.passwordNow?.message}
-                      </Typography>
+                      </h5>
                     </Grid>
 
                     <Grid className="row2__input">
@@ -159,9 +164,9 @@ const FormPassWord = () => {
                         {...register("password")}
                         error={errors.password ? true : false}
                       />
-                      <Typography variant="inherit" color="textSecondary">
+                      <h5 variant="inherit" color="textSecondary">
                         {errors.password?.message}
-                      </Typography>
+                      </h5>
                     </Grid>
                     <Grid className="row2__input">
                       <TextField
@@ -175,9 +180,9 @@ const FormPassWord = () => {
                         {...register("confirmPassword")}
                         error={errors.confirmPassword ? true : false}
                       />
-                      <Typography variant="inherit" color="textSecondary">
+                      <h5 variant="inherit" color="textSecondary">
                         {errors.password?.message}
-                      </Typography>
+                      </h5>
                     </Grid>
                   </MDBox>
 
@@ -193,7 +198,7 @@ const FormPassWord = () => {
                     >
                       Đổi mật khẩu
                     </Button> */}
-                    <Grid item xs={12}>
+                    <Box display="flex" justifyContent="center">
                       <Fab
                         variant="extended"
                         color="primary"
@@ -203,8 +208,8 @@ const FormPassWord = () => {
                         <VpnKeyIcon sx={{ marginRight: 1 }} />
                         Đổi mật khẩu
                       </Fab>
-                    </Grid>
-                    
+                    </Box>
+
                   </MDBox>
                 </>
               ) : (
