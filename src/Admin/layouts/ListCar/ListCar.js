@@ -128,7 +128,7 @@ export default function ListCar() {
       item.id,
       item.Namegarage,
       item.TypeVehicle,
-      item.Seat,
+      item.seat,
       item.PakingStart + "-" + item.EndPoint,
       item.LicensePlate,
       item.Hotline,
