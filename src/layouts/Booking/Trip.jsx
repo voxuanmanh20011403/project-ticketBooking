@@ -30,6 +30,7 @@ import { tripActions } from "redux/slices/tripsSilce";
 
 import "./style.css";
 import BannerSearch from "layouts/Body/Banner/BannerSearch";
+import imgRoad from "../../assets/img/roadtrip.png";
 import "../Body/Banner/Banner.css";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -112,7 +113,6 @@ const Trip = ({ fetchData }) => {
         );
       }
     }
-    
   });
 
   const handleSearch = (e) => {
@@ -217,7 +217,11 @@ const Trip = ({ fetchData }) => {
         <Container maxWidth="lg">
           <Grid container spacing={2}>
             <Grid item xs={12} className="form__search">
-              <BannerSearch />
+              <img
+                src={imgRoad}
+                alt="road trip"
+                style={{ objectFit: "cover", height: "60%", width: "100%" }}
+              />
             </Grid>
             <Grid item xs={6}></Grid>
             <Grid item xs={6}>
@@ -240,7 +244,7 @@ const Trip = ({ fetchData }) => {
             <Grid item xs={10}></Grid>
             <Grid item xs={3}>
               <Item className="cnt__filter">
-                <Typography className="filter">Lọc</Typography>
+                <Typography className="filter">Bộ lọc</Typography>
                 <FormGroup>
                   <Typography className="filter__title">Loại xe:</Typography>
                   <FormControlLabel
