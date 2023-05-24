@@ -27,6 +27,13 @@ import MDTypography from "Admin/components/MDTypography";
 import TableContainer from "@mui/material/TableContainer";
 
 import "./ManagerTickets.css";
+import {
+  DatePicker,
+  LocalizationProvider,
+  MobileDateTimePicker,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -113,6 +120,16 @@ export function ManagerTickets() {
     garage.NameGarage.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const [selectedTripId, setSelectedTripId] = useState(null);
+  // const handleDateChange = (date) => {
+  //   // Lấy giá trị ngày từ đối tượng date
+  //   const selectedDate = date.getDate();
+
+  //   console.log('selectedDate',selectedDate); // In giá trị ngày ra console
+  // };
+  const [selectDate, setSelectDate] = useState(dayjs());
+  const handleChangeDate = (date) => {
+    setSelectDate(date);
+  };
 
   return (
     <DashboardLayout>
@@ -140,7 +157,12 @@ export function ManagerTickets() {
                         <Box
                           sx={{ display: "flex", justifyContent: "flex-end" }}
                         >
-                          {/* TIMER */}
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                              defaultValue={dayjs()}
+                              onChange={handleChangeDate}
+                            />
+                          </LocalizationProvider>
                         </Box>
                       </div>
                     </div>
@@ -148,19 +170,23 @@ export function ManagerTickets() {
                 </MDBox>
                 <Box sx={{ width: "100%" }}>
                   <TableContainer>
-                    <Table style={{marginTop:'10px'}}>
+                    <Table style={{ marginTop: "10px" }}>
                       <TableHead>
                         <TableRow>
                           <TableCell align="right" className="code-container" />
                           <TableCell
-                            style={{ width: "40%", marginLeft: "10px", }}
+                            style={{ width: "40%", marginLeft: "10px" }}
                           >
                             Tên nhà xe
                           </TableCell>
-                          <TableCell style={{ width: "30%" , textAlign:'center' }}>
+                          <TableCell
+                            style={{ width: "30%", textAlign: "center" }}
+                          >
                             Số xe chạy
                           </TableCell>
-                          <TableCell style={{ width: "30%",  textAlign:'center' }}>
+                          <TableCell
+                            style={{ width: "30%", textAlign: "center" }}
+                          >
                             Tổng tiền thu về
                           </TableCell>
                         </TableRow>
@@ -178,8 +204,8 @@ export function ManagerTickets() {
                               const tripCheckoutData = checkoutData.filter(
                                 (checkout) =>
                                   checkout.ID_Trip === trip.id &&
-                                  (checkout.Status === "Thành công" ||
-                                    checkout.Status === "Thành công 1")
+                                  (checkout.Status === "Success" ||
+                                    checkout.Status === "Wait")
                               );
                               const totalPrice = tripCheckoutData.reduce(
                                 (total, checkout) =>
@@ -206,12 +232,12 @@ export function ManagerTickets() {
                                   style={{
                                     display: "flex",
                                     marginLeft: "30px",
-                                    textAlign:'center'
+                                    textAlign: "center",
                                   }}
                                 >
                                   {garage.NameGarage}
                                 </TableCell>
-                                <TableCell style={{ textAlign:'center'}}>
+                                <TableCell style={{ textAlign: "center" }}>
                                   {
                                     trips.filter((trip) => {
                                       const today = new Date();
@@ -222,22 +248,22 @@ export function ManagerTickets() {
                                       tripStartTime.setHours(
                                         tripStartTime.getHours() - 2
                                       );
-
+                                      const date = new Date(selectDate);
                                       return (
                                         trip.ID_Garage === garage.ID_Garage &&
                                         // tripStartTime.getHours() <= today.getHours() &&
                                         tripStartTime.getDate() ===
-                                          today.getDate() &&
+                                          date.getDate() &&
                                         tripStartTime.getMonth() ===
-                                          today.getMonth() &&
+                                          date.getMonth() &&
                                         tripStartTime.getFullYear() ===
-                                          today.getFullYear()
+                                          date.getFullYear()
                                       );
                                     }).length
                                   }
                                 </TableCell>
                                 {/* Tổng tiền thu về */}
-                                <TableCell style={{ textAlign:'center'}}>
+                                <TableCell style={{ textAlign: "center" }}>
                                   {totalRevenue.toLocaleString()}
                                 </TableCell>
                                 {/* <TableCell>{garage.id}</TableCell> */}
@@ -262,7 +288,10 @@ export function ManagerTickets() {
                                             <TableCell>
                                               {trips
                                                 .filter((trip) => {
-                                                  const today = new Date();
+                                                  // const today = new Date();
+                                                  const date = new Date(
+                                                    selectDate
+                                                  );
                                                   const tripStartTime =
                                                     new Date(
                                                       trip.StartTime.toDate()
@@ -271,7 +300,7 @@ export function ManagerTickets() {
                                                     new Date(
                                                       trip.StartTime.toDate()
                                                     );
-                                                  console.log("trip", trip);
+
                                                   tripStartTime.setHours(
                                                     tripStartTime.getHours() - 2
                                                   );
@@ -282,11 +311,11 @@ export function ManagerTickets() {
                                                     // tripStartTime.getHours() <=
                                                     //   today.getHours() &&
                                                     tripStartTime.getDate() ===
-                                                      today.getDate() &&
+                                                      date.getDate() &&
                                                     tripStartTime.getMonth() ===
-                                                      today.getMonth() &&
+                                                      date.getMonth() &&
                                                     tripStartTime.getFullYear() ===
-                                                      today.getFullYear()
+                                                      date.getFullYear()
                                                   );
                                                 })
                                                 .map((trip) => {
@@ -296,9 +325,9 @@ export function ManagerTickets() {
                                                         checkout.ID_Trip ===
                                                           trip.id &&
                                                         (checkout.Status ===
-                                                          "Thành công" ||
+                                                          "Success" ||
                                                           checkout.Status ===
-                                                            "Thành công 1")
+                                                            "Wait")
                                                     );
                                                   const totalSeats =
                                                     tripCheckoutData.reduce(
@@ -383,9 +412,9 @@ export function ManagerTickets() {
                                                                 checkout.ID_Trip ===
                                                                   trip.id &&
                                                                 (checkout.Status ===
-                                                                  "Thành công" ||
+                                                                  "Success" ||
                                                                   checkout.Status ===
-                                                                    "Thành công 1")
+                                                                    "Wait")
                                                             )
                                                             .map((checkout) => (
                                                               <TableRow

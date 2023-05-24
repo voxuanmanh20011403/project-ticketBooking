@@ -137,19 +137,6 @@ function createData(
 export default function CancelTickets() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
   //getData
   const [data, setData] = useState([]);
 
@@ -168,6 +155,7 @@ export default function CancelTickets() {
     fetchData();
   }, []);
   console.log("checkout", data);
+
   //craete Data
   const rows = data
     .map((item) => {
@@ -187,6 +175,18 @@ export default function CancelTickets() {
       );
     })
     .sort((a, b) => (a.calories < b.calories ? -1 : 1));
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   //onlcik
   const [open1, setOpen1] = useState(false);
   const [idUpdate, setIdUpdate] = useState("");
@@ -342,8 +342,7 @@ export default function CancelTickets() {
                             ]}
                             colSpan={3}
                             count={
-                              rows.filter((row) => row.status === "Wait")
-                                .length
+                              rows.filter((row) => row.status === "Wait").length
                             }
                             rowsPerPage={rowsPerPage}
                             page={page}
