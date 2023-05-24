@@ -76,7 +76,7 @@ function AddCar(props) {
   const [disabledTextFieldValue, setDisabledTextFieldValue] = useState("");
   const [hotline, setHotline] = useState("");
   const [namegarage, setNamegarage] = useState("");
-  // const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,7 +87,7 @@ function AddCar(props) {
     }
     const formattedPrice = price.replace(/,/g, "");
     const priceNumber = parseInt(formattedPrice);
-    // const durationNumber = parseInt(duration);
+    const durationNumber = parseInt(duration);
 
     try {
       const docRef = await addDoc(collection(db, "ListCar"), {
@@ -100,8 +100,8 @@ function AddCar(props) {
         Namegarage: namegarage,
         seat: seat,
         NameTrip: formData.StartPoint + "-" + formData.EndPoint,
-        TypeVehicle: `xe giường nằm ${seat} chỗ`,
-        // duration: durationNumber,
+        TypeVehicle: `Xe giường nằm ${seat} chỗ`,
+        duration: durationNumber,
       });
       console.log("Document written with ID: ", docRef.id);
       location.reload();
@@ -357,15 +357,15 @@ function AddCar(props) {
                           onChange={(e) => setSeat(e.target.value)}
                         >
                           <MenuItem value={20}>Xe giường nằm 20 chỗ </MenuItem>
-                          <MenuItem value={34}>Xe giường nằm 34 chỗ</MenuItem>
+                          <MenuItem value={36}>Xe giường nằm 36 chỗ</MenuItem>
                           <MenuItem value={44}>Xe giường nằm 44 chỗ</MenuItem>
                         </Select>
                       </FormControl>
                       <CustomTextField
                         label="Thời gian hành trình"
-                        // name="duration"
-                        // value={formData.duration}
-                        // onChange={(e) => setDuration(e.target.value)}
+                        name="duration"
+                        value={formData.duration}
+                        onChange={(e) => setDuration(e.target.value)}
                         placeholder="Thời gian hành trình"
                       />
 
