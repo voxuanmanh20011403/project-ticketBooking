@@ -131,7 +131,7 @@ const InfoTrip = ({ items }) => {
           <Item>
             <div className="v__info">
               <span className="ten__xe">
-                Xe {items.NameGarage}
+                 {items.NameGarage}
                 <span className="star">
                   <StarIcon sx={{ fontSize: 15 }} />
                   4.2(42)
