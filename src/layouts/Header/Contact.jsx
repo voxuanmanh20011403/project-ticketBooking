@@ -19,6 +19,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Hotline from 'layouts/Header/Hotline';
 import Email from 'layouts/Header/Email'
+import { Link } from 'react-router-dom';
 import "./Header.css"
 
 
@@ -102,7 +103,12 @@ export default function Contact() {
 
 <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
   {/* Thẻ bên trái */}
-  <div className='logo__img' style={{ minWidth: 100 }}></div>
+
+  <Link to="/" className="logo__link" style={{ minWidth: 100 }}>
+    <div className='logo__img'></div>
+  </Link>
+
+  
 
   {/* Phần con của Box */}
   <Box sx={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', ml: 2 }}>

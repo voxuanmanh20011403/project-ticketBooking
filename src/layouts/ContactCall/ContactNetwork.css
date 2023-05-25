@@ -26,12 +26,13 @@
     text-decoration: none;
 }
 
-.is_icon{
-    background: #C32AA3;
-    text-decoration: none;
-}
+
 .yt_icon{
     background: #FF0000;
+    text-decoration: none;
+}
+.is_icon{
+    background: #C32AA3;
     text-decoration: none;
 }
 .gg_icon{
