@@ -213,7 +213,10 @@
 }
 
 .ctn__trip .form__search{
-    padding: 4rem !important;
+    width: 100%;
+    height: 500px;
+    margin-top: 30px;
+    
 }
 .ctn__trip .search__input{
     padding: 10px;

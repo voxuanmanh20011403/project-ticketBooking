@@ -88,21 +88,11 @@ const Payment = () => {
       toast.error("Đã có lỗi xảy ra!" + error);
     }
   };
-  // backdrop
-  const handleClose = () => {
-    setLoading(false);
-  };
-  const handleOpen = () => {
-    setLoading(true);
-  };
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(true);
-    }, 2000);
-  
-    return () => clearTimeout(timer);
-  }, []);
 
+ 
+  setTimeout(() => {
+    setLoading(false);
+  }, 2000);
   // foramt price
   const price = dataBooking[0].price;
   const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });

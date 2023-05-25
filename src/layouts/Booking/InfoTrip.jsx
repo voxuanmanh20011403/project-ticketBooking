@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -10,6 +10,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import TabsUI from "./TabsUI";
 import ChooseSeat from "./ChooseSeat";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
+import { db } from "data/firebase";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -50,8 +58,8 @@ const UIFT = () => {
 const InfoTrip = ({ items }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showListSeat, setShowListSeat] = useState(false);
-  
-  
+  const [imgGagare, setImgGagare] = useState("");
+
   const timeStart = items.StartTime;
   const dateS = new Date(timeStart.seconds * 1000);
   const dayS = dateS.getDate();
@@ -59,7 +67,6 @@ const InfoTrip = ({ items }) => {
   const yearS = dateS.getFullYear();
   const hoursS = dateS.getHours();
   const minutesS = dateS.getMinutes();
-  
 
   const endTime = items.EndTime;
   const date = new Date(endTime.seconds * 1000);
@@ -69,32 +76,54 @@ const InfoTrip = ({ items }) => {
   const hours = date.getHours();
   const minutes = date.getMinutes();
 
- 
   const seatEmpty = () => {
     let countSeat = 0;
     const listSeat = items.seat;
-    listSeat.forEach((item) =>{
-      if(item.status === "empty"){
+    listSeat.forEach((item) => {
+      if (item.status === "empty") {
         countSeat++;
       }
-    })
-   return countSeat;
-  }
+    });
+    return countSeat;
+  };
   const handleStateDetails = () => {
     setShowDetails(!showDetails);
   };
   const handleShowListSeat = () => {
     setShowListSeat(!showListSeat);
   };
+
+  // get img from collection Gagare
+  useEffect(() => {
+    const getGarageUrlImage = async () => {
+      try {
+        const id = items.ID_Garage;
+        const garageCol = collection(db, "Garage");
+        const q = query(garageCol, where("ID_Garage", "==", id));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const garageData = querySnapshot.docs[0].data();
+          const urlImage = garageData.UrlImage;
+          console.log("img: " + urlImage);
+          setImgGagare(urlImage);
+        }
+      } catch (error) {
+        console.error("Lỗi: ", error);
+      }
+    };
+    getGarageUrlImage()
+  }, []);
+
   return (
     <Box sx={{ flexGrow: 1 }} className="listtrip">
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Item>
             <img
-              src="https://www.oca.edu.vn/uploads/images/info/con-meo-tieng-trung-la-gi.png"
-              alt=""
-              style={{ objectFit: "cover", height: "100%", width: "100%" }}
+              src={imgGagare}
+              alt="Hình ảnh nhà xe"
+              style={{ objectFit: "cover", height: "70%", width: "100%" }}
             />
           </Item>
         </Grid>
@@ -102,27 +131,37 @@ const InfoTrip = ({ items }) => {
           <Item>
             <div className="v__info">
               <span className="ten__xe">
-                Xe {items.NameGarage}
+                 {items.NameGarage}
                 <span className="star">
                   <StarIcon sx={{ fontSize: 15 }} />
                   4.2(42)
                 </span>
               </span>
-              <span className="cost">{items.Price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}/ghế</span>
+              <span className="cost">
+                {items.Price.toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
+                /ghế
+              </span>
             </div>
             <div className="type">{items.TypeVehicle}</div>
-            <div className="type">Ngày khởi hành: {dayS + "-" + monthS + "-" + yearS }</div>
+            <div className="type">
+              Ngày khởi hành: {dayS + "-" + monthS + "-" + yearS}
+            </div>
             <div className="lich__trinh">
               <div>
                 <UIFT />
               </div>
               <div className="start__end">
-                <span className="noi__den">{hoursS+ ":" + minutesS }- {items.PakingStart}</span>
+                <span className="noi__den">
+                  {hoursS + ":" + minutesS}- {items.PakingStart}
+                </span>
                 <span className="time"> {items.duration} </span>
                 <span className="noi__den">
-                {hours + ":" + minutes } - {items.PakingEnd}
+                  {hours + ":" + minutes} - {items.PakingEnd}
                 </span>
-              </div>  
+              </div>
               <div className="ghe__trong">
                 <h4>{seatEmpty()} ghế trống</h4>
               </div>

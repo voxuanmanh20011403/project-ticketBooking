@@ -44,6 +44,7 @@ import { Infor } from "redux/slices/auth";
 import { TripsAuto } from "Admin/layouts/RenderTableTripsAuto/TripsAuto";
 import FormComment from "layouts/Comment/FormComment";
 import User from "layouts/Form/User/User";
+import Messenger from "layouts/Messenger/Messenger";
 
 
 export default function App() {
@@ -103,6 +104,7 @@ export default function App() {
         <Route path="TestAddCar" element={<TestAddCar />} />
         <Route path="addusser" element={<AddUser />} />
         <Route path='/comment' element ={<FormComment />}></Route>
+        <Route path="/chatbot" element={<Messenger />}></Route>
       </Routes>
       <TripsAuto />
     </ThemeProvider>
