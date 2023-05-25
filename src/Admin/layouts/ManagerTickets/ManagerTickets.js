@@ -120,12 +120,7 @@ export function ManagerTickets() {
     garage.NameGarage.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const [selectedTripId, setSelectedTripId] = useState(null);
-  // const handleDateChange = (date) => {
-  //   // Lấy giá trị ngày từ đối tượng date
-  //   const selectedDate = date.getDate();
 
-  //   console.log('selectedDate',selectedDate); // In giá trị ngày ra console
-  // };
   const [selectDate, setSelectDate] = useState(dayjs());
   const handleChangeDate = (date) => {
     setSelectDate(date);

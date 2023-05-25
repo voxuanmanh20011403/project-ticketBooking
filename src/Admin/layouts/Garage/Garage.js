@@ -64,6 +64,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </TableCell>
+        
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -109,6 +110,7 @@ export default function Garage() {
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
+  const [dataListCar, setDataListCar] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -124,6 +126,21 @@ export default function Garage() {
     }
     fetchData();
   }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const accountsCol = collection(db, "ListCar");
+      const accountsSnapshot = await getDocs(accountsCol);
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      setDataListCar(accountsList);
+    }
+    fetchData();
+  }, []);
   const rows = data.map((item) =>
     createData(
       item.NameGarage,
@@ -131,7 +148,8 @@ export default function Garage() {
       item.Address,
       item.Hotline,
       item.Number,
-      item.id
+      item.id,
+      item.ID_Garage
     )
   );
   useEffect(() => {
@@ -394,7 +412,13 @@ export default function Garage() {
                                   <TableCell align="right">
                                     {row.protein}
                                   </TableCell>
-
+                                  <TableCell>
+                                    {
+                                      dataListCar.filter(
+                                        (car) => car.ID_Garage === row.ID_Garage
+                                      ).length
+                                    }
+                                  </TableCell>
                                   <TableCell style={{ display: "flex" }}>
                                     <Button
                                       onClick={(id) => {
