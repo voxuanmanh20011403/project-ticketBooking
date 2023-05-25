@@ -1,4 +1,4 @@
-.contact_call{
+.contact_call {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -9,7 +9,8 @@
     transform: translate(20px, -20px);
     z-index: 9999;
 }
-.contact_call a{
+
+.contact_call a {
     display: block;
     width: 60px;
     height: 60px;
@@ -17,7 +18,8 @@
     border-radius: 50%;
     position: relative;
 }
-.contact_call a::before{
+
+.contact_call a::before {
     content: '';
     position: absolute;
     width: 100px;
@@ -29,7 +31,8 @@
     border-radius: 50%;
     animation: 2s infinite phone-bg;
 }
-.phone_icon{
+
+.phone_icon {
     position: absolute;
     width: 50px;
     height: 50px;
@@ -37,39 +40,86 @@
     left: 10px;
     animation: 1.5s infinite phone-animation;
     color: white;
-    }
-@keyframes phone-bg{
-    0%{
+}
+
+.hotline-container {
+    position: absolute;
+    width: 200px; 
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-20%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f8f8;
+    border: 2px solid #2474e5;
+    border-radius: 10px;
+    padding: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+  
+  .contact_call:hover .hotline-container {
+    opacity: 1;
+    visibility: visible;
+  }
+
+.hotline {
+    color: #2474e5;
+    font-weight: bold;
+}
+
+@keyframes phone-bg {
+    0% {
         transform: scale(0.7);
     }
-    50%{
+
+    50% {
         transform: scale(1);
     }
-    100%{
+
+    100% {
         transform: scale(0.7);
     }
 }
 
-@keyframes phone-animation{
-    0%{
+@keyframes phone-animation {
+    0% {
         transform: rotate(0deg);
     }
-    10%{
+
+    10% {
         transform: rotate(25deg);
     }
-    20%{
+
+    20% {
         transform: rotate(-25deg);
     }
-    30%{
+
+    30% {
         transform: rotate(25deg);
     }
-    40%{
+
+    40% {
         transform: rotate(-25deg);
     }
-    50%{
+
+    50% {
         transform: rotate(0);
     }
-    100%{
+
+    100% {
         transform: rotate(0);
+    }
+}
+
+@keyframes hotline-animation {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
     }
 }

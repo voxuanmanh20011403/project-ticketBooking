@@ -69,7 +69,9 @@ export default function UserForm() {
       <Grid
         container
         rowSpacing={0}
-        style={{ width: "100%", minHeight: "600px", paddingTop: "8rem" }}
+        style={{ width: "100%", minHeight: "710px", paddingTop: "8rem", borderRight: "0.5px solid hsla(0,0%,59.2%,.5)",borderRadius: "10px", }}
+        // borderRadius: "10px",
+        // borderLeft="border-top: 0.5px solid hsla(0,0%,59.2%,.5)"
       >
 
         <Grid xs={2} style={{ display: "grid" }}>
