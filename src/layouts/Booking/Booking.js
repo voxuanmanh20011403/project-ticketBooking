@@ -36,7 +36,7 @@ const Booking = () => {
       const isoDate = Timestamp.fromDate(addedDate);
 
       const q = query(
-        collection(db, "Trips"),
+        collection(db, "Tripss"),
         where("StartPoint", "==", startPoint),
         where("EndPoint", "==", endPoint),
         where("StartTime", ">", isoDate)
@@ -47,7 +47,7 @@ const Booking = () => {
         querySnapshot.forEach((doc) => {
           tempDB.push({ ...doc.data(), id: doc.id });
         });
-        // console.log(tempDB);
+        console.log(tempDB);
         setData(tempDB);
       });
 

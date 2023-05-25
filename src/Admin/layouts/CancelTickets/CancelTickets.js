@@ -26,7 +26,7 @@ import {
   Grid,
   TableHead,
 } from "@mui/material";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc,getDoc } from "firebase/firestore";
 import { db } from "data/firebase";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -34,7 +34,9 @@ import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "Admin/examples/Navbars/DashboardNavbar";
 import MDBox from "Admin/components/MDBox";
 import MDTypography from "Admin/components/MDTypography";
-
+// toasst
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -190,34 +192,71 @@ export default function CancelTickets() {
   //onlcik
   const [open1, setOpen1] = useState(false);
   const [idUpdate, setIdUpdate] = useState("");
-
+    const [idTrip, setIdTrip] = useState("");
   const handleClose = () => {
     setOpen1(false);
     setIdUpdate("");
+    setIdTrip("");
+
   };
-  const handleClickStatus = (id) => {
+  const handleClickStatus = (id,id_Trip) => {
+    console.log("idUpdate: " + id);
+    console.log("idTrip: " + id_Trip);
     setOpen1(true);
     setIdUpdate(id);
-  };
+    setIdTrip(id_Trip);
+    };
+  
+
   const handleUpdate = () => {
     setOpen1(false);
-    //update
-    const statisticsRef = doc(collection(db, "Checkout"), `${idUpdate}`);
 
-    updateDoc(statisticsRef, {
-      Status: "Cancel",
-    })
-      .then(() => {
-        alert("huỷ vé thành công");
-      })
-      .catch((error) => {
-        alert("huỷ vé thất bại");
-      });
+    // update seat tcollection tripss when cancel ticket
+
+    const tripRef = doc(collection(db, "Tripss"), idTrip);
+
+    const updateTrip = async () => {
+      try {
+        const checkoutDocRef = doc(db, 'Checkout', `${idUpdate}`);
+        const checkoutDocSnapshot = await getDoc(checkoutDocRef);
+        let listSeat = [];
+        if (checkoutDocSnapshot.exists()) {
+          const checkoutData = checkoutDocSnapshot.data();
+          listSeat = checkoutData.ListSeated;
+        }
+        console.log("list seat" +listSeat);
+
+        const docSnap = await getDoc(tripRef);
+        const data = docSnap.data();
+        const updatedSeat = data.seat.map((s) => {
+          if (listSeat.includes(s.name)) {
+            return { ...s, status: "empty" };
+          }
+          return s;
+        });
+
+        await updateDoc(tripRef, { seat: updatedSeat });
+        // update status checkout
+        const statisticsRef = doc(collection(db, "Checkout"), `${idUpdate}`);
+        updateDoc(statisticsRef, {
+          Status: "Cancel"
+        })
+          toast.success("Hủy vé thành công!", {
+            autoClose: 1000,
+          });
+      } catch (e) {
+        toast.error("Đã có lỗi xảy ra!" + error, {
+          autoClose: 1000,
+        });
+      }
+    };
+    updateTrip();
   };
   const handleClose2 = () => {
-    setOpen(false);
+    setOpen1(false);
     setIdUpdate("");
-    setStatus("");
+    setIdTrip("");
+    // setStatus("");
   };
   return (
     <DashboardLayout>
@@ -279,14 +318,14 @@ export default function CancelTickets() {
                       <TableBody>
                         {(rowsPerPage > 0
                           ? rows
-                              .filter((row) => row.status === "Wait")
-                              .slice(
-                                page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage
-                              )
+                            .filter((row) => row.status === "Wait")
+                            .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
                           : rows.filter((row) => row.status === "Wait")
-                        ).map((row) => (
-                          <TableRow key={row.id_Trip}>
+                        ).map((row, index) => (
+                          <TableRow key={index}>
                             <TableCell align="">{row.fullname}</TableCell>
                             <TableCell align="">{row.email}</TableCell>
                             <TableCell align="">{row.nameTrip}</TableCell>
@@ -317,7 +356,7 @@ export default function CancelTickets() {
                                 }}
                                 variant="contained"
                                 color="success"
-                                onClick={(id) => handleClickStatus(row.id)}
+                                onClick={(id,id_Trip) => handleClickStatus(row.id,row.id_Trip)}
                               >
                                 {row.status}
                               </Button>

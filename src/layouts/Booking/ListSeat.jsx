@@ -43,40 +43,13 @@ const ListSeat = ({ items }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedSeatNames, setSelectedSeatNames] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-
-  // const handleChoNgoi = (id, name) => {
-  //   setSelectedSeats((prevSelectedSeats) => {
-  //     if (prevSelectedSeats.includes(id)) {
-  //       setTotalPrice(totalPrice - parseFloat(items.Price));
-  //       return prevSelectedSeats.filter((seatid) => seatid !== id);
-  //     } else {
-  //       setTotalPrice(totalPrice + parseFloat(items.Price));
-  //       return [...prevSelectedSeats, id];
-  //     }
-  //   });
-   
-  //   const newChoNgoi = [...choNgoi];
-
-  //   const updatedChoNgoi = newChoNgoi.map((item) => {
-  //     if (item.id === id) {
-
-  //       return {
-  //         ...item,
-  //         status: item.status === "empty" ? "book" : "empty",
-  //       };
-  //     } else {
-  //       return item;
-  //     }
-  //   });   
-  //   setChoNgoi(updatedChoNgoi);
-  // };
   
   const handleChoNgoi = (id, name) => {
     const seat = choNgoi.find((item) => item.id === id);
   
     if (seat) {
       if (seat.status === "book") {
-        return; // Không thực hiện gì nếu ghế đã được đặt
+        return; 
       } else if (seat.status === "empty") {
         setSelectedSeats((prevSelectedSeats) => {
           if (prevSelectedSeats.includes(id)) {
@@ -93,7 +66,7 @@ const ListSeat = ({ items }) => {
           if (item.id === id) {
             return {
               ...item,
-              // status: item.status === "empty" ? "book" : "empty",
+             
             };
           } else {
             return item;

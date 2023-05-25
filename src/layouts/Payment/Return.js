@@ -68,6 +68,7 @@ function Return() {
   const yearEnd = dateEnd.getFullYear();
   const hoursEnd = dateEnd.getHours();
   const minutesEnd = dateEnd.getMinutes();
+
   useEffect(() => {
     setReturnUrl([
       amount,
@@ -118,7 +119,7 @@ function Return() {
       const listSeated = getLocalUserDB.dataBooking[0].listSeated;
       const id = getLocalUserDB.dataBooking[0].id;
 
-      const tripRef = doc(collection(db, "Trips"), id);
+      const tripRef = doc(collection(db, "Tripss"), id);
 
       const updateTrip = async () => {
         try {
@@ -170,9 +171,9 @@ function Return() {
   //   }, 60000);
   // }
   // bắt sự kiện beforeunload thì clear storage
-  window.addEventListener("beforeunload", function (e) {
-    localStorage.clear();
-  });
+  // window.addEventListener("beforeunload", function (e) {
+  //   localStorage.clear();
+  // });
 
   // console.log("returnUrl: " + returnUrl);
 
