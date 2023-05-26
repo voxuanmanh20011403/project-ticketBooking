@@ -126,3 +126,14 @@
     height: auto;
     border: 0;
 }
+
+.bg4{
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    vertical-align: middle;
+    bottom: 0;
+    max-width: 100%;
+    height: auto;
+    border: 0;
+}

@@ -67,13 +67,14 @@ export function stableSort(array, comparator) {
 }
 
 //HÀM CREATE 
-export function createData(name, calories, fat, carbs, protein, id) {
+export function createData(name, calories, fat, carbs, protein, id,ID_Garage) {
     return {
       name,
       calories,
       fat,
       carbs,
       protein,
-      id
+      id,
+      ID_Garage
     };
 }

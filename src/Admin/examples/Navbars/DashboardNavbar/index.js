@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 // react-router components
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -36,9 +36,10 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "Admin/context";
-import { Breadcrumbs, TextField } from "@mui/material";
+import { Breadcrumbs, MenuItem, TextField } from "@mui/material";
 import NotificationItem from "Admin/examples/Items/NotificationItem";
-
+import { auth } from "data/firebase";
+import LogoutIcon from '@mui/icons-material/Logout';
 function DashboardNavbar({ absolute, light, isMini, onSearch }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
@@ -134,8 +135,12 @@ function DashboardNavbar({ absolute, light, isMini, onSearch }) {
     setSearchValue(value);
     onSearch(value);
   };
-  
-
+  const navigate = useNavigate();
+  const logout = () => {
+    auth.signOut();
+    localStorage.clear();
+    navigate("/");
+  };
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}
@@ -202,6 +207,7 @@ function DashboardNavbar({ absolute, light, isMini, onSearch }) {
                 <Icon sx={iconsStyle}>notifications</Icon>
               </IconButton>
               {renderMenu()}
+              <LogoutIcon   size="medium" onClick={logout}/>
             </MDBox>
           </MDBox>
         )}
