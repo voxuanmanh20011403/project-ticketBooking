@@ -16,6 +16,9 @@ import "./login.css";
 import { getDocs } from "firebase/firestore";
 import { collection, doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 import { db, auth } from "data/firebase";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function SignIn(props) {
   const [rememberMe, setRememberMe] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -121,17 +124,12 @@ function SignIn(props) {
           localStorage.setItem("account", accountJSON);
           localStorage.setItem('isLoggedIn', true);
 
-          if (accounts[i].Role === "0") {
-            setTimeout(() => {
-              history("/admin");
-            }, 2000);
-          } else  {
+          toast.success("Đăng nhập thành công!", {
+            autoClose: 1000,
+          });
+          setTimeout(() => {
             history("/");
-          }
-         
-          // {
-          //   accounts[i].Role === "1" ? history("/") : history("/admin");
-          // }
+          }, 2000);
           break;
         }
       }
