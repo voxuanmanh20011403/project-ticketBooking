@@ -15,14 +15,13 @@ import { blue } from "@mui/material/colors";
 import Login from "./../Login/index";
 import { useDispatch, useSelector } from "react-redux";
 
-import { auth } from 'data/firebase';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Hotline from 'layouts/Header/Hotline';
-import Email from 'layouts/Header/Email'
-import { Link } from 'react-router-dom';
-import "./Header.css"
-
+import { auth } from "data/firebase";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Hotline from "layouts/Header/Hotline";
+import Email from "layouts/Header/Email";
+import { Link } from "react-router-dom";
+import "./Header.css";
 
 function handleCartClick() {
   const cart = document.getElementById("cart"); // lấy thẻ chứa tuyến phổ biến
@@ -88,7 +87,7 @@ export default function Contact() {
     // console.log(handleLoginClick);
   };
   const handleRegisterClick = () => {
-    localStorage.setItem("isLoggedIn", true);
+    // localStorage.setItem("isLoggedIn", true);
     navigate("/Register");
   };
   const handleUserClick = () => {
@@ -110,55 +109,82 @@ export default function Contact() {
   }
   return (
     <React.Fragment>
+      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
+        {/* Thẻ bên trái */}
 
+        <Link to="/" className="logo__link" style={{ minWidth: 100 }}>
+          <div className="logo__img"></div>
+        </Link>
 
-<Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-  {/* Thẻ bên trái */}
-
-  <Link to="/" className="logo__link" style={{ minWidth: 100 }}>
-    <div className='logo__img'></div>
-  </Link>
-
-  
-
-  {/* Phần con của Box */}
-  <Box sx={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', ml: 2 }}>
-    <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 200 }} variant="button" className="head_cart" color="info" onClick={handleCartClick}>
-    Tuyến Phổ Biến
-    </Typography>
-    <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 150 }} variant="button" color="info" className="head_cart" onClick={handleBusClick}>
-    Bến Xe Khách
-    </Typography>
-    <Typography fontSize="large" fontWeight="500" sx={{ minWidth: 250 }} variant="button" className="head_cart" color="info"  onClick={handlePolicyClick} >
-    Chính Sách Hủy Vé
-    </Typography>
-    <Stack direction="row" spacing={1}>
-      <Email />
-      <Hotline />
-    </Stack>
-    <Tooltip title="Account settings">
-      <IconButton
-        onClick={handleClick}
-        size="small"
-        sx={{ ml: 2 }}
-        aria-controls={open ? 'account-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-      >
-        <div className='icon'>
-          <div display='flex'>
-            {Logged ? (
-              <p>Xin chào, {displayName} </p>
-            ) : (
-              <Avatar sx={{ width: 40, height: 40 }} />
-            )}
-          </div>
-        </div>
-      </IconButton>
-    </Tooltip>
-  </Box>
-</Box>
-
+        {/* Phần con của Box */}
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            ml: 2,
+          }}
+        >
+          <Typography
+            fontSize="large"
+            fontWeight="500"
+            sx={{ minWidth: 200 }}
+            variant="button"
+            className="head_cart"
+            color="info"
+            onClick={handleCartClick}
+          >
+            Tuyến Phổ Biến
+          </Typography>
+          <Typography
+            fontSize="large"
+            fontWeight="500"
+            sx={{ minWidth: 150 }}
+            variant="button"
+            color="info"
+            className="head_cart"
+            onClick={handleBusClick}
+          >
+            Bến Xe Khách
+          </Typography>
+          <Typography
+            fontSize="large"
+            fontWeight="500"
+            sx={{ minWidth: 250 }}
+            variant="button"
+            className="head_cart"
+            color="info"
+            onClick={handlePolicyClick}
+          >
+            Chính Sách Hủy Vé
+          </Typography>
+          <Stack direction="row" spacing={1}>
+            <Email />
+            <Hotline />
+          </Stack>
+          <Tooltip title="Account settings">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <div className="icon">
+                <div display="flex">
+                  {Logged ? (
+                    <p>Xin chào, {displayName} </p>
+                  ) : (
+                    <Avatar sx={{ width: 40, height: 40 }} />
+                  )}
+                </div>
+              </div>
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
 
       <Menu
         anchorEl={anchorEl}
