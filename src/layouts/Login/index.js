@@ -30,6 +30,9 @@ function SignIn(props) {
   const [rememberMe, setRememberMe] = useState(false);
   const [showError, setShowError] = useState(false);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const [stateEmail, setStateEmail] = useState(false);
+  const [statePassword, setStatePassword] = useState(false);
+
   const history = useNavigate();
   //CUSTOM VALIDATION USING YUP!
   const validationSchema = Yup.object().shape({
@@ -63,13 +66,34 @@ function SignIn(props) {
 
   const onSubmit = async (data) => {
     try {
+      try {
+        const user = await signInWithEmailAndPassword(
+          auth,
+          data.username,
+          data.password
+        );
+      } catch (error) {
+        if (
+          error.code === "auth/user-not-found" ||
+          error.code === "auth/wrong-password"
+        ) {
+          toast.error("Email hoặc mật khẩu không đúng!", {
+            autoClose: 1000,
+          });
+        } else {
+          toast.error("Vui lòng nhập đúng định dạng email!", {
+            autoClose: 1000,
+          });
+        }
+      }
+
       for (let i = 0; i < accounts.length; i++) {
         if (
           data.username === accounts[i].Email &&
           data.password === accounts[i].Password
         ) {
           // Thực hiện hành động mong muốn nếu email và password khớp với dữ liệu người dùng
-          console.log("accounts[i]", accounts[i]);
+          // console.log("accounts[i]", accounts[i]);
           const user = await signInWithEmailAndPassword(
             auth,
             data.username,
@@ -138,7 +162,7 @@ function SignIn(props) {
             history("/");
             window.location.reload();
           }, 2000);
-         
+
           break;
         }
       }
