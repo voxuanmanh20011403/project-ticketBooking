@@ -29,6 +29,7 @@ import {
 } from "./ListCar.constants";
 import AddCar from "./AddCar/AddCar";
 import UpdateListCar from "./UpdateListCar/UpdateListCar";
+import { toast } from "react-toastify";
 
 const DEFAULT_ORDER = "asc";
 const DEFAULT_ORDER_BY = "calories";
@@ -139,6 +140,7 @@ export default function ListCar() {
       item.duration
     )
   );
+  console.log("rows", rows);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -198,9 +200,14 @@ export default function ListCar() {
     if (window.confirm("Are you sure you want to delete this post?")) {
       try {
         console.log(id);
-        await deleteDoc(doc(db, "Account", id));
+        await deleteDoc(doc(db, "ListCar", id));
+        toast.success("Xoá xe thành công!", {
+          autoClose: 1000,
+        });
       } catch (error) {
-        console.log(error);
+        toast.error("Xoá xe thất bại!", {
+          autoClose: 1000,
+        });
       }
     }
   };
@@ -359,6 +366,9 @@ export default function ListCar() {
                                   </TableCell>
                                   <TableCell align="right">
                                     {row.hotline}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    {row.Price.toLocaleString()}
                                   </TableCell>
 
                                   <TableCell style={{ display: "flex" }}>

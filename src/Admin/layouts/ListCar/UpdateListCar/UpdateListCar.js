@@ -12,6 +12,7 @@ import {
 import DashboardLayout from "Admin/examples/LayoutContainers/DashboardLayout";
 import { db } from "data/firebase";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 function UpdateListCar(props) {
   const {
@@ -56,10 +57,6 @@ function UpdateListCar(props) {
 
     // Tăng trường "viewer" lên 1 đơn vị
     updateDoc(statisticsRef, {
-      // NameGarage: formData.NameGarage,
-      // Address: formData.Address,
-      // Owner: formData.Owner,
-      // Hotline: formData.Hotline
       Price:formData.Price ,
       EndPoint: formData.EndPoint,
       StartPoint: formData.StartPoint ,
@@ -68,12 +65,15 @@ function UpdateListCar(props) {
       duration: formData.duration,
     })
       .then(() => {
-        console.log(
-          `Updated viewer count for NameGarage ${formData.NameGarage}`
-        );
+        toast.success("Cập nhật thành công!", {
+          autoClose: 1000,
+        });
+        setActiveButtonUpdate(false);
       })
       .catch((error) => {
-        console.error(`Error updating viewer count: ${error}`);
+        toast.error(`Cập nhật thất bài, lỗi: ${error} `, {
+          autoClose: 1000,
+        });
       });
     // try {
     //   const docRef = await addDoc(collection(db, "Garage"), {

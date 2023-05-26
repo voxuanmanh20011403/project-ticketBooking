@@ -41,6 +41,12 @@ export const headCells = [
     disablePadding: false,
     label: "Điện thoại",
   },
+  {
+    id: "price",
+    numeric: true,
+    disablePadding: false,
+    label: "Giá vé",
+  },
 ];
 //Filter
 function descendingComparator(a, b, orderBy) {

@@ -331,7 +331,7 @@ export default function EnhancedTable() {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage,rows]
+    [order, orderBy, page, rowsPerPage, rows]
   );
 
   const handleDelete = async (id) => {
@@ -467,15 +467,23 @@ export default function EnhancedTable() {
                                   <TableCell align="right" className="id">
                                     <div>{row.id}</div>
                                   </TableCell>
-                                  <TableCell align="right">
-                                    {row.name}
+                                  <TableCell align="left" className="name">
+                                    <div>
+                                      {" "}
+                                      <div> {row.name}</div>
+                                    </div>
                                   </TableCell>
                                   <TableCell align="right">
-                                    {row.calories}
+                                    <div>
+                                      {" "}
+                                      <div> {row.calories}</div>
+                                    </div>
                                   </TableCell>
                                   <TableCell align="right">{row.fat}</TableCell>
-                                  <TableCell align="right">
-                                    {row.carbs}
+                                  <TableCell align="left">
+                                    <div>
+                                      <div> {row.carbs}</div>
+                                    </div>
                                   </TableCell>
                                   <TableCell align="right">
                                     {row.protein == 1 ? "nhanvien" : "admin"}

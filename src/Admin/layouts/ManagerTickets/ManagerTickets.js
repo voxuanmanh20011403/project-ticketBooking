@@ -117,7 +117,7 @@ export function ManagerTickets() {
   };
 
   const filteredGarages = garages.filter((garage) =>
-    garage.NameGarage.toLowerCase().includes(searchTerm.toLowerCase())
+    garage.NameGarage.toLowerCase().includes(searchTerm?.toLowerCase())
   );
   const [selectedTripId, setSelectedTripId] = useState(null);
 
