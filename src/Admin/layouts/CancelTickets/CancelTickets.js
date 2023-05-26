@@ -262,22 +262,22 @@ export default function CancelTickets() {
             currency: "VND",
           }),
         };
-        console.log(templateParams);
-        emailjs
-          .send(
-            "gmail",
-            "template_03k3cnb",
-            templateParams,
-            "nw10q72SaDSc17UUF"
-          )
-          .then(
-            (response) => {
-              console.log("SUCCESS!", response.status, response.text);
-            },
-            (error) => {
-              console.log("FAILED...", error);
-            }
-          );
+
+        // emailjs
+        //   .send(
+        //     "gmail",
+        //     "template_03k3cnb",
+        //     templateParams,
+        //     "nw10q72SaDSc17UUF"
+        //   )
+        //   .then(
+        //     (response) => {
+        //       console.log("SUCCESS!", response.status, response.text);
+        //     },
+        //     (error) => {
+        //       console.log("FAILED...", error);
+        //     }
+        //   );
       } catch (e) {
         toast.error("Đã có lỗi xảy ra!" + error.message, {
           autoClose: 1000,
