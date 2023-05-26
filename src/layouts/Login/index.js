@@ -134,19 +134,11 @@ function SignIn(props) {
           toast.success("Đăng nhập thành công!", {
             autoClose: 1000,
           });
-          // setTimeout(() => {
-          //   history("/");
-          //   window.location.reload();
-          // }, 2000);
-          if (accounts[i].Role === "0") {
-            setTimeout(() => {
-              history("/admin");
-              window.location.reload();
-            }, 1500);
-          } else  {
+          setTimeout(() => {
             history("/");
             window.location.reload();
-          }
+          }, 2000);
+         
           break;
         }
       }

@@ -42,7 +42,7 @@ export const TripsAuto = () => {
   useEffect(() => {
     const intervalId = setInterval(function () {
       var now = new Date();
-      if (now.getHours() == 11 && now.getMinutes() === 31) {
+      if (now.getHours() == 1 && now.getMinutes() === 8) {
         for (let i = 0; i < listCars.length; i++) {
           const car = listCars[i];
           // Tính khoảng cách giữa 2 ngày dưới dạng số mili giây
