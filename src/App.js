@@ -83,9 +83,43 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
+        {role === "0" && (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/SignIN" element={<SignIn />} />
+          </>
+        )}
+
+        {/* Các route dành cho role User */}
+        {role === "1" && (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/SignIN" element={<SignIn />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/payment" element={<Payment />} />
+            <Route path="/return" element={<Return />} />
+            <Route path="/comment" element={<FormComment />} />
+            <Route path="/user" element={<User />} />
+          </>
+        )}
+
+        {/* Các route cho các trường hợp còn lại */}
+        {role !== "1" && role !== "0" && (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/SignIN" element={<SignIn />} />
+            <Route path="/register" element={<Register />} />
+          </>
+        )}
+
+        {/* Route mặc định cho các trường hợp không hợp lệ */}
+        <Route path="*" element={<NotFoundPage />} />
 
         {/* Role: Admin */}
-        {role === "0" ? (
+        {/* {role === "0" ? (
           <>
             <Route path="/" element={<Home />}></Route>
             <Route path="/admin" element={<Admin />}></Route>
@@ -111,7 +145,7 @@ export default function App() {
           </>
         ) : (
           <Route path="*" element={<NotFoundPage />} />
-        )}
+        )} */}
 
         {/* <Route path="*" element={<NotFoundPage />} /> */}
 
