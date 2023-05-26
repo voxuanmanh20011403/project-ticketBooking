@@ -22,7 +22,7 @@ const PolicyTicket = () => {
               <a href="">
                 swiftride.contact@gmail.com</a>
             </span>
-             để được hỗ trợ hướng dẫn.
+             để được hỗ trợ hướng dẫn.
           </p>
           <p><strong>Thời gian hủy vé:</strong></p>
           <p>– Quý khách hủy vé, đổi chuyến vui lòng báo trước 24 tiếng so với giờ khởi hành bên em hoàn 95% giá vé hiện hành </p>
