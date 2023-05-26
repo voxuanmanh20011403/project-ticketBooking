@@ -19,8 +19,8 @@ import Stack from "@mui/material/Stack";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
-import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import EastIcon from '@mui/icons-material/East';
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 // Router
 import { useNavigate, useHistory } from "react-router-dom";
@@ -29,10 +29,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { tripActions } from "redux/slices/tripsSilce";
 
 import "./style.css";
-import BannerSearch from "layouts/Body/Banner/BannerSearch";
 import imgRoad from "../../assets/img/roadtrip.png";
 import "../Body/Banner/Banner.css";
-
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -42,6 +40,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 // Breadcrumbs
+
 function handleClick(event) {
   event.preventDefault();
   // console.info("You clicked a breadcrumb.");
@@ -73,6 +72,7 @@ const Trip = ({ fetchData }) => {
   const stateSearch = useSelector((state) => state.trip.stateSearch);
 
   const navigate = useNavigate();
+
 
   filteredData = fetchData.filter((item) => {
     if (selectedCheckboxes.length === 0) {
@@ -181,10 +181,10 @@ const Trip = ({ fetchData }) => {
   if (removeStateSearch) {
   }
   // console.log("filteredData: " + JSON.stringify(filteredData));
-
+ 
   const breadcrumbs = [
-    <Link underline="hover" key="1" color="inherit" onClick={handleClick}>
-      Home
+    <Link   underline="hover" key="1" color="inherit" >
+      <a href="" style={{ color: 'blue' }}>Trang Chủ</a>
     </Link>,
     <Link underline="hover" key="2" color="inherit" onClick={handleClick}>
       Tìm vé
@@ -201,7 +201,9 @@ const Trip = ({ fetchData }) => {
   }, 3000);
 
   return (
+    
     <React.Fragment>
+      {/* <Header/> */}
       <CssBaseline />
       <div className="ctn__trip">
         <Container className="breadcrumb" maxWidth="lg">
@@ -232,13 +234,24 @@ const Trip = ({ fetchData }) => {
                 size="medium"
                 fullWidth
                 InputProps={{
+                  style: {
+                    borderRadius: 8,
+                    height: 40,
+                    fontSize: 16,
+                    paddingLeft: 10,
+                  },
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon fontSize="medium" />
+                      <SearchIcon   style={{ color: "#888" }} fontSize="medium" />
                     </InputAdornment>
                   ),
                 }}
                 onChange={handleSearch}
+                style={{
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                }}
               />
             </Grid>
             <Grid item xs={10}></Grid>
@@ -304,7 +317,7 @@ const Trip = ({ fetchData }) => {
                   />
                 </FormGroup>
               </Item>
-              <Item>
+              <Item style={{ border: '1px solid #3ba59c', padding: '10px' }}>
                 <Typography className="">Đánh giá:</Typography>
                 <Stack
                   direction="row"
@@ -379,7 +392,7 @@ const Trip = ({ fetchData }) => {
                   <span className="cnt__info result">
                     {" "}
                     Chuyến xe từ {startPointRedux}{" "}
-                    <ArrowRightAltIcon fontSize="large" /> {endPointRedux}{" "}
+                    <EastIcon fontSize="default"/> {endPointRedux}{" "}
                     <span className="trip__length">
                       ({fetchData.length} chuyến được tìm thấy)
                     </span>

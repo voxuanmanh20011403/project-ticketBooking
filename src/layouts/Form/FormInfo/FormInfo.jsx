@@ -21,6 +21,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 
+
 const useStyles = makeStyles((theme) => ({
   container: {
     height: "60vh",
@@ -46,6 +47,7 @@ const FormInfo = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [id, setID] = useState("");
+  
 
 
   useEffect(() => {
@@ -71,6 +73,7 @@ const FormInfo = () => {
           autoClose: 1000,
         });
       });
+
     const statisticsRef = doc(collection(db, "Account"), `${id}`);
 
     updateDoc(statisticsRef, {
@@ -99,6 +102,9 @@ const FormInfo = () => {
 
   };
 
+
+  
+
   return (
     <Grid
       container
@@ -109,12 +115,12 @@ const FormInfo = () => {
       <Grid item xs={12} sm={12} md={6} lg={4}>
         <Paper elevation={4} className={classes.paper}>
           <h2 style={{
-          fontWeight: 'bold',
-          color: 'primary',
-          fontSize: '1.5rem',
-          marginBottom: '1rem',
-          color:'#2474e5',
-        }}>
+            fontWeight: 'bold',
+            color: 'primary',
+            fontSize: '1.5rem',
+            marginBottom: '1rem',
+            color: '#2474e5',
+          }}>
             Thông Tin Tài Khoản
           </h2>
           <form onSubmit={handleSubmit}>
