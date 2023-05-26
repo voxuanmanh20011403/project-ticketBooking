@@ -46,9 +46,8 @@ function EnhancedTableHead(props) {
     rowCount,
     onRequestSort,
   } = props;
-  const createSortHandler = (newOrderBy) => (event) => {
-    onRequestSort(event, newOrderBy);
-  };
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);}
 
   return (
     <TableHead>
@@ -64,6 +63,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </TableCell>
+        
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -105,10 +105,11 @@ export default function Garage() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [visibleRows, setVisibleRows] = React.useState(null);
+
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
+  const [dataListCar, setDataListCar] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -124,6 +125,21 @@ export default function Garage() {
     }
     fetchData();
   }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const accountsCol = collection(db, "ListCar");
+      const accountsSnapshot = await getDocs(accountsCol);
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      setDataListCar(accountsList);
+    }
+    fetchData();
+  }, []);
   const rows = data.map((item) =>
     createData(
       item.NameGarage,
@@ -131,43 +147,17 @@ export default function Garage() {
       item.Address,
       item.Hotline,
       item.Number,
-      item.id
+      item.id,
+      item.ID_Garage
     )
   );
-  useEffect(() => {
-    let rowsOnMount = stableSort(
-      rows,
-      getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY)
-    );
-
-    rowsOnMount = rowsOnMount.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
-    );
-
-    setVisibleRows(rowsOnMount);
-  }, [data]);
-
-  const handleRequestSort = React.useCallback(
-    (event, newOrderBy) => {
-      const isAsc = orderBy === newOrderBy && order === "asc";
-      const toggledOrder = isAsc ? "desc" : "asc";
-      setOrder(toggledOrder);
-      setOrderBy(newOrderBy);
-
-      const sortedRows = stableSort(
-        rows,
-        getComparator(toggledOrder, newOrderBy)
-      );
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      );
-
-      setVisibleRows(updatedRows);
-    },
-    [order, orderBy, page, rowsPerPage]
-  );
+  
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+    
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -180,7 +170,7 @@ export default function Garage() {
   const handleClick = (event, NameGarage) => {
     const selectedIndex = selected.indexOf(NameGarage);
     let newSelected = [];
-    console.log(selectedIndex);
+   
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
@@ -196,50 +186,29 @@ export default function Garage() {
     setSelected(newSelected);
   };
 
-  const handleChangePage = React.useCallback(
-    (event, newPage) => {
+  const handleChangePage = (event, newPage) => {
       setPage(newPage);
-
-      const sortedRows = stableSort(rows, getComparator(order, orderBy));
-      const updatedRows = sortedRows.slice(
-        newPage * rowsPerPage,
-        newPage * rowsPerPage + rowsPerPage
-      );
-
-      setVisibleRows(updatedRows);
+    };
+    const handleChangeRowsPerPage = (event) => {
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0);
+    };
+  
+    // const isSelected = (name) => selected.indexOf(name) !== -1;
 
       // Avoid a layout jump when reaching the last page with empty rows.
-      const numEmptyRows =
-        newPage > 0
-          ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
-          : 0;
+      const emptyRows =
+      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-      const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
-      setPaddingHeight(newPaddingHeight);
-    },
-    [order, orderBy, dense, rowsPerPage]
-  );
-
-  const handleChangeRowsPerPage = React.useCallback(
-    (event) => {
-      const updatedRowsPerPage = parseInt(event.target.value, 10);
-      setRowsPerPage(updatedRowsPerPage);
-
-      setPage(0);
-
-      const sortedRows = stableSort(rows, getComparator(order, orderBy));
-      const updatedRows = sortedRows.slice(
-        0 * updatedRowsPerPage,
-        0 * updatedRowsPerPage + updatedRowsPerPage
+      
+      const visibleRows = React.useMemo(
+        () =>
+          stableSort(rows, getComparator(order, orderBy)).slice(
+            page * rowsPerPage,
+            page * rowsPerPage + rowsPerPage
+          ),
+        [order, orderBy, page, rowsPerPage,rows]
       );
-
-      setVisibleRows(updatedRows);
-
-      // There is no layout jump to handle on the first page.
-      setPaddingHeight(0);
-    },
-    [order, orderBy]
-  );
 
   const isSelected = (NameGarage) => selected.indexOf(NameGarage) !== -1;
   const [show, setShow] = useState(false);
@@ -394,7 +363,13 @@ export default function Garage() {
                                   <TableCell align="right">
                                     {row.protein}
                                   </TableCell>
-
+                                  <TableCell>
+                                    {
+                                      dataListCar.filter(
+                                        (car) => car.ID_Garage === row.ID_Garage
+                                      ).length
+                                    }
+                                  </TableCell>
                                   <TableCell style={{ display: "flex" }}>
                                     <Button
                                       onClick={(id) => {
@@ -456,10 +431,11 @@ export default function Garage() {
         <AddGarage
           activeButton={activeButton}
           setActiveButton={setActiveButton}
+          data={data}
         />
       ) : (
         <></>
       )}
     </DashboardLayout>
   );
-}
+      }

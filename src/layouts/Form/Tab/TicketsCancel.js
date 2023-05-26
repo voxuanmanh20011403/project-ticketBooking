@@ -80,7 +80,7 @@ export default function TicketsCancel() {
             <TableCell style={{ width: "%" }} align="">
               Khách hàng
             </TableCell>
-            <TableCell style={{ width: "%" }} align="">
+            <TableCell style={{ width: "20%" }} align="">
               Email/Sdt
             </TableCell>
             <TableCell style={{ width: "%" }} align="">
