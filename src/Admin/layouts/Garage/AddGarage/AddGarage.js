@@ -33,13 +33,45 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "data/firebase";
 import DoneIcon from "@mui/icons-material/Done";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 function AddGarage(props) {
   const { activeButton, setActiveButton, data } = props;
   const [URLImage, setURLImage] = useState("");
   const [uploadComplete, setUploadComplete] = useState(false);
-  console.log("URLImage", URLImage);
+  const [nameGarage, setNameGarage] = useState("");
+  const [owner, setOwner] = useState("");
+  const [address, setAddress] = useState("");
+  const [hotline, setHotline] = useState("");
+  const [idGarage, setIdGarage] = useState("");
+
+  //YUP
+  // YUP: VALIDATION
+  const phoneRegExp =
+    /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+
+  const validationSchema = Yup.object().shape({
+    idGarage: Yup.string().required("ID nhà xe không được bỏ trống"),
+    nameGarage: Yup.string().required("Tên nhà xe không được bỏ trống"),
+    owner: Yup.string().required("Bạn chưa nhập tên chủ nhà xe"),
+    address: Yup.string().required("Địa chỉ nhà xe không được bỏ trống"),
+    hotline: Yup.string()
+      .required("Số điện thoại không được bỏ trống.")
+      .matches(phoneRegExp, "Định dạng số điện thoại chưa đúng"),
+  });
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
   //set show/hide form
   const open = true;
+  // const open = true;
   // const addPost = () => {};
   const handleClose = () => {
     setActiveButton(false);
@@ -90,26 +122,32 @@ function AddGarage(props) {
     );
   };
   //end iamge
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const existingGarage = data.find(
-      (item) => item.ID_Garage === formData.ID_Garage
-    );
+
+  const onSubmit = async (e) => {
+    const existingGarage = data.find((item) => item.ID_Garage === idGarage);
     if (existingGarage) {
-      alert(`ID: ${formData.ID_Garage} đã tồn tại`);
+      // alert(`ID: ${formData.ID_Garage} đã tồn tại`);
+      toast.error(`ID: ${idGarage} đã tồn tại`, {
+        autoClose: 1000,
+      });
       return;
     }
-    console.log(formData);
+
     try {
       const docRef = await addDoc(collection(db, "Garage"), {
-        ...formData,
+        Address: address,
+        Hotline: hotline,
+        ID_Garage: idGarage,
+        NameGarage: nameGarage,
+        Owner: owner,
         URLImage: URLImage,
       });
-      console.log("Document written with ID: ", docRef.id);
+      toast.success(`Thêm thành công nhà xe ${nameGarage}`, {
+        autoClose: 1000,
+      });
+      setActiveButton(false);
     } catch (e) {}
   };
-
   return (
     <DashboardLayout>
       <div className="addpost">
@@ -131,56 +169,124 @@ function AddGarage(props) {
                 <div>
                   <form className="form-horizontal" onSubmit={handleSubmit}>
                     <fieldset>
-                      <TextField
-                        id="outlined-basic"
-                        label="ID nhà xe"
-                        variant="outlined"
-                        name="ID_Garage"
-                        value={formData.ID_Garage}
-                        onChange={handleChangeValue}
-                        placeholder="ID nhà xe"
-                        className="Garage"
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Tên nhà xe"
-                        variant="outlined"
-                        name="NameGarage"
-                        value={formData.NameGarage}
-                        onChange={handleChangeValue}
-                        placeholder="Tên nhà xe"
-                        className="Garage"
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Chủ sở hữu"
-                        variant="outlined"
-                        name="Owner"
-                        value={formData.Owner}
-                        onChange={handleChangeValue}
-                        placeholder="Chủ sở hữu nhà xe"
-                        className="Garage"
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Địa chỉ nhà xe"
-                        variant="outlined"
-                        name="Address"
-                        value={formData.Address}
-                        onChange={handleChangeValue}
-                        placeholder="Địa chỉ nhà xe"
-                        className="Garage"
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Hotline"
-                        variant="outlined"
-                        name="Hotline"
-                        value={formData.Hotline}
-                        onChange={handleChangeValue}
-                        placeholder="Hotline"
-                        className="Garage"
-                      />
+                      <Grid className="Garage">
+                        <TextField
+                          required
+                          id="idGarage"
+                          name="idGarage"
+                          fullWidth
+                          placeholder="ID nhà xe"
+                          label="ID nhà xe"
+                          variant="outlined"
+                          // margin="dense"
+                          {...register("idGarage")}
+                          error={errors.idGarage ? true : false}
+                          onChange={(e) => {
+                            setIdGarage(e.target.value);
+                          }}
+                        />
+                        <div
+                          variant="inherit"
+                          color="textSecondary"
+                          className="error-message"
+                        >
+                          {errors.idGarage?.message}
+                        </div>
+                      </Grid>
+                      <Grid className="Garage">
+                        <TextField
+                          required
+                          id="nameGarage"
+                          name="nameGarage"
+                          fullWidth
+                          placeholder="Tên nhà xe"
+                          label="Tên nhà xe"
+                          variant="outlined"
+                          // margin="dense"
+                          {...register("nameGarage")}
+                          error={errors.nameGarage ? true : false}
+                          onChange={(e) => {
+                            setNameGarage(e.target.value);
+                          }}
+                        />
+                        <div variant="inherit" className="error-message">
+                          {errors.nameGarage?.message}
+                        </div>
+                      </Grid>
+                      <Grid className="Garage">
+                        <TextField
+                          required
+                          id="owner"
+                          name="owner"
+                          fullWidth
+                          placeholder="Tên chủ xe"
+                          label="Tên chủ xe"
+                          variant="outlined"
+                          // margin="dense"
+                          {...register("owner")}
+                          error={errors.owner ? true : false}
+                          onChange={(e) => {
+                            setOwner(e.target.value);
+                          }}
+                        />
+                        <div
+                          variant="inherit"
+                          color="textSecondary"
+                          className="error-message"
+                        >
+                          {errors.owner?.message}
+                        </div>
+                      </Grid>
+
+                      <Grid className="Garage">
+                        <TextField
+                          required
+                          label="Địa chỉ nhà xe"
+                          id="address"
+                          name="address"
+                          fullWidth
+                          placeholder="Địa chỉ nhà xe"
+                          variant="outlined"
+                          // margin="dense"
+                          {...register("address")}
+                          error={errors.address ? true : false}
+                          onChange={(e) => {
+                            setAddress(e.target.value);
+                          }}
+                        />
+                        <div
+                          variant="inherit"
+                          color="textSecondary"
+                          className="error-message"
+                        >
+                          {errors.address?.message}
+                        </div>
+                      </Grid>
+
+                      <Grid className="Garage">
+                        <TextField
+                          required
+                          label="Hotline"
+                          id="hotline"
+                          name="hotline"
+                          fullWidth
+                          placeholder="Hotline"
+                          variant="outlined"
+                          // margin="dense"
+                          {...register("hotline")}
+                          error={errors.hotline ? true : false}
+                          onChange={(e) => {
+                            setHotline(e.target.value);
+                          }}
+                        />
+                        <div
+                          variant="inherit"
+                          color="textSecondary"
+                          className="error-message"
+                        >
+                          {errors.hotline?.message}
+                        </div>
+                      </Grid>
 
                       <div className="modal__body Garage">
                         <form>
@@ -218,16 +324,18 @@ function AddGarage(props) {
                                   <DoneIcon />
                                 )}
                               </IconButton>
-                              {/* <p>{percent} "% done"</p> */}
                             </Grid>
                           </div>
                         </form>
                       </div>
                       <Button
                         variant="contained"
-                        className="modal__footer11"
+                        style={{
+                          width: "60%",
+                          margin: "0 20% 0 20%",
+                        }}
                         color="primary"
-                        type="submit"
+                        onClick={handleSubmit(onSubmit)}
                       >
                         Thêm mới nhà xe
                       </Button>

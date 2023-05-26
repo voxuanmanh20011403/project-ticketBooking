@@ -109,3 +109,7 @@
     width: 96%;
     margin: 2% !important;
 }
+.error-message {
+   font-weight: 100;
+   font-size: 15px;
+  }
