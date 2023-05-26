@@ -301,7 +301,7 @@ function Register() {
                 Bạn đã có tài khoản?{" "}
                 <MDTypography
                   component={Link}
-                  to="/"
+                  to="/SignIN"
                   variant="button"
                   color="info"
                   fontWeight="medium"

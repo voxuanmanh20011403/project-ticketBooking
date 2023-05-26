@@ -5,10 +5,21 @@ import { styled } from "@mui/material/styles";
 import { Container, Typography, Grid, Paper } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import emailjs from "@emailjs/browser";
-
+import Button from "@mui/material/Button";
+import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import { db } from "data/firebase";
-import { addDoc, collection, where, getDocs, query, getDoc, updateDoc, doc ,Timestamp} from "firebase/firestore";
-
+import {
+  addDoc,
+  collection,
+  where,
+  getDocs,
+  query,
+  getDoc,
+  updateDoc,
+  doc,
+  Timestamp,
+} from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -181,8 +192,12 @@ function Return() {
   let price = returnUrl[0];
   // let price = returnUrl[0].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   // console.log(price)
-  // const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  // const formattedPrice  = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
+  const navigate = useNavigate();
+  const handleReturnHome = () => {
+    navigate("/");
+  };
   return (
     <React.Fragment>
       <CssBaseline />
@@ -221,6 +236,24 @@ function Return() {
                 </h4>
               </div>
             </Item>
+            <Button
+              variant="contained"
+              style={{
+                padding: "1rem",
+                fontSize: "16px",
+                color: " #fff",
+                marginTop: "75px",
+              }}
+              onClick={handleReturnHome}
+            >
+              <KeyboardReturnIcon
+                fontSize="large"
+                style={{
+                  marginRight: "5px",
+                }}
+              />
+              Quay về trang chủ
+            </Button>
           </Grid>
           <Grid item xs={7}>
             <Item>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import { tripActions } from "redux/slices/tripsSilce";
-// toast
+// toast 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -24,6 +24,13 @@ export default function BannerDateTime({
   stateDestination,
 }) {
   const [selectDate, setSelectDate] = useState(dayjs());
+  // check role là admin thì k cho navigate tới booking 
+  const [role, setRole] = useState("");
+  useEffect(() => {
+    var data = JSON.parse(localStorage.getItem("account"));
+    const role = data ? data.Role : "-1";
+    setRole(role);
+  }, []);
 
   const today = dayjs().startOf("day");
   const isDateDisabled = (date) => {
@@ -60,9 +67,14 @@ console.log("selectDate: " + selectDate);
             selectDate: selectDate,
           })
         );
-        setTimeout(() => {
-          navigate("/booking");
-        }, 2500);
+          if(role !==  0) {
+            setTimeout(() => {
+              navigate("/booking");
+            }, 2500);
+          }else{
+            navigate("*");
+          }
+       
       } catch (error) {
         toast.error("Tìm kiếm thất bại!");
       }
