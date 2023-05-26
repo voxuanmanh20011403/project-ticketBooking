@@ -47,7 +47,8 @@ function EnhancedTableHead(props) {
     onRequestSort,
   } = props;
   const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);}
+    onRequestSort(event, property);
+  };
 
   return (
     <TableHead>
@@ -63,7 +64,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </TableCell>
-        
+
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -110,6 +111,39 @@ export default function Garage() {
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
   const [dataListCar, setDataListCar] = useState([]);
+  //
+  const [activeButton, setActiveButton] = useState(false);
+  const [ActiveButtonUpdate, setActiveButtonUpdate] = useState(false);
+
+  // state to re-render data
+  const [reLoad, setReLoad] = useState(false);
+  useEffect(() => {
+    async function fetchData() {
+      const accountsCol = collection(db, "Garage");
+      const accountsSnapshot = await getDocs(accountsCol);
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      setData(accountsList);
+    }
+    fetchData();
+
+    async function fetchData1() {
+      const accountsCol = collection(db, "ListCar");
+      const accountsSnapshot = await getDocs(accountsCol);
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      setDataListCar(accountsList);
+    }
+    fetchData1();
+  }, [reLoad]);
 
   useEffect(() => {
     async function fetchData() {
@@ -140,6 +174,7 @@ export default function Garage() {
     }
     fetchData();
   }, []);
+
   const rows = data.map((item) =>
     createData(
       item.NameGarage,
@@ -151,13 +186,12 @@ export default function Garage() {
       item.ID_Garage
     )
   );
-  
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-    
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -170,7 +204,7 @@ export default function Garage() {
   const handleClick = (event, NameGarage) => {
     const selectedIndex = selected.indexOf(NameGarage);
     let newSelected = [];
-   
+
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
@@ -187,43 +221,43 @@ export default function Garage() {
   };
 
   const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    };
-  
-    // const isSelected = (name) => selected.indexOf(name) !== -1;
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
-      // Avoid a layout jump when reaching the last page with empty rows.
-      const emptyRows =
-      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  // const isSelected = (name) => selected.indexOf(name) !== -1;
 
-      
-      const visibleRows = React.useMemo(
-        () =>
-          stableSort(rows, getComparator(order, orderBy)).slice(
-            page * rowsPerPage,
-            page * rowsPerPage + rowsPerPage
-          ),
-        [order, orderBy, page, rowsPerPage,rows]
-      );
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const visibleRows = React.useMemo(
+    () =>
+      stableSort(rows, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      ),
+    [order, orderBy, page, rowsPerPage, rows]
+  );
 
   const isSelected = (NameGarage) => selected.indexOf(NameGarage) !== -1;
   const [show, setShow] = useState(false);
+
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       try {
         console.log(id);
         await deleteDoc(doc(db, "Garage", id));
+      setReLoad((pre) => !pre);
       } catch (error) {
         console.log(error);
       }
     }
   };
-  const [activeButton, setActiveButton] = useState(false);
-  const [ActiveButtonUpdate, setActiveButtonUpdate] = useState(false);
+
   //form update
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -238,6 +272,7 @@ export default function Garage() {
     setOwner(owner);
     setAddress(address);
     setHotline(hotline);
+    // setReLoad((pre) => !pre);
   };
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (searchValue) => {
@@ -423,6 +458,7 @@ export default function Garage() {
           owner={owner}
           address={address}
           hotline={hotline}
+          setReLoad={setReLoad}
         />
       ) : (
         <></>
@@ -431,6 +467,7 @@ export default function Garage() {
         <AddGarage
           activeButton={activeButton}
           setActiveButton={setActiveButton}
+          setReLoad={setReLoad}
           data={data}
         />
       ) : (
@@ -438,4 +475,4 @@ export default function Garage() {
       )}
     </DashboardLayout>
   );
-      }
+}

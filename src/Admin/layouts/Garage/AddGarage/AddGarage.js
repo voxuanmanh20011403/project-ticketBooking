@@ -38,7 +38,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 function AddGarage(props) {
-  const { activeButton, setActiveButton, data } = props;
+  const { activeButton, setActiveButton, data, setReLoad } = props;
   const [URLImage, setURLImage] = useState("");
   const [uploadComplete, setUploadComplete] = useState(false);
   const [nameGarage, setNameGarage] = useState("");
@@ -146,6 +146,7 @@ function AddGarage(props) {
         autoClose: 1000,
       });
       setActiveButton(false);
+      setReLoad((pre) => !pre);
     } catch (e) {}
   };
   return (
