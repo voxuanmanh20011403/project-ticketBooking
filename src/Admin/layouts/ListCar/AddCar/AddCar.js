@@ -386,39 +386,13 @@ function AddCar(props) {
                         />
                       </LocalizationProvider>
 
-                      <div className="modal__body">
-                        <form>
-                          <div className="modal__footer">
-                            <Grid
-                              container
-                              xs={10}
-                              className="modal__footer__left "
-                            >
-                              <p>Thêm hình ảnh minh hoạ cho nhà xe</p>
-                            </Grid>
-                            <Grid container xs={2} className="">
-                              <IconButton>
-                                <label htmlFor="upload-image">
-                                  <PhotoLibraryIcon
-                                    className="modal__footer__rigth"
-                                    style={{
-                                      color: "green",
-                                      textAlign: "center",
-                                    }}
-                                  />
-                                </label>
-                              </IconButton>
-                            </Grid>
-                          </div>
-                        </form>
-                      </div>
                       <Button
                         variant="contained"
                         className="modal__footer11"
                         color="primary"
                         type="submit"
                       >
-                        Thêm mới nhà xe
+                        Thêm mới xe
                       </Button>
                     </fieldset>
                   </form>
