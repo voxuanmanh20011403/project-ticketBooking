@@ -198,6 +198,9 @@ function Return() {
   const handleReturnHome = () => {
     navigate("/");
   };
+  const handleReturnUser =() =>{
+    navigate("/user");
+  }
   return (
     <React.Fragment>
       <CssBaseline />
@@ -236,13 +239,14 @@ function Return() {
                 </h4>
               </div>
             </Item>
+           
             <Button
               variant="contained"
               style={{
                 padding: "1rem",
-                fontSize: "16px",
                 color: " #fff",
-                marginTop: "75px",
+                margin: "20px 25px 0 0"
+
               }}
               onClick={handleReturnHome}
             >
@@ -253,6 +257,17 @@ function Return() {
                 }}
               />
               Quay về trang chủ
+            </Button>
+            <Button
+              variant="contained"
+              style={{
+                padding: "1rem",
+                color: " #fff",
+                margin: "20px 0 0 0"
+              }}
+              onClick={handleReturnUser}
+            >
+              Xem lịch sử chuyến đi
             </Button>
           </Grid>
           <Grid item xs={7}>

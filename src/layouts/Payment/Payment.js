@@ -43,9 +43,9 @@ const Payment = () => {
   // get stateBooking from reudx
   const dataBooking = useSelector(state => state.trip.stateBooking);
 
-  const timeStart = dataBooking[0].StartTime;
+  const timeStart = dataBooking[0]?.StartTime;
 
-  const dateS = new Date(timeStart.seconds * 1000);
+  const dateS = new Date(timeStart?.seconds * 1000);
   const timestamp = Timestamp.fromDate(dateS);
   console.log(timestamp);
 
@@ -56,10 +56,10 @@ const Payment = () => {
   const minutesS = dateS.getMinutes();
   //  console.log("dataBooking: " + JSON.stringify(dataBooking[0].NameGarage));
 
-  const total = parseInt(dataBooking[0].price) * dataBooking[0].totalSeat;
+  const total = parseInt(dataBooking[0]?.price) * dataBooking[0]?.totalSeat;
 
   const amount = total; // Số tiền cần thanh toán
-  const description = `Thanh toán vé xe ${dataBooking[0].NameTrip}`; // Thông tin đơn hàng
+  const description = `Thanh toán vé xe ${dataBooking[0]?.NameTrip}`; // Thông tin đơn hàng
   const returnUrl = 'http://localhost:3000/return/'; // Đường dẫn trả về sau khi thanh toán
   const vnp_TmnCode = '0C8OWYLT'; // Mã website của bạn được cấp bởi VNPay
   const vnp_HashSecret = 'ZWPIGMIDMRBEDUXSWHBVSSBKEBYSDWWD'; // Mã bí mật để tạo chữ ký điện tử, được cấp bởi VNPay
@@ -94,8 +94,8 @@ const Payment = () => {
     setLoading(false);
   }, 2000);
   // foramt price
-  const price = dataBooking[0].price;
-  const formattedPrice = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  const price = dataBooking[0]?.price;
+  const formattedPrice = price?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   return (
     <>
       <Header />
@@ -174,16 +174,16 @@ const Payment = () => {
                 </Grid>
                 <Grid item xs="4" >
                   <div className='checkout__card'>
-                    <h4 >Nhà xe <span>{dataBooking[0].NameGarage}</span></h4>
-                    <h4>Chuyến xe <span> {dataBooking[0].NameTrip}</span></h4>
+                    <h4 >Nhà xe <span>{dataBooking[0]?.NameGarage}</span></h4>
+                    <h4>Chuyến xe <span> {dataBooking[0]?.NameTrip}</span></h4>
                     <h4>
                       Thời gian khởi hành<span>{dayS + "/" + monthS + "/ " + yearS + " - " + hoursS + ":" + minutesS}</span>
                     </h4>
-                    <h4>Nơi xuất phát<span> {dataBooking[0].PakingStart}</span></h4>
-                    <h4>Nơi đến<span>{dataBooking[0].PakingEnd}</span></h4>
-                    <h4>Số ghế đã đặt<span>{dataBooking[0].listSeated.join(", ")}</span></h4>
+                    <h4>Nơi xuất phát<span> {dataBooking[0]?.PakingStart}</span></h4>
+                    <h4>Nơi đến<span>{dataBooking[0]?.PakingEnd}</span></h4>
+                    <h4>Số ghế đã đặt<span>{dataBooking[0]?.listSeated.join(", ")}</span></h4>
                     <h4>Giá vé<span>{formattedPrice}</span></h4>
-                    <h4>Tổng số lượng ghế<span>{dataBooking[0].totalSeat}</span></h4>
+                    <h4>Tổng số lượng ghế<span>{dataBooking[0]?.totalSeat}</span></h4>
                     <hr />
                     <h3>TỔNG CỘNG <span>{total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span></h3>
                   </div>
