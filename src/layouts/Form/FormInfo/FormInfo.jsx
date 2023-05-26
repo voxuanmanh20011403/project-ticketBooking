@@ -22,7 +22,9 @@ import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-
+import Alert from '@mui/material/Alert';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +52,7 @@ const FormInfo = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [id, setID] = useState("");
+  
 
 
   useEffect(() => {
@@ -68,13 +71,17 @@ const FormInfo = () => {
       .then(() => {
         // Profile updated!
         // ...
-        alert("Updated");
+        toast.success("Cập nhật thông tin thành công", { autoClose: 2000 });
+        // alert("Updated");
       })
       .catch((error) => {
         // An error occurred
         // ...
-        alert("No update");
-      });
+        // alert("No update");
+        toast.error("Cập nhật thông tin thất bại", { autoClose: 2500 });
+            });
+
+      
     const statisticsRef = doc(collection(db, "Account"), `${id}`);
 
     updateDoc(statisticsRef, {
@@ -103,6 +110,9 @@ const FormInfo = () => {
 
   };
 
+
+  
+
   return (
     <Grid
       container
@@ -113,12 +123,12 @@ const FormInfo = () => {
       <Grid item xs={12} sm={12} md={6} lg={4}>
         <Paper elevation={4} className={classes.paper}>
           <h2 style={{
-          fontWeight: 'bold',
-          color: 'primary',
-          fontSize: '1.5rem',
-          marginBottom: '1rem',
-          color:'#2474e5',
-        }}>
+            fontWeight: 'bold',
+            color: 'primary',
+            fontSize: '1.5rem',
+            marginBottom: '1rem',
+            color: '#2474e5',
+          }}>
             Thông Tin Tài Khoản
           </h2>
           <form onSubmit={handleSubmit}>
