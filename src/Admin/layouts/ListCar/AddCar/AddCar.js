@@ -38,9 +38,10 @@ import {
   MobileDateTimePicker,
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { toast } from "react-toastify";
 
 function AddCar(props) {
-  const { activeButton, setActiveButton, data } = props;
+  const { activeButton, setActiveButton, data ,setReload } = props;
 
   const [state, setstate] = useState([]);
   const [seat, setSeat] = useState(0);
@@ -103,8 +104,13 @@ function AddCar(props) {
         TypeVehicle: `Xe giường nằm ${seat} chỗ`,
         duration: durationNumber,
       });
+      toast.success(`Thêm thành công!`, {
+        autoClose: 1000,
+      });
       console.log("Document written with ID: ", docRef.id);
-      location.reload();
+      // location.reload();
+      setActiveButton(false);
+      setReload(pre => !pre);
     } catch (e) {}
   };
   const [garages, setGarages] = useState([]);
@@ -140,7 +146,7 @@ function AddCar(props) {
           console.log("No such document!");
         }
       } else {
-        console.log("Error getting document:", error);
+       
       }
     };
     unsub();
@@ -358,7 +364,7 @@ function AddCar(props) {
                         >
                           <MenuItem value={20}>Xe giường nằm 20 chỗ </MenuItem>
                           <MenuItem value={36}>Xe giường nằm 36 chỗ</MenuItem>
-                          <MenuItem value={44}>Xe giường nằm 44 chỗ</MenuItem>
+                          <MenuItem value={40}>Xe giường nằm 40 chỗ</MenuItem>
                         </Select>
                       </FormControl>
                       <CustomTextField

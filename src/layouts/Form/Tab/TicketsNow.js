@@ -141,7 +141,7 @@ export default function DenseTable() {
             Status: "Success",
           })
             .then(() => {
-              toast.success("Vui lòng chờ xác nhận!", {
+              toast.success("Bạn đã hoàn tác huỷ vé thành công!", {
                 autoClose: 1000,
               });
               setReLoadDB((pve) => !pve);
@@ -225,8 +225,7 @@ export default function DenseTable() {
                   <Button
                     disabled={
                       row.startTime.getTime() - currentDate.getTime() <=
-                      24 * 60 * 60 * 1000 ||
-                      row.status === "Wait"
+                      24 * 60 * 60 * 1000
                     }
                     onClick={(id) => {
                       handleClickCancel(

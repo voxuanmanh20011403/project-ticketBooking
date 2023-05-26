@@ -130,6 +130,13 @@ function SignIn(props) {
           setTimeout(() => {
             history("/");
           }, 2000);
+          // if (accounts[i].Role === "0") {
+          //   setTimeout(() => {
+          //     history("/admin");
+          //   }, 1500);
+          // } else  {
+          //   history("/");
+          // }
           break;
         }
       }

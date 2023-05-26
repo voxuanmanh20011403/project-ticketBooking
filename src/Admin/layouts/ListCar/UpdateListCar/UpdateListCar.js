@@ -25,6 +25,7 @@ function UpdateListCar(props) {
     pakingEnd,
     pakingStart,
     duration,
+    setReload,
   } = props;
   //set show/hide form
   const [open, setOpen] = React.useState(true);
@@ -40,9 +41,9 @@ function UpdateListCar(props) {
 
   //TODO : CUSTOM FIELD THÊM NHÀ XE
   const [formData, setFormData] = useState({
-    Price:price ,
-    EndPoint:endPoint ,
-    StartPoint:  startPoint,
+    Price: price,
+    EndPoint: endPoint,
+    StartPoint: startPoint,
     PakingEnd: pakingEnd,
     PakingStart: pakingStart,
     duration: duration,
@@ -57,9 +58,9 @@ function UpdateListCar(props) {
 
     // Tăng trường "viewer" lên 1 đơn vị
     updateDoc(statisticsRef, {
-      Price:formData.Price ,
+      Price: formData.Price,
       EndPoint: formData.EndPoint,
-      StartPoint: formData.StartPoint ,
+      StartPoint: formData.StartPoint,
       PakingEnd: formData.PakingEnd,
       PakingStart: formData.PakingStart,
       duration: formData.duration,
@@ -69,6 +70,7 @@ function UpdateListCar(props) {
           autoClose: 1000,
         });
         setActiveButtonUpdate(false);
+        setReload((pre) => !pre);
       })
       .catch((error) => {
         toast.error(`Cập nhật thất bài, lỗi: ${error} `, {

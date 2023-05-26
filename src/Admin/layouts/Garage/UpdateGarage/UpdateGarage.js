@@ -22,6 +22,7 @@ function UpdateGarage(props) {
     owner,
     address,
     hotline,
+    setReLoad
   } = props;
   //set show/hide form
   const [open, setOpen] = React.useState(true);
@@ -61,6 +62,9 @@ function UpdateGarage(props) {
         console.log(
           `Updated viewer count for NameGarage ${formData.NameGarage}`
         );
+        setActiveButtonUpdate(false);
+      setReLoad((pre) => !pre);
+
       })
       .catch((error) => {
         console.error(`Error updating viewer count: ${error}`);

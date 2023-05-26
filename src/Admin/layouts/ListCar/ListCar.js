@@ -106,6 +106,22 @@ export default function ListCar() {
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = React.useState(0);
   const [data, setData] = useState([]);
+  // re-render
+  const [reLoad, setReload] = useState(false);
+  useEffect(() => {
+    async function fetchData() {
+      const accountsCol = collection(db, "ListCar");
+      const accountsSnapshot = await getDocs(accountsCol);
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      setData(accountsList);
+    }
+    fetchData();
+  }, [reLoad]);
 
   useEffect(() => {
     async function fetchData() {
@@ -204,6 +220,7 @@ export default function ListCar() {
         toast.success("Xoá xe thành công!", {
           autoClose: 1000,
         });
+        setReload((pre) => !pre);
       } catch (error) {
         toast.error("Xoá xe thất bại!", {
           autoClose: 1000,
@@ -428,6 +445,7 @@ export default function ListCar() {
           pakingEnd={pakingEnd}
           pakingStart={pakingStart}
           duration={duration}
+          setReload={setReload}
         />
       ) : (
         <></>
@@ -437,6 +455,8 @@ export default function ListCar() {
           activeButton={activeButton}
           setActiveButton={setActiveButton}
           data={data}
+          setReload={setReload}
+
         />
       ) : (
         <></>
