@@ -26,6 +26,9 @@ import {
 } from "firebase/firestore";
 import { db } from "data/firebase";
 import { useDispatch, useSelector } from "react-redux";
+// toasst
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function createData(
   id,
@@ -91,6 +94,7 @@ export default function DenseTable() {
   const [infoTickets, setInfoTickets] = useState("");
   const [idUpdate, setIdUpdate] = useState("");
   const [status, setStatus] = useState("");
+
   const handleClickCancel = (id, nameTrips, startTime, status) => {
     setOpen(true);
     setIdUpdate(id);
@@ -107,19 +111,27 @@ export default function DenseTable() {
             Status: "Wait",
           })
             .then(() => {
-              alert("ĐỢI thông báo");
+              toast.success("Vui lòng chờ xác nhận!", {
+                autoClose: 1000,
+              });
             })
             .catch((error) => {
-              alert("huỷ vé thất bại");
+              toast.error("Đã có lỗi xảy ra!" + error.message, {
+                autoClose: 1000,
+              });
             })
         : updateDoc(statisticsRef, {
             Status: "Success",
           })
             .then(() => {
-              alert("ĐỢI thông báo");
+              toast.success("Vui lòng chờ xác nhận!", {
+                autoClose: 1000,
+              });
             })
             .catch((error) => {
-              alert("huỷ vé thất bại");
+              toast.error("Đã có lỗi xảy ra!" + error.message, {
+                autoClose: 1000,
+              });
             });
     }
   };
@@ -133,7 +145,7 @@ export default function DenseTable() {
     setIdUpdate("");
     setStatus("");
   };
-  console.log('setIdUpdate',idUpdate);
+  // console.log('setIdUpdate',idUpdate);
   return (
     <>
       <TableContainer component={Paper}>

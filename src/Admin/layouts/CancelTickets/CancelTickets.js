@@ -26,7 +26,7 @@ import {
   Grid,
   TableHead,
 } from "@mui/material";
-import { collection, doc, getDocs, updateDoc,getDoc } from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "data/firebase";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -37,6 +37,8 @@ import MDTypography from "Admin/components/MDTypography";
 // toasst
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import emailjs from "@emailjs/browser";
+
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -192,21 +194,21 @@ export default function CancelTickets() {
   //onlcik
   const [open1, setOpen1] = useState(false);
   const [idUpdate, setIdUpdate] = useState("");
-    const [idTrip, setIdTrip] = useState("");
+  const [idTrip, setIdTrip] = useState("");
   const handleClose = () => {
     setOpen1(false);
     setIdUpdate("");
     setIdTrip("");
 
   };
-  const handleClickStatus = (id,id_Trip) => {
+  const handleClickStatus = (id, id_Trip) => {
     console.log("idUpdate: " + id);
     console.log("idTrip: " + id_Trip);
     setOpen1(true);
     setIdUpdate(id);
     setIdTrip(id_Trip);
-    };
-  
+  };
+
 
   const handleUpdate = () => {
     setOpen1(false);
@@ -224,7 +226,7 @@ export default function CancelTickets() {
           const checkoutData = checkoutDocSnapshot.data();
           listSeat = checkoutData.ListSeated;
         }
-        console.log("list seat" +listSeat);
+        console.log("list seat" + listSeat);
 
         const docSnap = await getDoc(tripRef);
         const data = docSnap.data();
@@ -241,16 +243,34 @@ export default function CancelTickets() {
         updateDoc(statisticsRef, {
           Status: "Cancel"
         })
-          toast.success("Hủy vé thành công!", {
-            autoClose: 1000,
-          });
+        toast.success("Hủy vé thành công!", {
+          autoClose: 1000,
+        });
+        const templateParams = {
+          toEmail: data[0].Email,
+          fullName: data[0].FullName,
+          nameGarage: data[0].NameGarage,
+          idTrip: data[0].ID_Trip,
+          nameTrip: data[0].NameTrip,
+          totalSeat: data[0].TotalSeated,
+          listSeated: data[0].ListSeated,
+          totalPrice: data[0].TotalPrice,
+        };
+        console.log(templateParams)
+        // emailjs.send('gmail', 'template_03k3cnb', templateParams, 'nw10q72SaDSc17UUF')
+        //   .then((response) => {
+        //     console.log('SUCCESS!', response.status, response.text);
+        //   }, (error) => {
+        //     console.log('FAILED...', error);
+        //   });
       } catch (e) {
-        toast.error("Đã có lỗi xảy ra!" + error, {
+        toast.error("Đã có lỗi xảy ra!" + error.message, {
           autoClose: 1000,
         });
       }
     };
     updateTrip();
+    // send mail when cancel ticket
   };
   const handleClose2 = () => {
     setOpen1(false);
@@ -356,7 +376,7 @@ export default function CancelTickets() {
                                 }}
                                 variant="contained"
                                 color="success"
-                                onClick={(id,id_Trip) => handleClickStatus(row.id,row.id_Trip)}
+                                onClick={(id, id_Trip) => handleClickStatus(row.id, row.id_Trip)}
                               >
                                 {row.status}
                               </Button>

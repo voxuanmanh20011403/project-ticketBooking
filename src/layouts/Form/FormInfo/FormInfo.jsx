@@ -15,13 +15,9 @@ import { LoginAction } from "redux/slices/auth";
 import { updateProfile } from "firebase/auth";
 import { auth } from "data/firebase";
 import { db } from "data/firebase";
-import PropTypes from "prop-types";
-import SwipeableViews from "react-swipeable-views";
-import { useTheme } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 
@@ -66,14 +62,14 @@ const FormInfo = () => {
       displayName: name,
     })
       .then(() => {
-        // Profile updated!
-        // ...
-        alert("Updated");
+        toast.success("Cập nhật thành công!", {
+          autoClose: 1000,
+        });
       })
       .catch((error) => {
-        // An error occurred
-        // ...
-        alert("No update");
+        toast.error("Đã có lỗi xảy ra!" + error.message, {
+          autoClose: 1000,
+        });
       });
     const statisticsRef = doc(collection(db, "Account"), `${id}`);
 

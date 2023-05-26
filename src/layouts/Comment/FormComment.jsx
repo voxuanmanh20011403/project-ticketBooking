@@ -22,7 +22,8 @@ import {
   doc,
   arrayUnion,
 } from "firebase/firestore";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const labels = {
   1: "Tệ",
   2: "Không hài lòng",
@@ -57,7 +58,7 @@ const FormComment = ({fullName, idGarage}) => {
   const addComment = async () => {
     const ID_Garage = idGarage;
     const commentData = {
-      FullName: fullName, // lấy fullname người dùng từ collection checkout
+      FullName: fullName, 
       Comment: comment,
       Start: value,
       DateTime: new Date(),
@@ -74,9 +75,14 @@ const FormComment = ({fullName, idGarage}) => {
           User: arrayUnion(commentData),
         });
         console.log("Comment added to document with ID: ", docSnapshot.id);
+        toast.success("Cảm ơn bạn đã đánh giá!", {
+          autoClose: 1000,
+        });
       });
     } catch (error) {
-      console.error("Error adding comment: ", error);
+      toast.error("Đã có lỗi xảy ra!" + error.message, {
+        autoClose: 1000,
+      });
     }
   };
   const handleSubmit = (event) => {

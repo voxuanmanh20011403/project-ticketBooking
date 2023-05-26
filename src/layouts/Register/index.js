@@ -27,6 +27,10 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+// toasst
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -134,11 +138,18 @@ function Register() {
         console.error("Error adding document: ", e);
       }
       sendEmailVerification(auth.currentUser).then(() => {
-        alert("Vui lòng kiểm tra email để thực hiện veri tài khoản !!!");
+        toast.success("Đăng kí thành công. Vui lòng kiểm tra email để thực hiện veri tài khoản !!!", {
+          autoClose: 1000,
+        });
+
       });
-      history("/");
+      setTimeout(() => {
+        history("/SignIn");
+      }, 2000);
     } catch (error) {
-      console.log(error.message);
+      toast.error("Đã có lỗi xảy ra! " + error.message, {
+        autoClose: 2000,
+      });
     }
   };
   return (
