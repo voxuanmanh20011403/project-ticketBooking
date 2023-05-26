@@ -26,7 +26,13 @@ import {
   Grid,
   TableHead,
 } from "@mui/material";
-import { collection, doc, getDocs, updateDoc,getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "data/firebase";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -37,6 +43,8 @@ import MDTypography from "Admin/components/MDTypography";
 // toasst
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import emailjs from "@emailjs/browser";
+
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -139,19 +147,6 @@ function createData(
 export default function CancelTickets() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
   //getData
   const [data, setData] = useState([]);
 
@@ -169,8 +164,6 @@ export default function CancelTickets() {
     }
     fetchData();
   }, []);
-  console.log("checkout", data);
-
   //craete Data
   const rows = data
     .map((item) => {
@@ -190,24 +183,34 @@ export default function CancelTickets() {
       );
     })
     .sort((a, b) => (a.calories < b.calories ? -1 : 1));
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   //onlcik
   const [open1, setOpen1] = useState(false);
   const [idUpdate, setIdUpdate] = useState("");
-    const [idTrip, setIdTrip] = useState("");
+  const [idTrip, setIdTrip] = useState("");
   const handleClose = () => {
     setOpen1(false);
     setIdUpdate("");
     setIdTrip("");
-
   };
-  const handleClickStatus = (id,id_Trip) => {
+  const handleClickStatus = (id, id_Trip) => {
     console.log("idUpdate: " + id);
     console.log("idTrip: " + id_Trip);
     setOpen1(true);
     setIdUpdate(id);
     setIdTrip(id_Trip);
-    };
-  
+  };
 
   const handleUpdate = () => {
     setOpen1(false);
@@ -218,14 +221,15 @@ export default function CancelTickets() {
 
     const updateTrip = async () => {
       try {
-        const checkoutDocRef = doc(db, 'Checkout', `${idUpdate}`);
+        const checkoutDocRef = doc(db, "Checkout", `${idUpdate}`);
         const checkoutDocSnapshot = await getDoc(checkoutDocRef);
+        let dataSendEmail = [];
         let listSeat = [];
         if (checkoutDocSnapshot.exists()) {
           const checkoutData = checkoutDocSnapshot.data();
+          dataSendEmail.push(checkoutData);
           listSeat = checkoutData.ListSeated;
         }
-        console.log("list seat" +listSeat);
 
         const docSnap = await getDoc(tripRef);
         const data = docSnap.data();
@@ -240,18 +244,48 @@ export default function CancelTickets() {
         // update status checkout
         const statisticsRef = doc(collection(db, "Checkout"), `${idUpdate}`);
         updateDoc(statisticsRef, {
-          Status: "Cancel"
-        })
-          toast.success("Hủy vé thành công!", {
-            autoClose: 1000,
-          });
+          Status: "Cancel",
+        });
+        toast.success("Hủy vé thành công!", {
+          autoClose: 1000,
+        });
+        const templateParams = {
+          toEmail: dataSendEmail[0].Email,
+          fullName: dataSendEmail[0].FullName,
+          nameGarage: dataSendEmail[0].NameGarage,
+          idTrip: dataSendEmail[0].ID_Trip,
+          nameTrip: dataSendEmail[0].NameTrip,
+          totalSeated: dataSendEmail[0].TotalSeated,
+          listSeated: dataSendEmail[0].ListSeated,
+          totalPrice: dataSendEmail[0].TotalPrice.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }),
+        };
+
+        // emailjs
+        //   .send(
+        //     "gmail",
+        //     "template_03k3cnb",
+        //     templateParams,
+        //     "nw10q72SaDSc17UUF"
+        //   )
+        //   .then(
+        //     (response) => {
+        //       console.log("SUCCESS!", response.status, response.text);
+        //     },
+        //     (error) => {
+        //       console.log("FAILED...", error);
+        //     }
+        //   );
       } catch (e) {
-        toast.error("Đã có lỗi xảy ra!" + error, {
+        toast.error("Đã có lỗi xảy ra!" + error.message, {
           autoClose: 1000,
         });
       }
     };
     updateTrip();
+    // send mail when cancel ticket
   };
   const handleClose2 = () => {
     setOpen1(false);
@@ -259,6 +293,20 @@ export default function CancelTickets() {
     setIdTrip("");
     // setStatus("");
   };
+  const reUpdateData = ( ) => {
+    async function fetchData() {
+      const accountsCol = collection(db, "Checkout");
+      const accountsSnapshot = await getDocs(accountsCol);
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      setData(accountsList);
+    }
+    fetchData();
+  }
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -276,13 +324,23 @@ export default function CancelTickets() {
                   bgColor="info"
                   borderRadius="lg"
                   coloredShadow="info"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    height: "80px",
+                  }}
                 >
                   <MDTypography variant="h6" color="white">
-                    <div style={{ width: "100%", display: "flex" }}>
-                      <h3 className="h3Title"> Quản lý huỷ vé xe</h3>
+                    <div style={{ width: "400px", display: "flex" , fontWeight: "bold"}}>
+                      <h3 className="h3Title" style={{fontWeight: "bold"} }> QUẢN LÝ HUỶ VÉ XE</h3>
                       <div className="btnAdd"></div>
                     </div>
                   </MDTypography>
+                  <Button variant="contained" onClick={reUpdateData}>
+                    <MDTypography variant="h6" color="white">
+                      Cập nhật
+                    </MDTypography>
+                  </Button>
                 </MDBox>
                 <Box sx={{ width: "100%" }}>
                   <TableContainer component={Paper}>
@@ -319,11 +377,11 @@ export default function CancelTickets() {
                       <TableBody>
                         {(rowsPerPage > 0
                           ? rows
-                            .filter((row) => row.status === "Wait")
-                            .slice(
-                              page * rowsPerPage,
-                              page * rowsPerPage + rowsPerPage
-                            )
+                              .filter((row) => row.status === "Wait")
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
                           : rows.filter((row) => row.status === "Wait")
                         ).map((row, index) => (
                           <TableRow key={index}>
@@ -357,7 +415,9 @@ export default function CancelTickets() {
                                 }}
                                 variant="contained"
                                 color="success"
-                                onClick={(id,id_Trip) => handleClickStatus(row.id,row.id_Trip)}
+                                onClick={(id, id_Trip) =>
+                                  handleClickStatus(row.id, row.id_Trip)
+                                }
                               >
                                 {row.status}
                               </Button>
@@ -382,8 +442,7 @@ export default function CancelTickets() {
                             ]}
                             colSpan={3}
                             count={
-                              rows.filter((row) => row.status === "Wait")
-                                .length
+                              rows.filter((row) => row.status === "Wait").length
                             }
                             rowsPerPage={rowsPerPage}
                             page={page}

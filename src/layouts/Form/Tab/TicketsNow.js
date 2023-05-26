@@ -1,134 +1,3 @@
-// import * as React from "react";
-// import Table from "@mui/material/Table";
-// import TableBody from "@mui/material/TableBody";
-// import TableCell from "@mui/material/TableCell";
-// import TableContainer from "@mui/material/TableContainer";
-// import TableHead from "@mui/material/TableHead";
-// import TableRow from "@mui/material/TableRow";
-// import Paper from "@mui/material/Paper";
-// import { Button } from "@mui/material";
-// import { useState } from "react";
-// import { useEffect } from "react";
-// import { collection, getDocs } from "firebase/firestore";
-// import { db } from "data/firebase";
-// import { useDispatch, useSelector } from "react-redux";
-
-// function createData(
-//   id,
-//   id_Trip,
-//   fullname,
-//   email,
-//   // startTime,
-//   nameTrip,
-//   // dateCheckout,
-//   totalSeated,
-//   totalPrice,
-//   status
-// ) {
-//   return {
-//     id,
-//     id_Trip,
-//     fullname,
-//     email,
-//     // startTime,
-//     nameTrip,
-//     // dateCheckout,
-//     totalSeated,
-//     totalPrice,
-//     status,
-//   };
-// }
-
-// export default function DenseTable() {
-//   const [data, setData] = useState([]);
-//   const dispatch = useDispatch();
-//   const { email } = useSelector((state) => state.user);
-//   // console.log(displayName);
-//   useEffect(() => {
-//     async function fetchData() {
-//       const accountsCol = collection(db, "Checkout");
-//       const accountsSnapshot = await getDocs(accountsCol);
-//       const accountsList = accountsSnapshot.docs.map((doc) => {
-//         return {
-//           id: doc.id,
-//           ...doc.data(),
-//         };
-//       });
-//       setData(accountsList);
-//     }
-//     fetchData();
-//   }, []);
-//   //craete data
-//   const rows = data.map((item) =>
-//     createData(
-//       item.id,
-//       item.ID_Trip,
-//       item.FullName,
-//       item.Email,
-//       // item.StartTime,
-//       item.NameTrip,
-//       // item.DateCheckout,
-//       item.TotalSeated,
-//       item.TotalPrice,
-//       item.Status
-//     )
-//   );
-//   return (
-//     <TableContainer component={Paper}>
-//       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-//         <TableHead>
-//           <TableRow>
-//             <TableCell style={{ width: "%" }} align="">
-//               Khách hàng
-//             </TableCell>
-//             <TableCell style={{ width: "%" }} align="">
-//               Email/Sdt
-//             </TableCell>
-//             <TableCell style={{ width: "%" }} align="">
-//               Chuyến xe
-//             </TableCell>
-//             <TableCell style={{ width: "15%" }} align="center">
-//               Ngày khởi hành
-//             </TableCell>
-//             <TableCell style={{ width: "%" }} align="center">
-//               Số vé
-//             </TableCell>
-//             <TableCell style={{ width: "%" }} align="center">
-//               Tổng thanh toán
-//             </TableCell>
-//             <TableCell style={{ width: "%" }} align="center">
-//               Ngày thanh toán
-//             </TableCell>
-//           </TableRow>
-//         </TableHead>
-//         <TableBody>
-//           {rows
-//             .filter((row) => row.status === "Success" && email === row.email)
-
-//             .map((row) => (
-//               <TableRow
-//                 key={row.name}
-//                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-//               >
-//                 <TableCell align="">{row.fullname}</TableCell>
-//                 <TableCell align="">{row.email}</TableCell>
-//                 <TableCell align="">{row.nameTrip}</TableCell>
-//                 <TableCell align="center">Thời gian khởi hành</TableCell>
-//                 <TableCell align="center">{row.totalSeated}</TableCell>
-//                 <TableCell align="center">
-//                   {row.totalPrice.toLocaleString()}
-//                 </TableCell>
-
-//                 <TableCell align="center">Ngày thanh toán</TableCell>
-
-//                 <Button>Yêu cầu huỷ vé </Button>
-//               </TableRow>
-//             ))}
-//         </TableBody>
-//       </Table>
-//     </TableContainer>
-//   );
-// }
 import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -157,6 +26,9 @@ import {
 } from "firebase/firestore";
 import { db } from "data/firebase";
 import { useDispatch, useSelector } from "react-redux";
+// toasst
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function createData(
   id,
@@ -190,8 +62,10 @@ export default function DenseTable() {
   const { email, displayName } = useSelector((state) => state.user);
   const currentDate = new Date();
   //get data from  db , sort : startTime
+
   const dataRef = collection(db, "Checkout");
   const getDatas = query(dataRef, orderBy("StartTime", "asc"));
+
   useEffect(() => {
     const getData = async () => {
       const data = await getDocs(getDatas);
@@ -222,12 +96,26 @@ export default function DenseTable() {
   const [infoTickets, setInfoTickets] = useState("");
   const [idUpdate, setIdUpdate] = useState("");
   const [status, setStatus] = useState("");
+  const [reloadDB, setReLoadDB] = useState(false);
+
+  useEffect(() => {
+    const dataRef = collection(db, "Checkout");
+    const getDatas = query(dataRef, orderBy("StartTime", "asc"));
+    const getData = async () => {
+      const data = await getDocs(getDatas);
+      setData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getData();
+  }, [reloadDB]);
+
   const handleClickCancel = (id, nameTrips, startTime, status) => {
     setOpen(true);
     setIdUpdate(id);
     setInfoTickets(nameTrips + " vào lúc: " + startTime);
     setStatus(status);
+    setReLoadDB((pve) => !pve);
   };
+
   const handleUpdate = () => {
     setOpen(false);
     //update
@@ -238,19 +126,31 @@ export default function DenseTable() {
             Status: "Wait",
           })
             .then(() => {
-              alert("ĐỢI thông báo");
+              toast.success("Vui lòng chờ xác nhận!", {
+                autoClose: 1000,
+              });
+              setReLoadDB((pve) => !pve);
             })
             .catch((error) => {
-              alert("huỷ vé thất bại");
+              toast.error("Đã có lỗi xảy ra!" + error.message, {
+                autoClose: 1000,
+              });
+              setReLoadDB((pve) => !pve);
             })
         : updateDoc(statisticsRef, {
             Status: "Success",
           })
             .then(() => {
-              alert("ĐỢI thông báo");
+              toast.success("Vui lòng chờ xác nhận!", {
+                autoClose: 1000,
+              });
+              setReLoadDB((pve) => !pve);
             })
             .catch((error) => {
-              alert("huỷ vé thất bại");
+              toast.error("Đã có lỗi xảy ra!" + error.message, {
+                autoClose: 1000,
+              });
+              setReLoadDB((pve) => !pve);
             });
     }
   };
@@ -264,7 +164,7 @@ export default function DenseTable() {
     setIdUpdate("");
     setStatus("");
   };
-  console.log('setIdUpdate',idUpdate);
+  // console.log('setIdUpdate',idUpdate);
   return (
     <>
       <TableContainer component={Paper}>
@@ -274,7 +174,7 @@ export default function DenseTable() {
               <TableCell style={{ width: "%" }} align="">
                 Khách hàng
               </TableCell>
-              <TableCell style={{ width: "%" }} align="">
+              <TableCell style={{ width: "20%" }} align="">
                 Email/Sdt
               </TableCell>
               <TableCell style={{ width: "%" }} align="">
@@ -325,7 +225,8 @@ export default function DenseTable() {
                   <Button
                     disabled={
                       row.startTime.getTime() - currentDate.getTime() <=
-                      24 * 60 * 60 * 1000
+                      24 * 60 * 60 * 1000 ||
+                      row.status === "Wait"
                     }
                     onClick={(id) => {
                       handleClickCancel(

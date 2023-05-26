@@ -28,7 +28,7 @@ export const TripsAuto = () => {
   }, []);
 
   const [groupLists, setGroupList] = useState([]);
-  const groupsRef = collection(db, "Trips");
+  const groupsRef = collection(db, "Tripss");
   const getGroups = query(groupsRef, orderBy("StartTime", "asc"));
   useEffect(() => {
     const getPosts = async () => {
@@ -42,7 +42,7 @@ export const TripsAuto = () => {
   useEffect(() => {
     const intervalId = setInterval(function () {
       var now = new Date();
-      if (now.getHours() ==18 && now.getMinutes() === 30) {
+      if (now.getHours() == 11 && now.getMinutes() === 31) {
         for (let i = 0; i < listCars.length; i++) {
           const car = listCars[i];
           // Tính khoảng cách giữa 2 ngày dưới dạng số mili giây
@@ -60,15 +60,23 @@ export const TripsAuto = () => {
             //cộng ngày chạy
             const date = StartTime.toDate();
             date.setDate(date.getDate() + diffDays);
+
             //chuyển vào fb
             const fromDate = new Date(date);
             const timestamp = Timestamp.fromDate(date);
+            console.log("datexyz", timestamp.toDate());
+
+            //endTime
+            const dateEnd = timestamp.toDate();
+            dateEnd.setHours(dateEnd.getHours() + car.duration);
+            const fromDateEnd = new Date(dateEnd);
+            const timestampEnd = Timestamp.fromDate(dateEnd);
 
             //só seat:
             let id = 0;
             let name = "A";
             let newState = [];
-            for (var ii = 1; ii <= car.Seat; ii++) {
+            for (var ii = 1; ii <= car.seat; ii++) {
               id++;
               newState.push({
                 id: id,
@@ -78,56 +86,75 @@ export const TripsAuto = () => {
               });
             }
             try {
-              const docRef = addDoc(collection(db, "Trips"), {
+              const docRef = addDoc(collection(db, "Tripss"), {
                 EndPoint: car.EndPoint,
                 Hotline: car.Hotline,
                 ID_Car: car.ID_Car,
                 ID_Garage: car.ID_Garage,
                 LicensePlate: car.LicensePlate,
-                Namegarage: car.Namegarage,
+                NameGarage: car.Namegarage,
+                NameTrip: car.NameTrip,
                 PakingEnd: car.PakingEnd,
                 PakingStart: car.PakingStart,
                 Price: car.Price,
-                Seat: newState,
                 StartPoint: car.StartPoint,
                 TypeVehicle: car.TypeVehicle,
                 duration: car.duration,
                 StartTime: timestamp,
+                EndTime: timestampEnd,
+                seat: newState,
               });
               console.log("Document written with ID: ", docRef.id);
             } catch (e) {}
-            // console.log('groupLists2',groupLists);
+            console.log("groupLists2", groupLists);
             clearInterval(intervalId);
           } else {
             console.log(
               `Car ${car.ID_Car} ko tồn tại, tiến hành tạo bảng đầu tiên `
             );
+            //só seat:
+            let id = 0;
+            let name = "A";
+            let newState = [];
+            for (var ii = 1; ii <= car.seat; ii++) {
+              id++;
+              newState.push({
+                id: id,
+                name: name + ii,
+                status: "empty",
+                ui: "",
+              });
+            }
+            //endTime
+            const dateEnd = car.StartTime.toDate();
+            dateEnd.setHours(dateEnd.getHours() + car.duration);
+            const fromDateEnd = new Date(dateEnd);
+            const timestampEnd = Timestamp.fromDate(dateEnd);
+            //endtime
             try {
-              const docRef = addDoc(collection(db, "Trips"), {
+              const docRef = addDoc(collection(db, "Tripss"), {
                 EndPoint: car.EndPoint,
                 Hotline: car.Hotline,
                 ID_Car: car.ID_Car,
                 ID_Garage: car.ID_Garage,
                 LicensePlate: car.LicensePlate,
-                Namegarage: car.Namegarage,
+                NameGarage: car.Namegarage,
+                NameTrip: car.NameTrip,
                 PakingEnd: car.PakingEnd,
                 PakingStart: car.PakingStart,
                 Price: car.Price,
-                Seat: newState,
                 StartPoint: car.StartPoint,
                 TypeVehicle: car.TypeVehicle,
                 duration: car.duration,
-                StartTime: StartTime,
+                StartTime: car.StartTime,
+                EndTime: timestampEnd,
+                seat: newState,
               });
               console.log("Document written with ID: ", docRef.id);
             } catch (e) {}
-
-            //dưeaj vào starttimn
-            //
           }
         }
       }
-     
     }, 100);
   }, [setGroupList]);
 

@@ -21,6 +21,9 @@ import {
 import { Fab } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const useStyles = makeStyles((theme) => ({
   saveButton: {
     width: "200px",
@@ -105,26 +108,38 @@ const FormPassWord = () => {
         console.log(
           `Updated viewer count for NameGarage `
         );
-      });
+        toast.success("Cập nhật thành công!", {
+          autoClose: 1000,
+        });
+      })
+      .catch((error) =>{
+        toast.error("Đã có lỗi xảy ra!" + error.message, {
+          autoClose: 1000,
+        });
+      })
     } else {
-      alert("Mật khẩu hiện tại chưa chính xác");
+      toast.error("Mật khẩu hiện tại chưa chính xác!", {
+        autoClose: 1000,
+      });
     }
   };
   const HandleSendMailVeri = () => {
     sendEmailVerification(auth.currentUser).then(() => {
-      alert("đã gửi email veri !!!");
+      toast.success("Vui lòng xác nhận email!", {
+        autoClose: 1000,
+      });
     });
   };
   return (
     <Grid container justifyContent="center" alignItems="center" className="code__container">
       <Grid item xs={12} sm={12} md={6} lg={4} >
-      <Paper elevation={4} className={classes.paper}>
-         <h2 style={{
-          fontWeight: 'bold',
-          color: 'primary',
-          fontSize: '1.5rem',
-          color:'#2474e5',
-        }}>
+        <Paper elevation={4} className={classes.paper}>
+          <h2 style={{
+            fontWeight: 'bold',
+            color: 'primary',
+            fontSize: '1.5rem',
+            color: '#2474e5',
+          }}>
             Đổi mật khẩu
           </h2>
           <MDBox pt={4} pb={3} px={3}>

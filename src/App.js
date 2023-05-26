@@ -7,7 +7,7 @@ import {
   Navigate,
   useLocation,
   useNavigate,
-  Redirect
+  Redirect,
 } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../src/Admin/assets/theme";
@@ -39,13 +39,10 @@ import { LogoutAction } from "redux/slices/auth";
 import { in4 } from "redux/slices/auth";
 import { Infor } from "redux/slices/auth";
 
-
-
 import { TripsAuto } from "Admin/layouts/RenderTableTripsAuto/TripsAuto";
 import FormComment from "layouts/Comment/FormComment";
 import User from "layouts/Form/User/User";
 import Messenger from "layouts/Messenger/Messenger";
-
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -66,11 +63,11 @@ export default function App() {
   const dispatch = useDispatch();
   const { displayName } = useSelector((state) => state.user);
 
-  useEffect(() =>{
+  useEffect(() => {
     var data = JSON.parse(localStorage.getItem("account"));
     const role = data ? data.Role : "-1";
     setRole(role);
-  },[])
+  }, []);
 
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
@@ -79,14 +76,49 @@ export default function App() {
       } else {
         dispatch(LogoutAction());
       }
-      setUid(authUser.uid);
+      // setUid(authUser.uid);
     });
   }, [dispatch]);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+
+        {/* Role: Admin */}
+        {role === "0" ? (
+          <>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/admin" element={<Admin />}></Route>
+            <Route path="/SignIN" element={<SignIn />} />
+          </>
+        ) : role === "1" ? (
+          <>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/SignIN" element={<SignIn />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/booking" element={<Booking />}></Route>
+            <Route path="/payment" element={<Payment />}></Route>
+            <Route path="/return" element={<Return />}></Route>
+            <Route path="/comment" element={<FormComment />}></Route>
+            <Route path="/user" element={<User />} />
+          </>
+        ) : role !== "1" && role !== "0" ? (
+          <>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/booking" element={<Booking />}></Route>
+            <Route path="/SignIN" element={<SignIn />} />
+            <Route path="/register" element={<Register />} />
+          </>
+        ) : (
+          <Route path="*" element={<NotFoundPage />} />
+        )}
+
+        {/* <Route path="*" element={<NotFoundPage />} /> */}
+
+        {/* <Route path="TestAddCar" element={<TestAddCar />} />
+        <Route path="addusser" element={<AddUser />} />
+        <Route path="/chatbot" element={<Messenger />}></Route> */}
+        {/*  <Route path="/" element={<Home />}></Route>
         <Route path="/SignIN" element={<SignIn />} />
         <Route path="/register" element={<Register />} />
         <Route path="/booking" element={<Booking />}></Route>
@@ -104,7 +136,7 @@ export default function App() {
         <Route path="TestAddCar" element={<TestAddCar />} />
         <Route path="addusser" element={<AddUser />} />
         <Route path='/comment' element ={<FormComment />}></Route>
-        <Route path="/chatbot" element={<Messenger />}></Route>
+        <Route path="/chatbot" element={<Messenger />}></Route> */}
       </Routes>
       <TripsAuto />
     </ThemeProvider>
