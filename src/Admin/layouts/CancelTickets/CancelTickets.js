@@ -26,7 +26,13 @@ import {
   Grid,
   TableHead,
 } from "@mui/material";
-import { collection, doc, getDocs, updateDoc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "data/firebase";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -158,8 +164,6 @@ export default function CancelTickets() {
     }
     fetchData();
   }, []);
-  console.log("checkout", data);
-
   //craete Data
   const rows = data
     .map((item) => {
@@ -199,7 +203,6 @@ export default function CancelTickets() {
     setOpen1(false);
     setIdUpdate("");
     setIdTrip("");
-
   };
   const handleClickStatus = (id, id_Trip) => {
     console.log("idUpdate: " + id);
@@ -208,7 +211,6 @@ export default function CancelTickets() {
     setIdUpdate(id);
     setIdTrip(id_Trip);
   };
-
 
   const handleUpdate = () => {
     setOpen1(false);
@@ -219,14 +221,15 @@ export default function CancelTickets() {
 
     const updateTrip = async () => {
       try {
-        const checkoutDocRef = doc(db, 'Checkout', `${idUpdate}`);
+        const checkoutDocRef = doc(db, "Checkout", `${idUpdate}`);
         const checkoutDocSnapshot = await getDoc(checkoutDocRef);
+        let dataSendEmail = [];
         let listSeat = [];
         if (checkoutDocSnapshot.exists()) {
           const checkoutData = checkoutDocSnapshot.data();
+          dataSendEmail.push(checkoutData);
           listSeat = checkoutData.ListSeated;
         }
-        console.log("list seat" + listSeat);
 
         const docSnap = await getDoc(tripRef);
         const data = docSnap.data();
@@ -241,28 +244,40 @@ export default function CancelTickets() {
         // update status checkout
         const statisticsRef = doc(collection(db, "Checkout"), `${idUpdate}`);
         updateDoc(statisticsRef, {
-          Status: "Cancel"
-        })
+          Status: "Cancel",
+        });
         toast.success("Hủy vé thành công!", {
           autoClose: 1000,
         });
         const templateParams = {
-          toEmail: data[0].Email,
-          fullName: data[0].FullName,
-          nameGarage: data[0].NameGarage,
-          idTrip: data[0].ID_Trip,
-          nameTrip: data[0].NameTrip,
-          totalSeat: data[0].TotalSeated,
-          listSeated: data[0].ListSeated,
-          totalPrice: data[0].TotalPrice,
+          toEmail: dataSendEmail[0].Email,
+          fullName: dataSendEmail[0].FullName,
+          nameGarage: dataSendEmail[0].NameGarage,
+          idTrip: dataSendEmail[0].ID_Trip,
+          nameTrip: dataSendEmail[0].NameTrip,
+          totalSeated: dataSendEmail[0].TotalSeated,
+          listSeated: dataSendEmail[0].ListSeated,
+          totalPrice: dataSendEmail[0].TotalPrice.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }),
         };
-        console.log(templateParams)
-        // emailjs.send('gmail', 'template_03k3cnb', templateParams, 'nw10q72SaDSc17UUF')
-        //   .then((response) => {
-        //     console.log('SUCCESS!', response.status, response.text);
-        //   }, (error) => {
-        //     console.log('FAILED...', error);
-        //   });
+
+        // emailjs
+        //   .send(
+        //     "gmail",
+        //     "template_03k3cnb",
+        //     templateParams,
+        //     "nw10q72SaDSc17UUF"
+        //   )
+        //   .then(
+        //     (response) => {
+        //       console.log("SUCCESS!", response.status, response.text);
+        //     },
+        //     (error) => {
+        //       console.log("FAILED...", error);
+        //     }
+        //   );
       } catch (e) {
         toast.error("Đã có lỗi xảy ra!" + error.message, {
           autoClose: 1000,
@@ -278,6 +293,20 @@ export default function CancelTickets() {
     setIdTrip("");
     // setStatus("");
   };
+  const reUpdateData = ( ) => {
+    async function fetchData() {
+      const accountsCol = collection(db, "Checkout");
+      const accountsSnapshot = await getDocs(accountsCol);
+      const accountsList = accountsSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      setData(accountsList);
+    }
+    fetchData();
+  }
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -295,13 +324,23 @@ export default function CancelTickets() {
                   bgColor="info"
                   borderRadius="lg"
                   coloredShadow="info"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    height: "80px",
+                  }}
                 >
                   <MDTypography variant="h6" color="white">
-                    <div style={{ width: "100%", display: "flex" }}>
-                      <h3 className="h3Title"> Quản lý huỷ vé xe</h3>
+                    <div style={{ width: "400px", display: "flex" , fontWeight: "bold"}}>
+                      <h3 className="h3Title" style={{fontWeight: "bold"} }> QUẢN LÝ HUỶ VÉ XE</h3>
                       <div className="btnAdd"></div>
                     </div>
                   </MDTypography>
+                  <Button variant="contained" onClick={reUpdateData}>
+                    <MDTypography variant="h6" color="white">
+                      Cập nhật
+                    </MDTypography>
+                  </Button>
                 </MDBox>
                 <Box sx={{ width: "100%" }}>
                   <TableContainer component={Paper}>
@@ -338,11 +377,11 @@ export default function CancelTickets() {
                       <TableBody>
                         {(rowsPerPage > 0
                           ? rows
-                            .filter((row) => row.status === "Wait")
-                            .slice(
-                              page * rowsPerPage,
-                              page * rowsPerPage + rowsPerPage
-                            )
+                              .filter((row) => row.status === "Wait")
+                              .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                              )
                           : rows.filter((row) => row.status === "Wait")
                         ).map((row, index) => (
                           <TableRow key={index}>
@@ -376,7 +415,9 @@ export default function CancelTickets() {
                                 }}
                                 variant="contained"
                                 color="success"
-                                onClick={(id, id_Trip) => handleClickStatus(row.id, row.id_Trip)}
+                                onClick={(id, id_Trip) =>
+                                  handleClickStatus(row.id, row.id_Trip)
+                                }
                               >
                                 {row.status}
                               </Button>

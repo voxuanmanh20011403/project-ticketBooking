@@ -62,8 +62,10 @@ export default function DenseTable() {
   const { email, displayName } = useSelector((state) => state.user);
   const currentDate = new Date();
   //get data from  db , sort : startTime
+
   const dataRef = collection(db, "Checkout");
   const getDatas = query(dataRef, orderBy("StartTime", "asc"));
+
   useEffect(() => {
     const getData = async () => {
       const data = await getDocs(getDatas);
@@ -94,13 +96,26 @@ export default function DenseTable() {
   const [infoTickets, setInfoTickets] = useState("");
   const [idUpdate, setIdUpdate] = useState("");
   const [status, setStatus] = useState("");
+  const [reloadDB, setReLoadDB] = useState(false);
+
+  useEffect(() => {
+    const dataRef = collection(db, "Checkout");
+    const getDatas = query(dataRef, orderBy("StartTime", "asc"));
+    const getData = async () => {
+      const data = await getDocs(getDatas);
+      setData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getData();
+  }, [reloadDB]);
 
   const handleClickCancel = (id, nameTrips, startTime, status) => {
     setOpen(true);
     setIdUpdate(id);
     setInfoTickets(nameTrips + " vào lúc: " + startTime);
     setStatus(status);
+    setReLoadDB((pve) => !pve);
   };
+
   const handleUpdate = () => {
     setOpen(false);
     //update
@@ -114,11 +129,13 @@ export default function DenseTable() {
               toast.success("Vui lòng chờ xác nhận!", {
                 autoClose: 1000,
               });
+              setReLoadDB((pve) => !pve);
             })
             .catch((error) => {
               toast.error("Đã có lỗi xảy ra!" + error.message, {
                 autoClose: 1000,
               });
+              setReLoadDB((pve) => !pve);
             })
         : updateDoc(statisticsRef, {
             Status: "Success",
@@ -127,11 +144,13 @@ export default function DenseTable() {
               toast.success("Vui lòng chờ xác nhận!", {
                 autoClose: 1000,
               });
+              setReLoadDB((pve) => !pve);
             })
             .catch((error) => {
               toast.error("Đã có lỗi xảy ra!" + error.message, {
                 autoClose: 1000,
               });
+              setReLoadDB((pve) => !pve);
             });
     }
   };
@@ -206,7 +225,8 @@ export default function DenseTable() {
                   <Button
                     disabled={
                       row.startTime.getTime() - currentDate.getTime() <=
-                      24 * 60 * 60 * 1000
+                      24 * 60 * 60 * 1000 ||
+                      row.status === "Wait"
                     }
                     onClick={(id) => {
                       handleClickCancel(

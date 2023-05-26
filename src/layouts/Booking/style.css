@@ -182,7 +182,7 @@
     border: 1px solid black;
 }
 .ctn__trip .cnt__filter{
-    border: 1px solid rgb(192, 192, 192);
+    border: 1px solid #3ba59c;
     padding: 0 !important; 
 }
 .ctn__trip .filter{
@@ -190,8 +190,8 @@
     font-weight: 500;
     font-size: 18px;
     background-color: #a8ebe4aa;
-    border-color: #ddd;
-    border-bottom: 1px solid transparent;
+    border-color: #3ba59c;
+    border-bottom: 1px solid #3ba59c;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     padding: 10px 15px;
@@ -205,16 +205,41 @@
 }
 .ctn__trip .cnt__info{
     font-size: 1.2rem;
-    color: black;
     font-weight: 500;
     padding: 0 0 2rem 0;
     margin: 0px;
     display: inline;
+    background-color: #e6f4f1;
+    border: 1px solid #3ba59c;
+    display: inline-block;
+    padding: 10px;
+    position: relative;
 }
+.ctn__trip .cnt__info::before {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+
+  
+.ctn__trip .cnt__info .result {
+    color: #3ba59c;
+    font-weight: bold;
+  }
+  
+.ctn__trip .cnt__info .trip__length {
+    color: #999;
+  }
 
 .ctn__trip .form__search{
     width: 100%;
-    height: 500px;
+    height: 100%;
     margin-top: 30px;
     
 }
@@ -241,11 +266,27 @@
 } */
 .typo__sort{
     cursor: pointer;
+    /* font-size: 1.6rem ; */
+    color: #333;
+    transition: all 0.3s ease;
 }
 .typo__sort.selected {
     color: #0d47a1;
     font-weight: bold;
 }
+.typo__sort:nth-child(3),.typo__sort:nth-child(4) {
+  color: #888;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+.typo__sort:hover {
+    color: #3ac2fe; /* Màu khi di chuột vào */
+    transform: scale(1.1); /* Hiệu ứng phóng to */
+  }
+  
+  .typo__sort.selected {
+    color: #3ac2fe; /* Màu khi được chọn */
+  }
 .css-17nabyk-MuiTypography-root{
     transform: translateY(-1rem);
     
@@ -262,7 +303,8 @@
 }
 .container__sort{
     margin-top: 1rem;
-
+    border: 1px solid #ccc;
+    padding: 10px;
 }
 .container__sort .css-w5nres-MuiButtonBase-root-MuiButton-root{
     width: 10rem;
