@@ -24,18 +24,29 @@ import { Link } from "react-router-dom";
 import "./Header.css";
 
 function handleCartClick() {
-  const cart = document.getElementById("cart"); // lấy thẻ chứa tuyến phổ biến
-  cart.scrollIntoView({ behavior: "smooth" }); // cuộn trang web đến vị trí của thẻ cart
+    // const cart = document.getElementById("cart"); // lấy thẻ chứa tuyến phổ biến
+  // cart.scrollIntoView({ behavior: "smooth" }); // cuộn trang web đến vị trí của thẻ cart
+  const currentPath = window.location.pathname; // lấy đường dẫn hiện tại
+  if (currentPath === "/") {
+    const cart = document.getElementById("cart"); // lấy thẻ chứa tuyến phổ biến
+    cart.scrollIntoView({ behavior: "smooth" }); // cuộn trang web đến vị trí của thẻ cart
+  }
 }
 
 function handleBusClick() {
-  const bus = document.getElementById("bus"); // lấy thẻ chứa tuyến phổ biến
-  bus.scrollIntoView({ behavior: "smooth" }); // cuộn trang web đến vị trí của thẻ cart
+  const currentPath = window.location.pathname;
+  if (currentPath === "/") {
+    const bus = document.getElementById("bus"); // lấy thẻ chứa tuyến phổ biến
+    bus.scrollIntoView({ behavior: "smooth" }); // cuộn trang web đến vị trí của thẻ cart
+  }
 }
 
 function handlePolicyClick() {
-  const policy = document.getElementById("policy"); // lấy thẻ chứa tuyến phổ biến
-  policy.scrollIntoView({ behavior: "smooth" }); // cuộn trang web đến vị trí của thẻ cart
+  const currentPath = window.location.pathname;
+  if (currentPath === "/") {
+    const policy = document.getElementById("policy"); // lấy thẻ chứa tuyến phổ biến
+    policy.scrollIntoView({ behavior: "smooth" }); // cuộn trang web đến vị trí của thẻ cart
+  }
 }
 
 export default function Contact() {
