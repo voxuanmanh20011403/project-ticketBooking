@@ -223,12 +223,16 @@ export default function Contact() {
       >
         {Logged ? (
           <>
-            <MenuItem onClick={handleUserClick}>Thông Tin</MenuItem>
-            <MenuItem onClick={logout}>Đăng xuất</MenuItem>
             {role === "0" ? (
-              <MenuItem onClick={handleDashboard}>Dashboard</MenuItem>
+              <>
+                <MenuItem onClick={handleDashboard}>Dashboard</MenuItem>
+                <MenuItem onClick={logout}>Đăng xuất</MenuItem>
+              </>
             ) : (
-              ""
+              <>
+                <MenuItem onClick={handleUserClick}>Thông Tin</MenuItem>
+                <MenuItem onClick={logout}>Đăng xuất</MenuItem>
+              </>
             )}
             <Divider />
           </>

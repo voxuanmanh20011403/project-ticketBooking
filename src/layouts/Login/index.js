@@ -14,7 +14,14 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import Notification from "layouts/notication/Notification";
 import "./login.css";
 import { getDocs } from "firebase/firestore";
-import { collection, doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import { db, auth } from "data/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -51,7 +58,7 @@ function SignIn(props) {
     };
     getAccounts();
   }, []);
-  
+
   // console.log("setAccounts", accounts);
 
   const onSubmit = async (data) => {
@@ -122,21 +129,24 @@ function SignIn(props) {
           });
           //end
           localStorage.setItem("account", accountJSON);
-          localStorage.setItem('isLoggedIn', true);
+          localStorage.setItem("isLoggedIn", true);
 
           toast.success("Đăng nhập thành công!", {
             autoClose: 1000,
           });
-          setTimeout(() => {
-            history("/");
-          }, 2000);
-          // if (accounts[i].Role === "0") {
-          //   setTimeout(() => {
-          //     history("/admin");
-          //   }, 1500);
-          // } else  {
+          // setTimeout(() => {
           //   history("/");
-          // }
+          //   window.location.reload();
+          // }, 2000);
+          if (accounts[i].Role === "0") {
+            setTimeout(() => {
+              history("/admin");
+              window.location.reload();
+            }, 1500);
+          } else  {
+            history("/");
+            window.location.reload();
+          }
           break;
         }
       }
@@ -228,7 +238,6 @@ function SignIn(props) {
                 }}
                 color="error"
                 onClick={handleSubmit(onSubmit)}
-
               >
                 Đăng nhập
               </Button>
