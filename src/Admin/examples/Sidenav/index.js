@@ -123,15 +123,12 @@ function Sidenav(props, { color, brand, brandName, routes, ...rest }) {
         }
       />
       <List style={{ display: "inline-grid" }}>
-        <Button  style={{paddingLeft: '50%', marginBottom:'5%'}}  onClick={() => onClickTaskValue(1)}>Trang chủ</Button>
-        <Button  style={{paddingLeft: '50%', marginBottom:'5%'}}  onClick={() => onClickTaskValue(2)}>Quản lý tài khoản</Button>
-        <Button  style={{paddingLeft: '50%', marginBottom:'5%'}}  onClick={() => onClickTaskValue(3)}>Quản lý nhà xe</Button>
-        <Button  style={{paddingLeft: '50%', marginBottom:'5%'}}  onClick={() => onClickTaskValue(4)}>Quản lý danh sách xe</Button>
-        <Button style={{paddingLeft: '50%', marginBottom:'5%'}}  onClick={() => onClickTaskValue(5)}>Quản lý vé xe </Button>
-        <Button style={{paddingLeft: '50%', marginBottom:'5%'}}  onClick={() => onClickTaskValue(6)}>Quản lý huỷ vé  </Button>
-        {/* <Button onClick={() => onClickTaskValue(4)}>Quản lý Chuyến xe</Button> */}
-        {/* <Button onClick={() => onClickTaskValue(4)}>Quản lý đặt vé</Button> */}
-
+        <Button  style={{ marginBottom:'5%',color: "white", width:'100%'}}  onClick={() => onClickTaskValue(1)}>Trang chủ</Button>
+        <Button style={{ marginBottom:'5%',color: "white", width:'100%'}}   onClick={() => onClickTaskValue(2)}>Quản lý tài khoản</Button>
+        <Button  style={{ marginBottom:'5%',color: "white", width:'100%'}}   onClick={() => onClickTaskValue(3)}>Quản lý nhà xe</Button>
+        <Button  style={{ marginBottom:'5%',color: "white", width:'100%'}}   onClick={() => onClickTaskValue(4)}>Quản lý danh sách xe</Button>
+        <Button style={{ marginBottom:'5%',color: "white", width:'100%'}}   onClick={() => onClickTaskValue(5)}>Quản lý vé xe </Button>
+        <Button style={{ marginBottom:'5%',color: "white", width:'100%'}}   onClick={() => onClickTaskValue(6)}>Quản lý huỷ vé  </Button>
       </List>
     </SidenavRoot>
   );

@@ -1,7 +1,7 @@
 export const headCells = [
   {
     id: "id",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "ID xe",
   },
@@ -9,7 +9,7 @@ export const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Tên nhà xe",
+    label: "Thuộc nhà xe",
   },
   {
     id: "calories",

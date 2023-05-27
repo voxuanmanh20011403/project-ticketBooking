@@ -97,7 +97,9 @@ function AddGarage(props) {
     e.preventDefault();
     //start image
     if (!file) {
-      alert("Please upload an image first!");
+      toast.error("Vui lòng chọn ảnh nhà xe.", {
+        autoClose: 1000,
+      });
     }
     const storageRef = ref(storage, `/imageGarage/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -117,6 +119,7 @@ function AddGarage(props) {
           console.log(url);
           setURLImage(url);
           setUploadComplete(true);
+         
         });
       }
     );
@@ -132,7 +135,25 @@ function AddGarage(props) {
       });
       return;
     }
+    const existingGarage1 = data.find((item) => item.NameGarage === nameGarage);
 
+    if (existingGarage1) {
+      // alert(`ID: ${formData.ID_Garage} đã tồn tại`);
+      toast.error(`${nameGarage} đã tồn tại`, {
+        autoClose: 1000,
+      });
+      return;
+    }
+
+    const existingGarage2 = data.find((item) => item.Hotline === hotline);
+
+    if (existingGarage2) {
+      // alert(`ID: ${formData.ID_Garage} đã tồn tại`);
+      toast.error(`${hotline} đã tồn tại ở 1 nhà xe khác`, {
+        autoClose: 1000,
+      });
+      return;
+    }
     try {
       const docRef = await addDoc(collection(db, "Garage"), {
         Address: address,
