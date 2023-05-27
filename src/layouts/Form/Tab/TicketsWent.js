@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "data/firebase";
 import { useDispatch, useSelector } from "react-redux";
-import FormComment from '../../Comment/FormComment';
+import FormComment from "../../Comment/FormComment";
 
 function createData(
   id,
@@ -78,7 +78,8 @@ export default function TicketsWent() {
   });
   // console.log("rows: " + JSON.stringify(rows))
   const [open, setOpen] = useState(false);
-
+  const [check, setCheck] = useState(false);
+ 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 600 }} size="small" aria-label="a dense table">
@@ -136,8 +137,12 @@ export default function TicketsWent() {
                   {" "}
                   {row.dateCheckout.toLocaleString()}
                 </TableCell>
-                <Button>
-                <FormComment fullName={row.fullname}  idGarage={row.ID_Garage}/>
+                <Button >
+                  <FormComment
+                    fullName={row.fullname}
+                    idGarage={row.ID_Garage}
+                    setCheck= {setCheck}
+                  />
                 </Button>
               </TableRow>
             ))}
