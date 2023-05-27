@@ -486,7 +486,7 @@ export default function EnhancedTable() {
                                     </div>
                                   </TableCell>
                                   <TableCell align="right">
-                                    {row.protein == 1 ? "nhanvien" : "admin"}
+                                    {row.protein == 1 ? "khách hàng" : "admin"}
                                   </TableCell>
 
                                   <TableCell align="right">
