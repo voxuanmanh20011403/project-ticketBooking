@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  Button,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { TextField, Button, Grid, Paper, Typography } from "@material-ui/core";
 // import { db, docRef } from "../../data/firebase";
 import { Fab } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -15,12 +9,16 @@ import { LoginAction } from "redux/slices/auth";
 import { updateProfile } from "firebase/auth";
 import { auth } from "data/firebase";
 import { db } from "data/firebase";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
-
+import {
+  collection,
+  doc,
+  updateDoc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -40,26 +38,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-import { collection, doc, updateDoc } from "firebase/firestore";
 const FormInfo = () => {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [id, setID] = useState("");
-  
-
 
   useEffect(() => {
     const dataAccount = JSON.parse(localStorage.getItem("account"));
-    console.log(dataAccount);
+    // console.log(dataAccount);
     setEmail(dataAccount.Email);
     setName(dataAccount.Name);
     setPhone(dataAccount.NumberPhone);
     setID(dataAccount.id);
-  }, [])
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    // update name authentication
     updateProfile(auth.currentUser, {
       displayName: name,
     })
@@ -73,7 +70,30 @@ const FormInfo = () => {
           autoClose: 1000,
         });
       });
+    // update nanme in collection checkout
+    const updateFullName = async () => {
+      try {
+        const checkoutQuery = query(
+          collection(db, "Checkout"),
+          where("Email", "==", email)
+        );
+        const querySnapshot = await getDocs(checkoutQuery);
 
+        const updatePromises = querySnapshot.docs.map((doc) => {
+          const checkoutRef = doc.ref;
+          return updateDoc(checkoutRef, { FullName: name });
+        });
+
+        await Promise.all(updatePromises);
+        console.log("thành công")
+      } catch (error) {
+        console.error("Lỗi khi cập nhật FullName:", error);
+      }
+    };
+
+    // Sử dụng hàm updateFullName với giá trị name mới
+    updateFullName();
+    // update name in collection account
     const statisticsRef = doc(collection(db, "Account"), `${id}`);
 
     updateDoc(statisticsRef, {
@@ -89,21 +109,14 @@ const FormInfo = () => {
         console.error(`Error updating viewer count: ${error}`);
       });
 
+    // update name in local
     const existingAccountJSON = localStorage.getItem("account");
     const existingAccount = JSON.parse(existingAccountJSON);
     existingAccount.Name = name;
     existingAccount.NumberPhone = phone;
     const updatedAccountJSON = JSON.stringify(existingAccount);
     localStorage.setItem("account", updatedAccountJSON);
-    // sendEmailVerification(auth.currentUser)
-    // .then(() => {
-    //   alert("dang xác minh")
-    // });
-
   };
-
-
-  
 
   return (
     <Grid
@@ -114,13 +127,15 @@ const FormInfo = () => {
     >
       <Grid item xs={12} sm={12} md={6} lg={4}>
         <Paper elevation={4} className={classes.paper}>
-          <h2 style={{
-            fontWeight: 'bold',
-            color: 'primary',
-            fontSize: '1.5rem',
-            marginBottom: '1rem',
-            color: '#2474e5',
-          }}>
+          <h2
+            style={{
+              fontWeight: "bold",
+              color: "primary",
+              fontSize: "1.5rem",
+              marginBottom: "1rem",
+              color: "#2474e5",
+            }}
+          >
             Thông Tin Tài Khoản
           </h2>
           <form onSubmit={handleSubmit}>
@@ -169,8 +184,6 @@ const FormInfo = () => {
         </Paper>
       </Grid>
     </Grid>
-
   );
 };
 export default FormInfo;
-
