@@ -100,6 +100,7 @@ const FormComment = ({ fullName, idGarage, setCheck }) => {
           userComments.push(commentData);
 
           updateDoc(commentDocRef, {
+            ID_Garage: ID_Garage,
             User: userComments,
             CountComment: userComments.length,
             AvgStart: calculateAverageStart(userComments),
