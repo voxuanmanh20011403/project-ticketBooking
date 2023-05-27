@@ -41,7 +41,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { toast } from "react-toastify";
 
 function AddCar(props) {
-  const { activeButton, setActiveButton, data ,setReload } = props;
+  const { activeButton, setActiveButton, data, setReload } = props;
 
   const [state, setstate] = useState([]);
   const [seat, setSeat] = useState(0);
@@ -59,7 +59,6 @@ function AddCar(props) {
       });
     }
     setstate(newState);
-   
   }, [seat]);
   //set show/hide form
   const open = true;
@@ -79,40 +78,7 @@ function AddCar(props) {
   const [namegarage, setNamegarage] = useState("");
   const [duration, setDuration] = useState(0);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const existingGarage = data.find((item) => item.ID_Car === formData.ID_Car);
-    if (existingGarage) {
-      alert(`ID: ${formData.ID_Car} đã tồn tại`);
-      return;
-    }
-    const formattedPrice = price.replace(/,/g, "");
-    const priceNumber = parseInt(formattedPrice);
-    const durationNumber = parseInt(duration);
-
-    try {
-      const docRef = await addDoc(collection(db, "ListCar"), {
-        ...formData,
-        Price: priceNumber,
-        StartTime: timestamp,
-        StartTimeNext: timestamp2,
-        ID_Garage: disabledTextFieldValue,
-        Hotline: hotline,
-        Namegarage: namegarage,
-        seat: seat,
-        NameTrip: formData.StartPoint + "-" + formData.EndPoint,
-        TypeVehicle: `Xe giường nằm ${seat} chỗ`,
-        duration: durationNumber,
-      });
-      toast.success(`Thêm thành công!`, {
-        autoClose: 1000,
-      });
-      console.log("Document written with ID: ", docRef.id);
-      // location.reload();
-      setActiveButton(false);
-      setReload(pre => !pre);
-    } catch (e) {}
-  };
+ 
   const [garages, setGarages] = useState([]);
   const [selectedGarage, setSelectedGarage] = useState("");
   const [garageInfo, setGarageInfo] = useState([]);
@@ -146,7 +112,6 @@ function AddCar(props) {
           console.log("No such document!");
         }
       } else {
-       
       }
     };
     unsub();
@@ -168,7 +133,9 @@ function AddCar(props) {
   //format time
   const [selectDate, setSelectDate] = useState(dayjs());
   const [selectDate2, setSelectDate2] = useState(dayjs());
-
+  const [selectDateTurn, setSelectDateTurn] = useState(dayjs());
+  const [selectDateTurnNext, setSelectDateTurnNext] = useState(dayjs());
+  
   const today = dayjs().startOf("day");
   const isDateDisabled = (date) => {
     return date.isBefore(today, "day");
@@ -179,11 +146,21 @@ function AddCar(props) {
   const handleChangeDate2 = (date) => {
     setSelectDate2(date);
   };
+  const handleChangeDate3 = (date) => {
+    setSelectDateTurn(date);
+  };
+  const handleChangeDate4 = (date) => {
+    setSelectDateTurnNext(date);
+  };
 
   const date = new Date(selectDate);
   const timestamp = Timestamp.fromDate(date);
   const date2 = new Date(selectDate2);
   const timestamp2 = Timestamp.fromDate(date2);
+  const date3 = new Date(selectDateTurn);
+  const timestamp3 = Timestamp.fromDate(date3);
+  const date4 = new Date(selectDateTurnNext);
+  const timestamp4 = Timestamp.fromDate(date4);
   //
 
   useEffect(() => {
@@ -198,7 +175,78 @@ function AddCar(props) {
       setNamegarage(garageInfo.NameGarage);
     }
   }, [garageInfo]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const existingGarage = data.find((item) => item.ID_Car === formData.ID_Car);
+    if (existingGarage) {
+      toast.error(`ID: ${formData.ID_Car} đã tồn tại`, {
+        autoClose: 1000,
+      });
+      return;
+    }
+    const formattedPrice = price.replace(/,/g, "");
+    const priceNumber = parseInt(formattedPrice);
+    const durationNumber = parseInt(duration);
+    const dateTime1 = dayjs(selectDate);
+    const dateTime2 = dayjs(selectDate2);
+    const dateTime3 = dayjs(selectDateTurn);
+    const dateTime4 = dayjs(selectDateTurnNext);
+    
+    if (dateTime1.isAfter(dateTime2)) {
+      // alert("Ngày/Giờ 1 lớn hơn Ngày/Giờ 2");
+      toast.error("Ngày xe đi tiếp theo phải lớn hơn ngày xe đi ban đầu", {
+        autoClose: 1000,
+      });
+      return;
+    }
+    if (dateTime3.isAfter(dateTime4)) {
+      // alert("Ngày/Giờ 1 lớn hơn Ngày/Giờ 2");
+      toast.error("Ngày xe về tiếp theo phải lớn hơn ngày xe về", {
+        autoClose: 1000,
+      });
+      return;
+    }
+    if (dateTime1.isAfter(dateTime3)) {
+      // alert("Ngày/Giờ 1 lớn hơn Ngày/Giờ 2");
+      toast.error("Ngày đăng kí xe đi phải trước ngày ngày đăng kí xe về", {
+        autoClose: 1000,
+      });
+      return;
+    }
+    if (dateTime1.isAfter(dateTime3)) {
+      // alert("Ngày/Giờ 1 lớn hơn Ngày/Giờ 2");
+      toast.error("Ngày đăng kí xe đi phải trước ngày ngày đăng kí xe về", {
+        autoClose: 1000,
+      });
+      return;
+    }
+    //Xe về xuất phát > xe đi + thời gian đi
 
+    try {
+      const docRef = await addDoc(collection(db, "ListCar"), {
+        ...formData,
+        Price: priceNumber,
+        StartTime: timestamp,
+        StartTimeNext: timestamp2,
+        ID_Garage: disabledTextFieldValue,
+        Hotline: hotline,
+        Namegarage: namegarage,
+        seat: seat,
+        NameTrip: formData.StartPoint + "-" + formData.EndPoint,
+        TypeVehicle: `Xe giường nằm ${seat} chỗ`,
+        duration: durationNumber,
+        TurnTime: timestamp3,
+        TurnTimeNext: timestamp4,
+      });
+      toast.success(`Thêm thành công!`, {
+        autoClose: 1000,
+      });
+      console.log("Document written with ID: ", docRef.id);
+      // location.reload();
+      setActiveButton(false);
+      setReload((pre) => !pre);
+    } catch (e) {}
+  };
   return (
     <DashboardLayout>
       <div className="addpost">
@@ -374,13 +422,13 @@ function AddCar(props) {
                         onChange={(e) => setDuration(e.target.value)}
                         placeholder="Thời gian hành trình"
                       />
-
+                      <h6>Thời gian đăng kí xe đi đầu tiên - xe đi tiếp theo</h6>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDateTimePicker
                           value={selectDate}
                           onChange={handleChangeDate}
                           shouldDisableDate={isDateDisabled}
-                          className="Garage datapicker "
+                          className="Garage datapicker RenderFromGarage "
                         />
                       </LocalizationProvider>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -388,10 +436,26 @@ function AddCar(props) {
                           value={selectDate2}
                           onChange={handleChangeDate2}
                           shouldDisableDate={isDateDisabled}
-                          className="Garage datapicker "
+                          className="Garage datapicker RenderFromGarage "
                         />
                       </LocalizationProvider>
-
+                      <h6>Thời gian đăng kí xe về đầu tiên - xe về tiếp theo </h6>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDateTimePicker
+                          value={selectDateTurn}
+                          onChange={handleChangeDate3}
+                          shouldDisableDate={isDateDisabled}
+                          className="Garage datapicker RenderFromGarage "
+                        />
+                      </LocalizationProvider>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileDateTimePicker
+                          value={selectDateTurnNext}
+                          onChange={handleChangeDate4}
+                          shouldDisableDate={isDateDisabled}
+                          className="Garage datapicker RenderFromGarage "
+                        />
+                      </LocalizationProvider>
                       <Button
                         variant="contained"
                         className="modal__footer11"

@@ -50,28 +50,14 @@ export const TripsAuto = () => {
             car.StartTimeNext.toDate() - car.StartTime.toDate();
           // Chuyển đổi số mili giây thành số ngày
           const diffDays = Math.floor(diffMillis / (1000 * 60 * 60 * 24));
+          const diffHours = Math.floor(diffMillis / (1000 * 60 * 60));
 
           if (groupedData[car.ID_Car]) {
             console.log(`Car ${car.ID_Car} tồn tại `);
-            const lengData =
-              groupedData[car.ID_Car][groupedData[car.ID_Car].length - 1];
-            const StartTime = lengData.StartTime;
+            console.log("diffDays", car.StartTimeNext.toDate());
+            console.log("diffDays", car.StartTime.toDate());
 
-            //cộng ngày chạy
-            const date = StartTime.toDate();
-            date.setDate(date.getDate() + diffDays);
-
-            //chuyển vào fb
-            const fromDate = new Date(date);
-            const timestamp = Timestamp.fromDate(date);
-            console.log("datexyz", timestamp.toDate());
-
-            //endTime
-            const dateEnd = timestamp.toDate();
-            dateEnd.setHours(dateEnd.getHours() + car.duration);
-            const fromDateEnd = new Date(dateEnd);
-            const timestampEnd = Timestamp.fromDate(dateEnd);
-
+            // XE VỀ
             //só seat:
             let id = 0;
             let name = "A";
@@ -85,27 +71,123 @@ export const TripsAuto = () => {
                 ui: "",
               });
             }
-            try {
-              const docRef = addDoc(collection(db, "Tripss"), {
-                EndPoint: car.EndPoint,
-                Hotline: car.Hotline,
-                ID_Car: car.ID_Car,
-                ID_Garage: car.ID_Garage,
-                LicensePlate: car.LicensePlate,
-                NameGarage: car.Namegarage,
-                NameTrip: car.NameTrip,
-                PakingEnd: car.PakingEnd,
-                PakingStart: car.PakingStart,
-                Price: car.Price,
-                StartPoint: car.StartPoint,
-                TypeVehicle: car.TypeVehicle,
-                duration: car.duration,
-                StartTime: timestamp,
-                EndTime: timestampEnd,
-                seat: newState,
-              });
-              console.log("Document written with ID: ", docRef.id);
-            } catch (e) {}
+            if (
+              groupedData[car.ID_Car][groupedData[car.ID_Car].length - 2]
+                .StartPoint === car.StartPoint
+            ) {
+              const lengData =
+                groupedData[car.ID_Car][groupedData[car.ID_Car].length - 2];
+
+              const StartTime = lengData.StartTime;
+              //XE ĐI
+              //cộng ngày chạy
+              const date = StartTime.toDate();
+              // date.setDate(date.getDate() + diffDays);
+              date.setHours(date.getHours() + diffHours);
+
+              console.log("Đây là xe đi", date);
+              //chuyển vào fb
+              const fromDate = new Date(date);
+              const timestamp = Timestamp.fromDate(date);
+
+              //endTime
+              const dateEnd = timestamp.toDate();
+              dateEnd.setHours(dateEnd.getHours() + car.duration);
+              const fromDateEnd = new Date(dateEnd);
+              const timestampEnd = Timestamp.fromDate(dateEnd);
+              //Xe đi
+              try {
+                const docRef = addDoc(collection(db, "Tripss"), {
+                  EndPoint: car.EndPoint,
+                  Hotline: car.Hotline,
+                  ID_Car: car.ID_Car,
+                  ID_Garage: car.ID_Garage,
+                  LicensePlate: car.LicensePlate,
+                  NameGarage: car.Namegarage,
+                  NameTrip: car.NameTrip,
+                  PakingEnd: car.PakingEnd,
+                  PakingStart: car.PakingStart,
+                  Price: car.Price,
+                  StartPoint: car.StartPoint,
+                  TypeVehicle: car.TypeVehicle,
+                  duration: car.duration,
+                  StartTime: timestamp,
+                  EndTime: timestampEnd,
+                  seat: newState,
+                });
+                console.log("Document written with ID: ", docRef.id);
+              } catch (e) {}
+            }
+            if (
+              groupedData[car.ID_Car][groupedData[car.ID_Car].length - 1]
+                .StartPoint != car.StartPoint
+            ) {
+              const lengData =
+                groupedData[car.ID_Car][groupedData[car.ID_Car].length - 1];
+
+              const StartTime = lengData.StartTime;
+              //XE ĐI
+              //cộng ngày chạy
+              const date = StartTime.toDate();
+              // date.setDate(date.getDate() + diffDays);
+              date.setHours(date.getHours() + diffHours);
+
+              console.log("Đây là xe về", date);
+
+              //chuyển vào fb
+              const fromDate = new Date(date);
+              const timestamp = Timestamp.fromDate(date);
+
+              //endTime
+              const dateEnd = timestamp.toDate();
+              dateEnd.setHours(dateEnd.getHours() + car.duration);
+              const fromDateEnd = new Date(dateEnd);
+              const timestampEnd = Timestamp.fromDate(dateEnd);
+              // xe về
+              try {
+                const docRef = addDoc(collection(db, "Tripss"), {
+                  EndPoint: car.StartPoint,
+                  Hotline: car.Hotline,
+                  ID_Car: car.ID_Car,
+                  ID_Garage: car.ID_Garage,
+                  LicensePlate: car.LicensePlate,
+                  NameGarage: car.Namegarage,
+                  NameTrip: car.NameTrip,
+                  PakingEnd: car.PakingStart,
+                  PakingStart: car.PakingEnd,
+                  Price: car.Price,
+                  StartPoint: car.EndPoint,
+                  TypeVehicle: car.TypeVehicle,
+                  duration: car.duration,
+                  StartTime: timestamp,
+                  EndTime: timestampEnd,
+                  seat: newState,
+                });
+                console.log("Document written with ID: ", docRef.id);
+              } catch (e) {}
+            }
+
+            // try {
+            //   const docRef = addDoc(collection(db, "Tripss"), {
+            //     EndPoint: car.EndPoint,
+            //     Hotline: car.Hotline,
+            //     ID_Car: car.ID_Car,
+            //     ID_Garage: car.ID_Garage,
+            //     LicensePlate: car.LicensePlate,
+            //     NameGarage: car.Namegarage,
+            //     NameTrip: car.NameTrip,
+            //     PakingEnd: car.PakingEnd,
+            //     PakingStart: car.PakingStart,
+            //     Price: car.Price,
+            //     StartPoint: car.StartPoint,
+            //     TypeVehicle: car.TypeVehicle,
+            //     duration: car.duration,
+            //     StartTime: timestamp,
+            //     EndTime: timestampEnd,
+            //     seat: newState,
+            //   });
+            //   console.log("Document written with ID: ", docRef.id);
+            // } catch (e) {}
             console.log("groupLists2", groupLists);
             clearInterval(intervalId);
           } else {
@@ -128,9 +210,14 @@ export const TripsAuto = () => {
             //endTime
             const dateEnd = car.StartTime.toDate();
             dateEnd.setHours(dateEnd.getHours() + car.duration);
-            const fromDateEnd = new Date(dateEnd);
-            const timestampEnd = Timestamp.fromDate(dateEnd);
-            //endtime
+            const timestampEnd = Timestamp.fromDate(dateEnd); // Sửa lại phương thức thành fromDate
+
+            //endTimeTurning
+            const dateEnd1 = car.TurnTime.toDate();
+            dateEnd1.setHours(dateEnd1.getHours() + car.duration);
+            console.log('car.duration',car.duration);
+            const timestampEnd1 = Timestamp.fromDate(dateEnd1); // Sửa lại phương thức thành fromDate
+
             try {
               const docRef = addDoc(collection(db, "Tripss"), {
                 EndPoint: car.EndPoint,
@@ -151,7 +238,33 @@ export const TripsAuto = () => {
                 seat: newState,
               });
               console.log("Document written with ID: ", docRef.id);
-            } catch (e) {}
+            } catch (e) {
+              console.error("Error adding document: ", e);
+            }
+
+            try {
+              const docRef1 = addDoc(collection(db, "Tripss"), {
+                EndPoint: car.StartPoint,
+                Hotline: car.Hotline,
+                ID_Car: car.ID_Car,
+                ID_Garage: car.ID_Garage,
+                LicensePlate: car.LicensePlate,
+                NameGarage: car.Namegarage,
+                NameTrip: car.NameTrip,
+                PakingEnd: car.PakingStart,
+                PakingStart: car.PakingEnd,
+                Price: car.Price,
+                StartPoint: car.EndPoint,
+                TypeVehicle: car.TypeVehicle,
+                duration: car.duration,
+                StartTime: car.TurnTime,
+                EndTime: timestampEnd1,
+                seat: newState,
+              });
+              console.log("Document written with ID: ", docRef1.id);
+            } catch (e) {
+              console.error("Error adding document: ", e);
+            }
           }
         }
       }
