@@ -29,7 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { tripActions } from "redux/slices/tripsSilce";
 
 import "./style.css";
-import imgRoad from "../../assets/img/roadtrip.png";
+
 import "../Body/Banner/Banner.css";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -40,7 +40,6 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 // Breadcrumbs
-
 function handleClick(event) {
   event.preventDefault();
   // console.info("You clicked a breadcrumb.");
@@ -181,7 +180,7 @@ const Trip = ({ fetchData }) => {
   if (removeStateSearch) {
   }
   // console.log("filteredData: " + JSON.stringify(filteredData));
- 
+
   const breadcrumbs = [
     <Link   underline="hover" key="1" color="inherit" >
       <a href="" style={{ color: 'blue' }}>Trang Chủ</a>
@@ -201,7 +200,7 @@ const Trip = ({ fetchData }) => {
   }, 3000);
 
   return (
-    
+
     <React.Fragment>
       {/* <Header/> */}
       <CssBaseline />
@@ -218,13 +217,6 @@ const Trip = ({ fetchData }) => {
         </Container>
         <Container maxWidth="lg">
           <Grid container spacing={2}>
-            <Grid item xs={12} className="form__search">
-              <img
-                src={imgRoad}
-                alt="road trip"
-                style={{ objectFit: "cover", height: "60%", width: "100%" }}
-              />
-            </Grid>
             <Grid item xs={6}></Grid>
             <Grid item xs={6}>
               <TextField
@@ -242,7 +234,7 @@ const Trip = ({ fetchData }) => {
                   },
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon   style={{ color: "#888" }} fontSize="medium" />
+                      <SearchIcon style={{ color: "#888" }} fontSize="medium" />
                     </InputAdornment>
                   ),
                 }}
@@ -392,7 +384,7 @@ const Trip = ({ fetchData }) => {
                   <span className="cnt__info result">
                     {" "}
                     Chuyến xe từ {startPointRedux}{" "}
-                    <EastIcon fontSize="default"/> {endPointRedux}{" "}
+                    <EastIcon fontSize="default" /> {endPointRedux}{" "}
                     <span className="trip__length">
                       ({fetchData.length} chuyến được tìm thấy)
                     </span>
@@ -434,9 +426,8 @@ const Trip = ({ fetchData }) => {
                       variant="button"
                       display="block"
                       gutterBottom
-                      className={`typo__sort ${
-                        selectedTypography === "asc" ? "selected" : ""
-                      }`}
+                      className={`typo__sort ${selectedTypography === "asc" ? "selected" : ""
+                        }`}
                       onClick={() => handleClickTypography("asc")}
                     >
                       Giá thấp - cao
@@ -445,9 +436,8 @@ const Trip = ({ fetchData }) => {
                       variant="button"
                       display="block"
                       gutterBottom
-                      className={`typo__sort ${
-                        selectedTypography === "desc" ? "selected" : ""
-                      }`}
+                      className={`typo__sort ${selectedTypography === "desc" ? "selected" : ""
+                        }`}
                       onClick={() => handleClickTypography("desc")}
                     >
                       Giá cao - thấp

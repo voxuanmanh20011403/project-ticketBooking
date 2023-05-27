@@ -1,0 +1,41 @@
+.body__footerbooking {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .footer__booking {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 60px 0 20px 10px;
+
+  }
+  
+  .about__Booking {
+    margin-bottom: 1rem;
+    margin-right: 5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .about__listBooking {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .about__listBooking li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 768px) {
+    .footer__booking {
+      justify-content: center;
+    }
+  
+    .about__Booking {
+      margin-right: 1rem;
+    }
+  }

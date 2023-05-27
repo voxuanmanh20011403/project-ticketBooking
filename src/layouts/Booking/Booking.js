@@ -18,7 +18,7 @@ import { db } from "./../../data/firebase";
 // Router
 import { useNavigate } from "react-router-dom";
 import ScrollToTopButton from 'layouts/TopButton/ScrollToTopButton';
-import BannerFooter from 'layouts/Footer/BannerFooter';
+import FooterBooking from 'layouts/Footer/FooterBooking';
 import Bg from 'layouts/Body/Cart/Bg';
 import ContactCall from 'layouts/ContactCall/ContactCall';
 
@@ -67,11 +67,11 @@ const Booking = () => {
        <>
         <Header/>
        <>
-      
        <Trip fetchData={data} />
         <ScrollToTopButton/>
+      <ContactCall/>
        </>
-        <BannerFooter/>
+       <FooterBooking/>
        </>
   )
 }
