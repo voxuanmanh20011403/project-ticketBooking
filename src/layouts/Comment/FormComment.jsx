@@ -3,7 +3,6 @@ import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
 import {
-
   Typography,
   Grid,
   TextField,
@@ -21,6 +20,7 @@ import {
   updateDoc,
   doc,
   arrayUnion,
+  addDoc,
 } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -35,7 +35,7 @@ function getLabelText(value) {
   return `${value} Star${value !== 1 ? "s" : ""}, ${labels[value]}`;
 }
 
-const FormComment = ({fullName, idGarage}) => {
+const FormComment = ({ fullName, idGarage, setCheck }) => {
   // console.log(fullName + " và " + idGarage);
   const [value, setValue] = React.useState(3);
   const [hover, setHover] = React.useState(-1);
@@ -55,10 +55,20 @@ const FormComment = ({fullName, idGarage}) => {
   const handleCommentChange = (event) => {
     setComment(event.target.value);
   };
+  const calculateAverageStart = (comments) => {
+    if (comments.length === 0) {
+      return 0;
+    }
+    const totalStart = comments.reduce(
+      (sum, comment) => sum + comment.Start,
+      0
+    );
+    return totalStart / comments.length;
+  };
   const addComment = async () => {
     const ID_Garage = idGarage;
     const commentData = {
-      FullName: fullName, 
+      FullName: fullName,
       Comment: comment,
       Start: value,
       DateTime: new Date(),
@@ -66,30 +76,74 @@ const FormComment = ({fullName, idGarage}) => {
 
     const commentRef = collection(db, "Comment");
     const queryRef = query(commentRef, where("ID_Garage", "==", ID_Garage));
-
     try {
       const querySnapshot = await getDocs(queryRef);
-      querySnapshot.forEach((docSnapshot) => {
-        const commentDocRef = doc(commentRef, docSnapshot.id);
-        updateDoc(commentDocRef, {
-          User: arrayUnion(commentData),
+
+      if (querySnapshot.empty) {
+        const newCommentDocRef = await addDoc(commentRef, {
+          ID_Garage: ID_Garage,
+          User: [commentData],
+          CountComment: 1,
+          AvgStart: commentData.Start,
         });
-        console.log("Comment added to document with ID: ", docSnapshot.id);
-        toast.success("Cảm ơn bạn đã đánh giá!", {
-          autoClose: 1000,
+
+        console.log(
+          "New comment document created with ID: ",
+          newCommentDocRef.id
+        );
+      } else {
+        querySnapshot.forEach((docSnapshot) => {
+          const commentDocRef = doc(commentRef, docSnapshot.id);
+          const commentDocData = docSnapshot.data();
+          const userComments = commentDocData.User || [];
+
+          userComments.push(commentData);
+
+          updateDoc(commentDocRef, {
+            ID_Garage: ID_Garage,
+            User: userComments,
+            CountComment: userComments.length,
+            AvgStart: calculateAverageStart(userComments),
+          });
+
+          console.log("Comment added to document with ID: ", docSnapshot.id);
         });
+      }
+
+      toast.success("Cảm ơn bạn đã đánh giá!", {
+        autoClose: 1000,
       });
     } catch (error) {
       toast.error("Đã có lỗi xảy ra!" + error.message, {
         autoClose: 1000,
       });
+      console.log(error);
     }
+
+    // try {
+    //   const querySnapshot = await getDocs(queryRef);
+    //   querySnapshot.forEach((docSnapshot) => {
+    //     const commentDocRef = doc(commentRef, docSnapshot.id);
+    //     updateDoc(commentDocRef, {
+    //       User: arrayUnion(commentData),
+    //     });
+    //     console.log("Comment added to document with ID: ", docSnapshot.id);
+    //     toast.success("Cảm ơn bạn đã đánh giá!", {
+    //       autoClose: 1000,
+    //     });
+    //   });
+    // } catch (error) {
+    //   toast.error("Đã có lỗi xảy ra!" + error.message, {
+    //     autoClose: 1000,
+    //   });
+    // }
   };
   const handleSubmit = (event) => {
     event.preventDefault();
     // console.log('Số sao:', value);
     // console.log('Nhận xét:', comment);
     addComment();
+    setCheck(true);
     setTimeout(() => {
       setIsOpen(false);
     }, 1000);
@@ -102,7 +156,9 @@ const FormComment = ({fullName, idGarage}) => {
       alignItems="center"
       // style={{ height: "100vh" }}
     >
-      <Button onClick={handleOpen}>Đánh giá</Button>
+      <Button onClick={handleOpen}>
+        {setCheck ? "Đã đánh giá" : "Đánh giá"}
+      </Button>
 
       <Dialog open={isOpen} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>Trải nghiệm của bạn như thế nào?</DialogTitle>
@@ -159,7 +215,7 @@ const FormComment = ({fullName, idGarage}) => {
                   onChange={handleCommentChange}
                 />
               </Box>
-              <Box mt={2}  display="flex" justifyContent="flex-end">
+              <Box mt={2} display="flex" justifyContent="flex-end">
                 <Button
                   style={{
                     width: "100px",
