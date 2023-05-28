@@ -42,7 +42,7 @@ export const TripsAuto = () => {
   useEffect(() => {
     const intervalId = setInterval(function () {
       var now = new Date();
-      if (now.getHours() == 1 && now.getMinutes() === 8) {
+      if (now.getHours() == 11 && now.getMinutes() === 11) {
         for (let i = 0; i < listCars.length; i++) {
           const car = listCars[i];
           // Tính khoảng cách giữa 2 ngày dưới dạng số mili giây
@@ -166,29 +166,6 @@ export const TripsAuto = () => {
                 console.log("Document written with ID: ", docRef.id);
               } catch (e) {}
             }
-
-            // try {
-            //   const docRef = addDoc(collection(db, "Tripss"), {
-            //     EndPoint: car.EndPoint,
-            //     Hotline: car.Hotline,
-            //     ID_Car: car.ID_Car,
-            //     ID_Garage: car.ID_Garage,
-            //     LicensePlate: car.LicensePlate,
-            //     NameGarage: car.Namegarage,
-            //     NameTrip: car.NameTrip,
-            //     PakingEnd: car.PakingEnd,
-            //     PakingStart: car.PakingStart,
-            //     Price: car.Price,
-            //     StartPoint: car.StartPoint,
-            //     TypeVehicle: car.TypeVehicle,
-            //     duration: car.duration,
-            //     StartTime: timestamp,
-            //     EndTime: timestampEnd,
-            //     seat: newState,
-            //   });
-            //   console.log("Document written with ID: ", docRef.id);
-            // } catch (e) {}
-            console.log("groupLists2", groupLists);
             clearInterval(intervalId);
           } else {
             console.log(

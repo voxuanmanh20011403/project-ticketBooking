@@ -157,7 +157,7 @@ const FormComment = ({ fullName, idGarage, setCheck }) => {
       // style={{ height: "100vh" }}
     >
       <Button onClick={handleOpen}>
-        {setCheck ? "Đã đánh giá" : "Đánh giá"}
+        Đánh giá
       </Button>
 
       <Dialog open={isOpen} onClose={handleClose} maxWidth="sm" fullWidth>

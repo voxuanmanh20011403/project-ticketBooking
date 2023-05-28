@@ -135,7 +135,7 @@ function AddCar(props) {
   const [selectDate2, setSelectDate2] = useState(dayjs());
   const [selectDateTurn, setSelectDateTurn] = useState(dayjs());
   const [selectDateTurnNext, setSelectDateTurnNext] = useState(dayjs());
-  
+
   const today = dayjs().startOf("day");
   const isDateDisabled = (date) => {
     return date.isBefore(today, "day");
@@ -191,7 +191,7 @@ function AddCar(props) {
     const dateTime2 = dayjs(selectDate2);
     const dateTime3 = dayjs(selectDateTurn);
     const dateTime4 = dayjs(selectDateTurnNext);
-    
+
     if (dateTime1.isAfter(dateTime2)) {
       // alert("Ngày/Giờ 1 lớn hơn Ngày/Giờ 2");
       toast.error("Ngày xe đi tiếp theo phải lớn hơn ngày xe đi ban đầu", {
@@ -242,10 +242,86 @@ function AddCar(props) {
         autoClose: 1000,
       });
       console.log("Document written with ID: ", docRef.id);
+      //start
+      // console.log(`Car ${car.ID_Car} ko tồn tại, tiến hành tạo bảng đầu tiên `);
+
+      //end
       // location.reload();
+     
+    } catch (e) {}
+    // só seat:
+    let id = 0;
+    let name = "A";
+    let newState = [];
+    for (var ii = 1; ii <= seat; ii++) {
+      id++;
+      newState.push({
+        id: id,
+        name: name + ii,
+        status: "empty",
+        ui: "",
+      });
+    }
+    console.log("date3", date3);
+    // endTime
+    const dateEnd = timestamp.toDate();
+    dateEnd.setHours(dateEnd.getHours() + durationNumber);
+    const timestampEnd = Timestamp.fromDate(dateEnd); // Sửa lại phương thức thành fromDate
+
+    //endTimeTurning
+    const dateEnd1 = timestamp3.toDate();
+    dateEnd1.setHours(dateEnd1.getHours() + durationNumber);
+    const timestampEnd1 = Timestamp.fromDate(dateEnd1); // Sửa lại phương thức thành fromDate
+
+    try {
+      const docRef = addDoc(collection(db, "Tripss"), {
+        EndPoint: formData.EndPoint,
+        Hotline: hotline,
+        ID_Car: formData.ID_Car,
+        ID_Garage: disabledTextFieldValue,
+        LicensePlate: formData.LicensePlate,
+        NameGarage: namegarage,
+        NameTrip: formData.StartPoint + "-" + formData.EndPoint,
+        PakingEnd: formData.PakingEnd,
+        PakingStart: formData.PakingStart,
+        Price: priceNumber,
+        StartPoint: formData.StartPoint,
+        TypeVehicle: `Xe giường nằm ${seat} chỗ`,
+        duration: durationNumber,
+        StartTime: timestamp,
+        EndTime: timestampEnd,
+        seat: newState,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+
+    try {
+      const docRef1 = addDoc(collection(db, "Tripss"), {
+        EndPoint: formData.StartPoint,
+        Hotline: hotline,
+        ID_Car: formData.ID_Car,
+        ID_Garage: disabledTextFieldValue,
+        LicensePlate: formData.LicensePlate,
+        NameGarage: namegarage,
+        NameTrip: formData.EndPoint + "-" + formData.StartPoint,
+        PakingEnd: formData.PakingEnd,
+        PakingStart: formData.PakingStart,
+        Price: priceNumber,
+        StartPoint: formData.EndPoint,
+        TypeVehicle: `Xe giường nằm ${seat} chỗ`,
+        duration: durationNumber,
+        StartTime: timestamp3,
+        EndTime: timestampEnd1,
+        seat: newState,
+      });
+      console.log("Document written with ID: ", docRef1.id);
       setActiveButton(false);
       setReload((pre) => !pre);
-    } catch (e) {}
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
   return (
     <DashboardLayout>
@@ -330,7 +406,7 @@ function AddCar(props) {
                         className="Garage RenderFromGarage"
                       />
                       <CustomTextField
-                        label="Nơi bắt đầu"
+                        label="Bến xe kết thúc"
                         name="PakingEnd"
                         value={formData.PakingEnd}
                         onChange={handleChangeValue}
@@ -422,7 +498,9 @@ function AddCar(props) {
                         onChange={(e) => setDuration(e.target.value)}
                         placeholder="Thời gian hành trình"
                       />
-                      <h6>Thời gian đăng kí xe đi đầu tiên - xe đi tiếp theo</h6>
+                      <h6>
+                        Thời gian đăng kí xe đi đầu tiên - xe đi tiếp theo
+                      </h6>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDateTimePicker
                           value={selectDate}
@@ -439,7 +517,9 @@ function AddCar(props) {
                           className="Garage datapicker RenderFromGarage "
                         />
                       </LocalizationProvider>
-                      <h6>Thời gian đăng kí xe về đầu tiên - xe về tiếp theo </h6>
+                      <h6>
+                        Thời gian đăng kí xe về đầu tiên - xe về tiếp theo{" "}
+                      </h6>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileDateTimePicker
                           value={selectDateTurn}
