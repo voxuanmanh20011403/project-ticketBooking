@@ -7,7 +7,7 @@ const ContactCall = () => {
 
   return (
     <div className='contact_call'>
-      <a href="" >
+      <a href="#" >
         <i style={{ fontSize: '40px' }}>
           <PhoneIcon className='phone_icon' />
         </i>

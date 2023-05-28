@@ -77,7 +77,7 @@ export function ManagerTickets() {
   }, []);
   useEffect(() => {
     async function fetchData() {
-      const accountsCol = collection(db, "Trips");
+      const accountsCol = collection(db, "Tripss");
       const accountsSnapshot = await getDocs(accountsCol);
       const accountsList = accountsSnapshot.docs.map((doc) => {
         return {

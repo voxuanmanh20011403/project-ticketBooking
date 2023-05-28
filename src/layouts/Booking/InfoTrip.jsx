@@ -104,7 +104,7 @@ const InfoTrip = ({ items }) => {
 
         if (!querySnapshot.empty) {
           const garageData = querySnapshot.docs[0].data();
-          const urlImage = garageData.UrlImage;
+          const urlImage = garageData.URLImage;
           console.log("img: " + urlImage);
           setImgGagare(urlImage);
         }
@@ -157,7 +157,7 @@ const InfoTrip = ({ items }) => {
                 <span className="noi__den">
                   {hoursS + ":" + minutesS}- {items.PakingStart}
                 </span>
-                <span className="time"> {items.duration} </span>
+                <span className="time"> {items.duration}h </span>
                 <span className="noi__den">
                   {hours + ":" + minutes} - {items.PakingEnd}
                 </span>

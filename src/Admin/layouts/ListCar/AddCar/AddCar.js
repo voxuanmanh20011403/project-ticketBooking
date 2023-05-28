@@ -330,7 +330,7 @@ function AddCar(props) {
                         className="Garage RenderFromGarage"
                       />
                       <CustomTextField
-                        label="Nơi bắt đầu"
+                        label="Bến xe kết thúc"
                         name="PakingEnd"
                         value={formData.PakingEnd}
                         onChange={handleChangeValue}
